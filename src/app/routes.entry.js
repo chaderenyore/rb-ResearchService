@@ -1,5 +1,7 @@
 const { Router } = require("express");
 const Research = require("./modules/research/routes/research.routes");
+const Likes = require("./modules/research/routes/research.routes");
+const Comment = require("./modules/research/routes/research.routes");
 const AdminControl = require("./modules/adminControl/routes/adminControl.routes");
 
 
