@@ -1,4 +1,4 @@
-const {getPaginatedRecords} = require ('../_helpers/paginate');
+const { getPaginatedRecords } = require ('../_helpers/paginate');
 
 class Repository {
   constructor (Model) {
@@ -46,6 +46,13 @@ class Repository {
 
   update (condition, update) {
     return this.Model.findOneAndUpdate (condition, update, {
+      new: true,
+      lean: true,
+    });
+  }
+
+  updateMany (condition, update) {
+    return this.Model.updateMany(condition, update, {
       new: true,
       lean: true,
     });
