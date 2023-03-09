@@ -5,8 +5,17 @@ const schema = mongoose.Schema(
     researcher_id: { type: String},
     researcher_image_url: { type: String},
     coin_name: {type: String},
-    coni_url: {type: String},
+    coin_url: {type: String},
+    coin_image: {type: string},
     amount_paid:{type: Number},
+    total_likes: {type: Number, default: 0},
+    total_comments: {type: Number, default: 0},
+    total_views: {type: Number, default: 0},
+    age: {type: Number},
+    tokenomics_rating: {type: String, enum: ['excellent', 'good', 'very bad', 'fair', 'poor']},
+    potential_return: {type: String},
+    verdit:{type: String},
+    number_of_downloads: {type: Number, default: 0}
   },
   {
     timestamps: { createdAt: "created_at", updatedAt: "updated_at" },
