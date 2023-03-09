@@ -9,6 +9,7 @@ const KEYS = {
   redisPort: process.env.REDISPORT,
   redisPassword: process.env.REDISPASSWORD,
   appVersion: process.env.APP_VERSION,
+  AUTH_URI: process.env.AUTH_URI
 };
 
 module.exports = KEYS;

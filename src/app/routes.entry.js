@@ -9,7 +9,7 @@ module.exports = () => {
   
   const router = Router();
 
-//   router.use("/", Research);
+  router.use("/", Research);
 //   router.use("/admin",  AdminControl);
   return router;
 };
