@@ -9,7 +9,10 @@ const KEYS = {
   redisPort: process.env.REDISPORT,
   redisPassword: process.env.REDISPASSWORD,
   appVersion: process.env.APP_VERSION,
-  AUTH_URI: process.env.AUTH_URI
+  AUTH_URI: process.env.AUTH_URI,
+  USER_SERVICE_URI: process.env.USER_SERVICE_URI,
+  AWS_ACCESS_KEY: process.env.AWS_ACCESS_KEY,
+  AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY
 };
 
 module.exports = KEYS;
