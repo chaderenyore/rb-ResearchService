@@ -11,7 +11,7 @@ exports.getUsersResearch = async (req, res, next) => {
     const allUsersResearch = await new ResearchService().all(
       req.query.limit,
       req.query.page,
-      { researcher_id: req.user.user_id}
+      { poster_id: req.user.user_id}
     );
     if (allUsersResearch.data.length === 0) {
       return next(
