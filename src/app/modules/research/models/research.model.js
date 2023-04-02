@@ -3,6 +3,9 @@ const mongoose = require("mongoose");
 const schema = mongoose.Schema(
   {
     researcher_id: { type: String},
+    poster_id:{type: String},
+    original_research_id:{type: String},
+    research_child:{type: Object},
     researcher_image_url: { type: String},
     coin_name: {type: String},
     coin_url: {type: String},

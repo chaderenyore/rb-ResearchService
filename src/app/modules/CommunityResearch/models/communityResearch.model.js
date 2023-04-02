@@ -7,6 +7,8 @@ const schema = mongoose.Schema(
     original_research_id: {type: String},
     is_original: {type: Boolean},
     original_research: {type: Object},
+    reposter_id:{type: String},
+    research_child:{type: Object},
     coin_name: {type: String},
     coin_url: {type: String},
     coin_image: {type: String},
