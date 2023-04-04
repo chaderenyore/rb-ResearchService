@@ -3,8 +3,8 @@ Joi.objectId = require("joi-objectid")(Joi);
 
 exports.premCheckSchema = Joi.object().keys({
   was_draft: Joi.boolean().required(),
-  research_id: Joi.objectId().optional(),
   coin_name: Joi.string().required(),
+  coin_image: Joi.string().required(),
   twitter_url: Joi.string().uri().required(),
   twitter_createdAt: Joi.date()
     .format(["YYYY-MM-DD", "DD-MM-YYYY", "DD/MM/YYYY"])
@@ -23,6 +23,6 @@ exports.premCheckSchema = Joi.object().keys({
     .format(["YYYY-MM-DD", "DD-MM-YYYY", "DD/MM/YYYY"])
     .utc()
     .required(),
-  is_social_media_active: Joi.bolean().required(),
+  is_social_media_active: Joi.boolean().required(),
   tags: Joi.array().required()
 });

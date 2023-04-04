@@ -36,6 +36,9 @@ class ResearchLikesService {
   async findById (id) {
     return this.ResearchLikesRepository.findById (id)
   }
+  async deletOne (condition) {
+    return this.ResearchLikesRepository.delete(condition)
+  }
 }
 
 module.exports = ResearchLikesService;

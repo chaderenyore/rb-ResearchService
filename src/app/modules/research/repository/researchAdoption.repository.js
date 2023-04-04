@@ -1,9 +1,9 @@
 const Repository = require("../../../Repository");
-const ResearchAdoption  = require("../models/researchAdoption.model");
+const ResearchAdoptionModel  = require("../../Research/models/researchAdoption.model");
 
 class ResearchAdoptionRepository extends Repository {
     constructor() {
-        super(ResearchAdoption);
+        super(ResearchAdoptionModel);
     };
 }
 

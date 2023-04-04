@@ -21,7 +21,11 @@ exports.saveDraftPremCheck = async (req, res, next) => {
     if (user && user.data && user.data.code === 200) {
             // Create Research with info supplied supplied
     const dataToResearch = {
+        researcher_username: user.data.data.username ? user.data.data.username : "",
+        researcher_firstname: user.data.data.firstname ? user.data.data.firstname : "",
+        researcher_lastame: user.data.data.lastname ? user.data.data.lastname : "",
         researcher_id: req.user.user_id,
+        poster_id: req.user.user_id,
         researcher_image_url: user.data.data.image ? user.data.data.image : "",
         tags: req.body.tags ? req.body.tags : "",
         is_draft: true,

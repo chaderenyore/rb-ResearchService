@@ -1,6 +1,6 @@
+const axios = require("axios").default;
 const { HTTP } = require("../../../../_constants/http");
 const { RESPONSE } = require("../../../../_constants/response");
-const { HTTP } = require("../../../../_constants/http");
 const createError = require("../../../../_helpers/createError");
 const { createResponse } = require("../../../../_helpers/createResponse");
 const DoPremCheck =
@@ -14,6 +14,7 @@ exports.premCheck = async (req, res, next) => {
     // get body data
     const {
       coin_name,
+      coin_image,
       twitter_url,
       twitter_account_age,
       twitter_createdAt,
@@ -65,11 +66,28 @@ exports.premCheck = async (req, res, next) => {
         );
       }
     } else {
-      // Create Research with tags supplied
+            // Get user Info for creating post
+    const user = await axios.get(
+        `${KEYS.USER_SERVICE_URI}/users/v1/user/${req.user.user_id}?platform=web`,
+        {
+          headers: {
+            Authorization: `Bearer ${req.token}`,
+          },
+        }
+      );
+      if (user && user.data && user.data.code === 200) {
+              // Create Research with tags supplied
       const dataToResearch = {
         researcher_id: req.user.user_id,
+        researcher_username: user.data.data.username ? user.data.data.username : "",
+        researcher_firstname: user.data.data.firstname ? user.data.data.firstname : "",
+        researcher_lastame: user.data.data.lastname ? user.data.data.lastname : "",
+        poster_id: req.user.user_id,
+        researcher_image_url: user.data.data.image ? user.data.data.image : "",
+        is_draft: false,
+        coin_image,
         coin_name,
-        tags,
+        ...req.body,
       };
       const newResearch = await new ResearchService().createResearch(
         dataToResearch
@@ -113,6 +131,8 @@ exports.premCheck = async (req, res, next) => {
           HTTP.OK
         );
       }
+      }
+
     }
   } catch (err) {
     console.error(err);

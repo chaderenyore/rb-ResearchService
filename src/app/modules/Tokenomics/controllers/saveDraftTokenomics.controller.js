@@ -3,7 +3,7 @@ const createError = require("../../../../_helpers/createError");
 const { createResponse } = require("../../../../_helpers/createResponse");
 const logger = require("../../../../../logger.conf");
 const ResearchService = require("../../Research/services/research.services");
-const TokenomicsService = require("../services/premCheck.service");
+const TokenomicsService = require("../services/tokenomics.service");
 
 exports.saveDraftTokenomics = async (req, res, next) => {
   try {

@@ -4,7 +4,6 @@ const createError = require("../../../../_helpers/createError");
 const { createResponse } = require("../../../../_helpers/createResponse");
 const logger = require("../../../../../logger.conf");
 const CommunityResearchService = require("../services/communityResearch.services");
-const KEYS = require("../../../../_config/keys");
 
 exports.fetchAllSponsoredResearch = async (req, res, next) => {
   try {

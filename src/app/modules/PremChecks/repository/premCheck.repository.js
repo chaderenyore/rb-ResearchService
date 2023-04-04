@@ -1,5 +1,5 @@
 const Repository = require("../../../Repository");
-const PremCheck  = require("../models/premCheck.model");
+const PremCheck  = require("../../PremChecks/models/premCheck.model");
 
 class  PremCheckRepository extends Repository {
     constructor() {

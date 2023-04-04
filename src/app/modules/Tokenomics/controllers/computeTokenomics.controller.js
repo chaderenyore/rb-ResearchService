@@ -1,6 +1,5 @@
 const { HTTP } = require("../../../../_constants/http");
 const { RESPONSE } = require("../../../../_constants/response");
-const { HTTP } = require("../../../../_constants/http");
 const createError = require("../../../../_helpers/createError");
 const { createResponse } = require("../../../../_helpers/createResponse");
 const ComputeTokenomicsHealth =
@@ -108,6 +107,11 @@ exports.computeTokenomics = async (req, res, next) => {
           has_dao,
         };
         const { message, data } = await ComputeTokenomicsHealth(coinData);
+        // update base research
+        const dataToUpdateResearch = {
+
+        }
+        const updatedResearch = await new ResearchService().update({_id: research_id})
         const tokenomicsResults = {
           research_id: research_id,
           tokenomicsResults: {

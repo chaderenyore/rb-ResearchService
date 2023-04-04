@@ -16,4 +16,4 @@ const schema = mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("ResearchCommunity", schema);
+module.exports = mongoose.model("ResearchCommunityTeamSpirit", schema);

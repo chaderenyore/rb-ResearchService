@@ -6,7 +6,7 @@ const logger = require("../../../../../logger.conf");
 const TokenomicsService = require("../services/tokenomics.service");
 const KEYS = require("../../../../_config/keys");
 
-exports.getDraftPremCheck = async (req, res, next) => {
+exports.getTokenomicsDraftCheck = async (req, res, next) => {
   try {
     const allTokenomicsDrafts = await new TokenomicsService().all(
       req.query.limit,

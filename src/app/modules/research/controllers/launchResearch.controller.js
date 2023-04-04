@@ -4,10 +4,10 @@ const { createResponse } = require("../../../../_helpers/createResponse");
 const logger = require("../../../../../logger.conf");
 const PremCheckService = require("../../PremChecks/services/premCheck.service");
 const TokenomicsService = require("../../Tokenomics/services/tokenomics.service");
-const AdoptionAndRecognitionService = require("../../Research/services/researchAdoption.service");
-const ResearchCommunityANdSpiritService = require("../../Research/services/researchCommunity.service");
-const ResearchComparisonService = require("../../Research/services/comparison.services");
-const ResearchService = require("../../Research/services/research.services");
+const AdoptionAndRecognitionService = require("../services/researchAdoption.service");
+const ResearchCommunityAndSpiritService = require("../services/researchCommunity.service");
+const ResearchComparisonService = require("../services/comparison.services");
+const ResearchService = require("../services/research.services");
 const CommunityResearchService = require("../../CommunityResearch/services/communityResearch.services");
 
 exports.launchResearch = async (req, res, next) => {
@@ -27,22 +27,22 @@ exports.launchResearch = async (req, res, next) => {
       const researchTokenomics = await new TokenomicsService().update({
         research_id: req.query.research_id,
       },
-      {is_saved:true});
+      {is_saved:true, is_draft:false});
       const researchAdoptionAndRecognition =
         await new AdoptionAndRecognitionService().update({
           research_id: req.query.research_id,
         },
-        {is_saved:true});
-      const researchCommunityAndTeamSpirit =
-        await new ResearchCommunityANdSpiritService().findOne({
-          research_id: req.query.research_id,
-        });
-      const researchComparison = await new ResearchComparisonService().findOne({
+        {is_saved:true, is_draft:false});
+      const researchComparison = await new ResearchComparisonService().update({
         research_id: req.query.research_id,
-      });
+      }, {is_saved:true, is_draft:false});
+      const researchTeamSpirit = await new ResearchCommunityAndSpiritService().update({
+        research_id: req.query.research_id,
+      }, {is_saved:true, is_draft:false});
       // create community copy
       const DataToCommunityResearch = {
         original_research_id: researchExist._id,
+        poster_id: req.user.user_id,
         ...researchExist
       }
       const communityResearch = await new CommunityResearchService().create(DataToCommunityResearch);

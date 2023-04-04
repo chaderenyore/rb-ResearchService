@@ -1,5 +1,5 @@
 const Repository = require("../../../Repository");
-const Tokenomics  = require("../models/tokenomics.model");
+const Tokenomics  = require("../../Tokenomics/models/tokenomics.model");
 
 class TokenomicsRepository extends Repository {
     constructor() {

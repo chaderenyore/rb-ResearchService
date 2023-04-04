@@ -1,5 +1,5 @@
 const Repository = require("../../../Repository");
-const CommentLikes  = require("../models/commentLike.model");
+const CommentLikes  = require("../../Likes/models/commentLike.model");
 
 class CommentLikesRepository extends Repository {
     constructor() {

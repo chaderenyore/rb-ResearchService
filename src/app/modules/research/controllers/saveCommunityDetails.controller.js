@@ -2,36 +2,36 @@ const { HTTP } = require("../../../../_constants/http");
 const createError = require("../../../../_helpers/createError");
 const { createResponse } = require("../../../../_helpers/createResponse");
 const logger = require("../../../../../logger.conf");
-const ResearchService = require("../../Research/services/research.services");
-const ResearchComparisonService = require("../services/comparison.services");
+const ResearchService = require("../services/research.services");
+const CommunityDetailsService = require("../services/researchCommunity.service");
 
-exports.saveResearchComparisonInfo = async (req, res, next) => {
+exports.saveCommunitySpiritInfo = async (req, res, next) => {
   try {
     // check if action is to save as draft
     if (req.query.save_as_draft === true) {
-      const dataToComparison = {
+      const dataToCommunitySpirit = {
         is_draft: true,
         ...req.body,
       };
-      const draftEntry = await new ResearchComparisonService().create(
-        dataToComparison
+      const draftEntry = await new CommunityDetailsService().create(
+        dataToCommunitySpirit
       );
       return createResponse(`Draft Saved`, draftEntry)(res, HTTP.OK);
     } else {
       if (req.body.was_draft === true) {
-        // search for draft Details
-        const researchComparisonDraft =
-          await new ResearchComparisonService().findOne({
+        // search for draft Com Details
+        const communityDetailsDraft =
+          await new CommunityDetailsService().findOne({
             research_id: req.body.research_id,
           });
-        if (researchComparisonDraft) {
+        if (communityDetailsDraft) {
           // update community details
-          const updatedResearchComparison =
-            await new ResearchComparisonService().update(
+          const updatedCommunityDetails =
+            await new CommunityDetailsService().update(
               { research_id: research_id },
               { ...req.body }
             );
-          return createResponse(`Data Saved`, updatedResearchComparison)(
+          return createResponse(`Data Saved`, updatedCommunityDetails)(
             res,
             HTTP.OK
           );
@@ -43,16 +43,14 @@ exports.saveResearchComparisonInfo = async (req, res, next) => {
       });
       if (research) {
         // create Community Detail  entry
-        const dataToResearchComparison = {
+        const dataToCommunityDetails = {
           research_id: research_id,
           is_draft: false,
           ...req.body,
         };
-        const newRsearchComparisonData =
-          await new ResearchComparisonService().create(
-            dataToResearchComparison
-          );
-        return createResponse(`Data Saved`, newRsearchComparisonData)(
+        const newCommunityDetailsData =
+          await new AdoptionRecognitionService().create(dataToCommunityDetails);
+        return createResponse(`Data Saved`, newCommunityDetailsData)(
           res,
           HTTP.OK
         );
