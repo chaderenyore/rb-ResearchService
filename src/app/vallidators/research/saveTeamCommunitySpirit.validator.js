@@ -1,7 +1,7 @@
 const Joi = require("joi").extend(require("@joi/date"));
 Joi.objectId = require("joi-objectid")(Joi);
 
-exports.saveAdoptionAndRecognitionSchema = Joi.object().keys({
+exports.saveCommunityAndTeamInfoSchema = Joi.object().keys({
   was_draft: Joi.boolean().required(),
   research_id: Joi.objectId().required(),
   has_known_partners: Joi.boolean().required(),
@@ -12,7 +12,7 @@ exports.saveAdoptionAndRecognitionSchema = Joi.object().keys({
 });
 
 
-exports.saveTeamNdCommunitySpiritQuerySchema = Joi.object().keys({
+exports.saveTeamAndCommunitySpiritQuerySchema = Joi.object().keys({
     was_draft: Joi.boolean().required(),
     save_as_draft: Joi.boolean().required()
   });

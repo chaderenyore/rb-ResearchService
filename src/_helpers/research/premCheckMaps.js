@@ -11,8 +11,8 @@ exports.premCheckMaps = {
         "<=3": 4,
         ">=4": 5
     },
-    twitter_createdAt,
-    date_of_project_launch,
+    twitter_createdAt:{"less than 5 months":0},
+    date_of_project_launch:{"less than 5 moths":0},
     project_status :{
         "isActive": 5,
         "inACtive": 0,

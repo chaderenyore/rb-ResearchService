@@ -1,4 +1,4 @@
-const TokenomicsControlRepository = require("../repository/tokenomics.repository");
+const TokenomicsControlRepository = require("../repository/tokenomicsControl.repository");
 
 class TokenomicsControlService {
   constructor() {
@@ -34,4 +34,4 @@ class TokenomicsControlService {
   }
 }
 
-module.exports = TokenomicsService;
+module.exports = TokenomicsControlService;

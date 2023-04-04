@@ -9,27 +9,27 @@ exports.computeTokenomicsHealth = async (coinData) => {
     // check for points and return acoridngly
     if (totalPoint === 0) {
       return {
-        message: "Tokenomics Very Very Bad",
+        message: "Very Bad",
         data: totalPoint,
       };
     } else if (totalPoint <= 5) {
       return {
-        message: "Tokenomics Very Poor",
+        message: "Poor",
         data: totalPoint,
       };
     } else if (totalPoint <= 10) {
       return {
-        message: "Tokenomics Fair",
+        message: "Fair",
         data: totalPoint,
       };
     } else if (totalPoint >= 15) {
       return {
-        message: "Tokenomics Good",
+        message: "Good",
         data: totalPoint,
       };
     } else if (totalPoint === 20) {
       return {
-        message: "Tokenomics Excellent",
+        message: "Excellent",
         data: totalPoint,
       };
     }

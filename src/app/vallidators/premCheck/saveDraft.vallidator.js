@@ -22,6 +22,6 @@ exports.saveDraftPremCheckSchema = Joi.object().keys({
     .format(["YYYY-MM-DD", "DD-MM-YYYY", "DD/MM/YYYY"])
     .utc()
     .optional(),
-  is_social_media_active: Joi.bolean().optional(),
+  is_social_media_active: Joi.boolean().optional(),
   tags: Joi.array().optional()
 });

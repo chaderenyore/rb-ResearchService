@@ -2,7 +2,7 @@ const { HTTP } = require("../../../../_constants/http");
 const createError = require("../../../../_helpers/createError");
 const { createResponse } = require("../../../../_helpers/createResponse");
 const logger = require("../../../../../logger.conf");
-const ResearchService = require("../../Research/services/research.services");
+const ResearchService = require("../services/research.services");
 const AdoptionRecognitionService = require("../services/researchAdoption.service");
 
 exports.saveAdoptionAndRecognitionInfo = async (req, res, next) => {

@@ -3,7 +3,8 @@ Joi.objectId = require("joi-objectid")(Joi);
 
 exports.saveComparisonSchema = Joi.object().keys({
   research_id: Joi.objectId().required(),
-  main_coin_info: Joi.boolean().required(),
+  research_price: Joi.string().required(),
+  main_coin_info: Joi.array().required(),
   reference_coins_data: Joi.array().required(),
 });
 

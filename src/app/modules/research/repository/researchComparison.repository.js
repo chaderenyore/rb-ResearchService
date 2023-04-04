@@ -1,5 +1,5 @@
 const Repository = require("../../../Repository");
-const ResearchComparison  = require("../models/researchComparison.model");
+const ResearchComparison  = require("../../Research/models/researchComparison.model");
 
 class ResearchComparisonRepository extends Repository {
     constructor() {

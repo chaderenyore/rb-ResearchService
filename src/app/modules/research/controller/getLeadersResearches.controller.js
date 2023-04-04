@@ -1,1 +1,0 @@
-// find the researches of the leader that a follower follows

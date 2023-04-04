@@ -41,7 +41,8 @@ exports.shareResearch = async (req, res, next) => {
         const dataToReResearchModel = {
           poster_id: req.user.user_id,
           researcher_id: research.researcher_id,
-          original_research_id: research._id
+          original_research_id: research._id,
+          type: "shared"
         };
         const referenceResearchForUsereSharing = await new ResearchService().create(dataToReResearchModel);
         // save to community
@@ -55,6 +56,7 @@ exports.shareResearch = async (req, res, next) => {
             ? user.data.data.username
             : "",
             is_shared: true,
+            type: "shared",
             research_child:research
         };
         const communityResearch = await new CommunityResearchService().create(

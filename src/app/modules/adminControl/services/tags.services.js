@@ -34,4 +34,4 @@ class TagsService {
   }
 }
 
-module.exports = TokenomicsControlService;
+module.exports = TagsService;

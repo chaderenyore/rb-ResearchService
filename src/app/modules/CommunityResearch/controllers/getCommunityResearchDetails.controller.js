@@ -34,12 +34,15 @@ exports.getResearchDetails = async (req, res, next) => {
       const researchComparison = await new ResearchComparisonService().findOne({
         research_id: req.query.research_id,
       });
+      let dataMessage = {
+        message: "Not Found"
+      }
       const DataToClient = {
-        PremChecks: researchPremChecks,
-        Tokenomics: researchTokenomics,
-        Adoption_And_Recognition: researchAdoptionAndRecognition,
-        Community_And_TeamSpirit: researchCommunityAndTeamSpirit,
-        Comparison: researchComparison,
+        PremChecks: researchPremChecks || dataMessage,
+        Tokenomics: researchTokenomics || dataMessage,
+        Adoption_And_Recognition: researchAdoptionAndRecognition || dataMessage,
+        Community_And_TeamSpirit: researchCommunityAndTeamSpirit || dataMessage,
+        Comparison: researchComparison || dataMessage,
         Tags: researchExist.tags,
       };
       //   update Resaerch Clicks
