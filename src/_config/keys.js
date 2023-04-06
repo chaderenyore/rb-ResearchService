@@ -1,4 +1,4 @@
-const dotenv = require("dotenv");
+const dotenv = require('dotenv');
 dotenv.config();
 
 const KEYS = {
@@ -14,9 +14,10 @@ const KEYS = {
   PUSHER_SECRET: process.env.PUSHER_SECRET,
   PUSHER_CLUSTER: process.env.PUSHER_CLUSTER,
   AUTH_URI: process.env.AUTH_URI,
+  ADMIN_URI: process.env.ADMIN_URI,
   USER_SERVICE_URI: process.env.USER_SERVICE_URI,
   AWS_ACCESS_KEY: process.env.AWS_ACCESS_KEY,
-  AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY
+  AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
 };
 
 module.exports = KEYS;

@@ -9,7 +9,7 @@ class TagsService {
     return this.TagsRepository.create(data);
   }
 
-  async findOne(query) {
+  async findATag(query) {
     return this.TagsRepository.findOne(query);
   }
 
