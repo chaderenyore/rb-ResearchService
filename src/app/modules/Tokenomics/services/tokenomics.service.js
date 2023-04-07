@@ -24,7 +24,10 @@ class TokenomicsService {
   async deleteAll(condition) {
     return this.TokenomicsRepository.deleteMany(condition);
   }
+  async deleteOne (condition) {
+    return this.TokenomicsRepository.deleteOne (condition)
 
+  }
   async all(limit, page, data) {
     return this.TokenomicsRepository.all(limit, page, data);
   }

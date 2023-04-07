@@ -37,14 +37,16 @@ exports.saveDraftPremCheck = async (req, res, next) => {
       if (newResearch) {
         // create prem check entry
         const dataToPremCheck = {
+          researcher_id: req.user.user_id,
           research_id: newResearch._id,
-          tags: req.body.tags ? req.body.tags : "",
+          tags: req.body.tags ? req.body.tags : [""],
           is_draft: true,
           ...req.body,
         };
         const draftPremCheck = await new PremCheckService().create(
           dataToPremCheck
         );
+        console.log("drafts ================ ", draftPremCheck)
         return createResponse(`Draft Saved`, draftPremCheck)(res, HTTP.OK);
       }
     }

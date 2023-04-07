@@ -1,7 +1,6 @@
 const Joi = require("joi");
 Joi.objectId = require("joi-objectid")(Joi);
 
-
-exports.saveResearchSchema = Joi.object({
-    research_info: Joi.object().required(),
-  });
+exports.saveResearchQuerySchema = Joi.object({
+  original_research_id: Joi.objectId().required(),
+});

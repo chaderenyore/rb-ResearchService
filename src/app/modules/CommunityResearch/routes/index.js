@@ -54,14 +54,14 @@ router.get(
 );
 
 router.post(
-  '/save-research',
+  '/save',
   authorize(['user','org']),
-  validateRequest(SaveResearchSchema.saveResearchSchema, "body"),
+  validateRequest(SaveResearchSchema.saveResearchQuerySchema, "query"),
   SaveResearchController.saveResearch
 );
 
-router.get(
-  '/share-research',
+router.post(
+  '/share',
   authorize(['user','org']),
   validateRequest(ShareResearchSchema.shareResearchQuerySchema, "query"),
   ShareResearchController.shareResearch

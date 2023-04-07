@@ -29,10 +29,14 @@ exports.deleteComment = async (req, res, next) => {
           ])
         );
       } else {
+        console.log("COmment ====== ", comment);
            // check if research exist
      const research = await new ResearchService().findAResearch({_id:comment.research_id});
      if(research){
+      // delete comment
       const deletedComment = await new CommentService().deletOne({_id: req.query.comment_id});
+      const CommentReplies = await new CommentService().deleteAll({comment_id: req.query.comment_id});
+
       console.log("deleted COmment =========== " , deletedComment);
       // update community
       const updatedCommunity = await new CommunityResearchService().update(

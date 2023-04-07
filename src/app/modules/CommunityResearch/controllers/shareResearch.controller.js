@@ -42,10 +42,42 @@ exports.shareResearch = async (req, res, next) => {
           poster_id: req.user.user_id,
           researcher_id: research.researcher_id,
           original_research_id: research._id,
-          type: "shared"
+          type: "shared",
         };
-        const referenceResearchForUsereSharing = await new ResearchService().create(dataToReResearchModel);
+        const referenceResearchForUsereSharing =
+          await new ResearchService().createResearch(dataToReResearchModel);
+        console.log("Rsearch =========== ", research);
         // save to community
+        // build child research  child view data
+        let researchChild;
+        const childResearch = {
+          original_research_id: research._id,
+          research_child: research.research_child,
+          researcher_image_url: research.researcher_image_url,
+          researcher_username: research.reposter_image,
+          researcher_firstname: research.researcher_firstname,
+          researcher_lastame: research.researcher_lastname,
+          coin_name: research.coin_name,
+          coin_url: research.coin_url,
+          coin_image: research.coin_image,
+          tokenomics_rating: research.tokenomics_rating,
+          verdit_score: research.verdit_score,
+          is_working_product: research.is_working_product,
+          research_price: research.research_price,
+          is_visible: research.is_visible,
+          is_sponsored: research.is_sponsored,
+          is_draft: research.is_draft,
+          tags: research.tags,
+          type: research.type,
+        };
+        // build research child
+
+        if (research.is_visible && research.is_visible === false) {
+          researchChild = "Researched Shared Is Turned Off";
+        } else {
+          researchChild = research;
+        }
+
         const dataToCommunityResearchModel = {
           poster_id: req.user.user_id,
           researcher_id: research.researcher_id,
@@ -55,13 +87,22 @@ exports.shareResearch = async (req, res, next) => {
           reposter_username: user.data.data.username
             ? user.data.data.username
             : "",
-            is_shared: true,
-            type: "shared",
-            research_child:research
+          is_shared: true,
+          type: "shared",
+          research_child: researchChild,
         };
         const communityResearch = await new CommunityResearchService().create(
-            dataToCommunityResearchModel
+          dataToCommunityResearchModel
         );
+        // update save count 
+        const queryUpdate = {
+          _id: req.query.original_research_id,
+        }
+  
+        const updatedBaseResearch = await new ResearchService().update(
+          queryUpdate,
+          { $inc: { 'total_times_shared': 1 } }
+        )
         return createResponse("Research Shared Successfuly", communityResearch)(
           res,
           HTTP.OK

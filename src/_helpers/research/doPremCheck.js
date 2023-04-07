@@ -1,45 +1,45 @@
 // import map control
-const PremCheckMaps = require("../../_helpers/research/premCheckMaps");
+const PremCheckMaps = require("./tokenomicsIndicator");
+const calculateAge = require("./ageCalculator").calculateAge
 exports.doPremCheck = async (coinData) => {
   try {
-    const totalPoint = 0;
-    // TOD ::::::: More Conditions To Be aaded
-    if (coinData.twitter_account_age < 2) {
-      // add points here as required
-      const pointsHere =
-        PremCheckMaps.premCheckMaps.is_social_media_active.true;
-      totalPoint += pointsHere;
+    console.log("COIN DATA ============ ", coinData);
+    // points tracker
+    let  totalPoint = 0
+    const passMark = 60;
+    // calculate age form twitter cretaedAt
+    const TwitterAgeInMonths = await calculateAge(coinData.twitter_createdAt);
+    const LaunchDateAgeInMonths = await calculateAge(coinData.date_of_project_launch);
+    console.log("Twitter AGE IN MONTHS ============ ", TwitterAgeInMonths)
+    console.log("Launch AGE IN MONTHS ============ ", LaunchDateAgeInMonths)
+
+    if(TwitterAgeInMonths.ageConvertedToMonths || LaunchDateAgeInMonths.ageConvertedToMonths ){
+      if (TwitterAgeInMonths.ageConvertedToMonths >= 4 || LaunchDateAgeInMonths.ageConvertedToMonths >= 4) {
+        // add points here as required
+       totalPoint += 40;
+      }
     }
-    if (coinData.twitter_account_age > 2) {
+    if (coinData.is_social_media_active == true) {
       //   add points as required here
-      const pointsHere =
-        PremCheckMaps.premCheckMaps.is_social_media_active.true;
-      totalPoint += pointsHere;
+      totalPoint += 20
+    }
+    // get last tweet timeline
+    const LastTweetTimeInDays = await calculateAge(coinData.last_tweet_date).ageConvertedToDays;
+    if(LastTweetTimeInDays && LastTweetTimeInDays < 30){
+        totalPoint += 10
+    }
+    if(coinData.project_status === "yes"){
+        totalPoint += 30
     }
     // check for points and return acoridngly
-    if (totalPoint === 0) {
+    if (totalPoint >= 60) {
       return {
-        message: "Prem Check Very Very Bad",
+        message: "Success",
         data: totalPoint,
       };
-    } else if (totalPoint <= 5) {
+    } else {
       return {
-        message: "Prem Check Very Poor",
-        data: totalPoint,
-      };
-    } else if (totalPoint <= 10) {
-      return {
-        message: "Prem Check Fair",
-        data: totalPoint,
-      };
-    } else if (totalPoint >= 15) {
-      return {
-        message: "Prem Check Good",
-        data: totalPoint,
-      };
-    } else if (totalPoint === 20) {
-      return {
-        message: "Prem Check Excellent",
+        message: "Failure",
         data: totalPoint,
       };
     }

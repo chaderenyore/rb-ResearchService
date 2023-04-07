@@ -29,7 +29,7 @@ exports.getAllResearchComments = async (req, res, next) => {
       const comments = await new CommentService().all(
         req.query.limit,
         req.query.page,
-        { post_id: req.query.research_id }
+        { research_id: req.query.research_id }
       );
       if (comments.data.length === 0) {
         return next(

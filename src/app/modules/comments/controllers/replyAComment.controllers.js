@@ -14,7 +14,7 @@ const logger = require("../../../../../logger.conf");
 exports.replyAComment = async (req, res, next) => {
   try {
     // check if comment exists/user owns the comment
-      const comment = await new CommentService().findAComment(
+      const comment = await new CommentService().findARecord(
         {_id: req.body.comment_id}
       );
       if (!comment) {
@@ -64,10 +64,11 @@ exports.replyAComment = async (req, res, next) => {
         }
         const newCommentReply = await new ReplyService().create(dataToReplyModel);
         //  update research model
-        const updatedComment = await new CommentService().updateARecord(
+        const updatedComment = await new CommentService().update(
           { _id: comment._id },
           { $inc: { 'total_replies': 1 } }
         );
+        console.log("UPDATED COMMENT ========== ", updatedComment);
         return createResponse(`Replied A Comment Successfuly`, newCommentReply)(res, HTTP.OK);
         } else {
             return next(

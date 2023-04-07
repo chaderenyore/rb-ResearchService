@@ -6,6 +6,7 @@ const ResearchService = require("../../../Research/services/research.services");
 const SavedResearchService = require("../../../CommunityResearch/services/savedResearch.services");
 const CommunityRsearchService = require("../../../CommunityResearch/services/communityResearch.services");
 const ResearchLikeService = require("../../services/researchLikes.services");
+const LikeResearchService = require("../../services/userLikedResearch.service");
 const logger = require("../../../../../../logger.conf");
 
 exports.unLikeAResearch = async (req, res, next) => {
@@ -27,47 +28,54 @@ exports.unLikeAResearch = async (req, res, next) => {
         ])
       );
     } else {
-        // check if like exists
-        const likeExist = await new ResearchLikeService().findARecord({
+      // check if like exists
+      const likeExist = await new ResearchLikeService().findARecord({
+        post_id: req.query.original_research_id,
+        user_id: req.user.user_id,
+      });
+      if (!likeExist) {
+        return next(
+          createError(HTTP.OK, [
+            {
+              status: RESPONSE.SUCCESS,
+              message: "You Have Not Liked This Research",
+              statusCode: HTTP.OK,
+              data: null,
+              code: HTTP.OK,
+            },
+          ])
+        );
+      } else {
+        const Like = await new ResearchLikeService().deletOne({
           post_id: req.query.original_research_id,
           user_id: req.user.user_id,
         });
-        if (!likeExist) {
-          return next(
-            createError(HTTP.OK, [
-              {
-                status: RESPONSE.SUCCESS,
-                message: "You Have Not Liked This Post",
-                statusCode: HTTP.OK,
-                data: null,
-                code: HTTP.OK,
-              },
-            ])
-          );
-        } else {
-          const Like = await new ResearchLikeService().deletOne({
-            post_id: req.query.original_research_id,
-            user_id: req.user.user_id,
-          });
-          // decrement like count on research
-          const updatedCommunityPost = await new CommunityRsearchService().update(
-            { original_research_id: req.query.original_research_id },
-            { $inc: { 'total_likes': -1 } }
-          );
+        // decrement like count on research
+        const updatedCommunityPost = await new CommunityRsearchService().update(
+          { original_research_id: req.query.original_research_id },
+          { $inc: { 'total_likes': -1 } }
+        );
 
-          const updatedResearch = await new ResearchService().update(
-            { post_id: req.query.original_research_id },
-            { $inc: { 'total_likes': -1 } }
-          );
-              // update saved research
-    const updatedSavedResearch = await new SavedResearchService().update(
-      { post_id: req.query.original_research_id },
-      { $inc: { 'total_likes': -1 } }
-    )
+        const updatedResearch = await new ResearchService().update(
+          { _id: req.query.original_research_id },
+          { $inc: { 'total_likes': -1 } }
+        );
+        // update saved research
+        const updatedSavedResearch = await new SavedResearchService().update(
+          { research_id: req.query.original_research_id },
+          { $inc: { 'total_likes': -1 } }
+        );
+        // update User likedRsearch Model
+        const queryDataToUserLikedResearch = {
+          user_id: req.user.user_id,
+          research_id: req.query.original_research_id,
+        };
+        const userLikedResearch = await new LikeResearchService().deletOne(
+          queryDataToUserLikedResearch
+        );
 
-          return createResponse("You UnLiked A Research", Like)(res, HTTP.OK);
-        }
-
+        return createResponse("You UnLiked A Research", Like)(res, HTTP.OK);
+      }
     }
   } catch (err) {
     logger.error(err);

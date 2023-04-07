@@ -51,7 +51,7 @@ exports.createComment = async (req, res, next) => {
             }
                // create comment
     const dataToCommentModel = {
-      post_id: research._id,
+      research_id: research._id,
       commenter_id: req.user.user_id,
       is_parent: true,
       commenter_image: user.data.data.image ? user.data.data.image : "",
@@ -66,20 +66,17 @@ exports.createComment = async (req, res, next) => {
       { original_post_id: req.body.research_id },
       { $inc: { 'total_comments': 1 } }
     )
-    // update saved research
-        const updatedSavedResearch = await new SavedResearchService().update(
-          { post_id: req.body.research_id },
-          { $inc: { 'total_comments': 1 } }
-        )
-       
-      // Real time update frontend
-      const pusher = await init_pusher();
-      pusher.trigger("research_comments", dataToCommentModel);
+      // // Real time update frontend
+      // const pusher = await init_pusher();
+      // pusher.trigger("research_comments", dataToCommentModel);
       //  update research model
       const updatedResearch = await new ResearchService().update(
         { _id: req.body.research_id },
         { $inc: { 'total_comments': 1 } }
       );
+      console.log("UPDATED RESEARCH COMMENT COUNT === ", updatedResearch);
+      console.log("COMMUNITY RESEARCH COMMENT COUNT === ", updatedCommunity);
+
       return createResponse('Comment Created', newComment)(res, HTTP.OK);
    }
 

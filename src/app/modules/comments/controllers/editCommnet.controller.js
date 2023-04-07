@@ -22,9 +22,14 @@ exports.editComment = async (req, res, next) => {
         ])
       );
     } else {
-      const comment = new CommentService().findARecord({
+      const comment = await new CommentService().findARecord({
         _id: req.body.comment_id,
       });
+      console.log("USER ID ========= ", req.user.user_id)
+      console.log("COMMENTER ID ========= ", comment.commenter_id)
+      console.log("COMMENT ========= ", comment)
+
+
       if (req.user.user_id !== comment.commenter_id) {
         return next(
           createError(HTTP.UNAUTHORIZED, [
@@ -38,7 +43,7 @@ exports.editComment = async (req, res, next) => {
           ])
         );
       } else {
-        const updatedComment = await new CommentService().updateARecord(
+        const updatedComment = await new CommentService().update(
           { _id: req.body.comment_id },
           { comment_body_text: req.body.comment_body_text, was_edited: true }
         );

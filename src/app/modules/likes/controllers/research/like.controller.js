@@ -7,6 +7,7 @@ const ResearchService = require("../../../Research/services/research.services");
 const SavedResearchService = require("../../../CommunityResearch/services/savedResearch.services");
 const CommunityRsearchService = require("../../../CommunityResearch/services/communityResearch.services");
 const ResearchLikeService = require("../../services/researchLikes.services");
+const LikeResearchService = require("../../services/userLikedResearch.service");
 const logger = require("../../../../../../logger.conf");
 const KEYS = require("../../../../../_config/keys");
 
@@ -22,7 +23,7 @@ exports.likeARsearch = async (req, res, next) => {
           createError(HTTP.OK, [
             {
               status: RESPONSE.SUCCESS,
-              message: "You Have ALready Liked This Post",
+              message: "You Have ALready Liked This Research",
               statusCode: HTTP.OK,
               data: null,
               code: HTTP.OK,
@@ -86,6 +87,15 @@ exports.likeARsearch = async (req, res, next) => {
         const updatedBaseResearch = await new ResearchService().update(
           { _id: req.query.original_research_id },
           { $inc: { 'total_likes': 1 } }
+        );
+        // save to likedRsearch Model
+        const dataToUserLikedResearch = {
+          user_id: req.user.user_id,
+          research_id: req.query.original_research_id,
+          research_tags: research.tags
+        }
+        const userLikedResearch = await new LikeResearchService().create(
+          dataToUserLikedResearch
         );
     // update saved research
     const updatedSavedResearch = await new SavedResearchService().update(

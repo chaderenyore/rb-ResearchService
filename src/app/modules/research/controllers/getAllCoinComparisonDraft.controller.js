@@ -1,4 +1,4 @@
-const axios = require("axios").default;
+const { RESPONSE } = require("../../../../_constants/response");
 const { HTTP } = require("../../../../_constants/http");
 const createError = require("../../../../_helpers/createError");
 const { createResponse } = require("../../../../_helpers/createResponse");

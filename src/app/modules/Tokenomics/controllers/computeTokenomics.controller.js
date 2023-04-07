@@ -3,7 +3,7 @@ const { RESPONSE } = require("../../../../_constants/response");
 const createError = require("../../../../_helpers/createError");
 const { createResponse } = require("../../../../_helpers/createResponse");
 const ComputeTokenomicsHealth =
-  require("../../../../_helpers/research/computeTokenomicsHealth").computeTokenomicsHealth;
+  require("../../../../_helpers/research/tokenomicsHealthCalculator").computeTokenomicsHealth;
 const ResearchService = require("../../Research/services/research.services");
 const logger = require("../../../../../logger.conf");
 const TokenomicsService = require("../services/tokenomics.service");
@@ -12,106 +12,46 @@ exports.computeTokenomics = async (req, res, next) => {
   try {
     // get body data
     const {
-      coin_name,
       research_id,
       number_of_tradeable_tokens,
       is_main_token,
       has_enough_utility,
       token_type,
+      research_price,
       circulating_supply,
       total_supply,
       max_supply,
-      purpose,
+      allocation_data,
       has_dao,
       was_draft,
-      tags,
     } = req.body;
-
-    if (was_draft === true) {
-      // search for draft Tokenomics
-      const draftTokenomics = await new TokenomicsService().findOne({
-        research_id: research_id,
-      });
-      // update info and compute tokenomics check
-      if (draftTokenomics) {
-        // update Tokenomics Data
-        const updateTokenomics = await new TokenomicsService().update({researcher_id: research_id},
-            {...req.body})
-        // get Prem check results from criteria
-        const coinData = {
-          twitter_account_age,
-          number_of_tradeable_tokens,
-          is_main_token,
-          has_enough_utility,
-          token_type,
-          circulating_supply,
-          total_supply,
-          max_supply,
-          purpose,
-          has_dao,
-        };
-        const { message, data } = await ComputeTokenomicsHealth(coinData);
-        const premCheckResults = {
-          research_id: research_id,
-          tokenomicsResults: {
-            message,
-            score: data,
-          },
-        };
-        return createResponse(`${message}`, premCheckResults)(res, HTTP.OK);
-      } else {
+    // check if tokenomics is been used as a tool
+    if (req.query.is_independent === "true") {
+      // get Tokenomics results from criteria
+      const coinData = {
+        number_of_tradeable_tokens,
+        is_main_token,
+        has_enough_utility,
+        token_type,
+        allocation_data,
+        has_dao,
+      };
+      const { error, message, data } = await ComputeTokenomicsHealth(coinData);
+      if (error) {
         return next(
           createError(HTTP.OK, [
             {
               status: RESPONSE.SUCCESS,
-              message: "This Draft Is Invalid",
+              message: message,
               statusCode: HTTP.OK,
-              data: null,
+              data,
               code: HTTP.OK,
             },
           ])
         );
-      }
-    } else {
-      // get associated Research
-      const research = await new ResearchService().findAResearch({
-        research_id: research_id,
-      });
-      if (research) {
-        // create tokenomics
-        const dataToTokenomics = {
-          research_id: research_id,
-          number_of_tradeable_tokens,
-          is_main_token,
-          has_enough_utility,
-          token_type,
-          circulating_supply,
-          total_supply,
-          max_supply,
-          purpose,
-          has_dao,
-        };
-        const researchTokenomics = await new TokenomicsService().create(
-          dataToTokenomics
-        );
-        // get Prem check results from criteria
-        const coinData = {
-          number_of_tradeable_tokens,
-          is_main_token,
-          has_enough_utility,
-          token_type,
-          circulating_supply,
-          total_supply,
-          max_supply,
-          purpose,
-          has_dao,
-        };
-        const { message, data } = await ComputeTokenomicsHealth(coinData);
-        // update base research
-        const dataToUpdateResearch = {
-
-        }
-        const updatedResearch = await new ResearchService().update({_id: research_id})
+      } else {
+        console.log("MESSAGE ================== ", message);
+        console.log("Data ================== ", data);
         const tokenomicsResults = {
           research_id: research_id,
           tokenomicsResults: {
@@ -120,6 +60,189 @@ exports.computeTokenomics = async (req, res, next) => {
           },
         };
         return createResponse(`${message}`, tokenomicsResults)(res, HTTP.OK);
+      }
+    } else {
+      // check if User owns this research
+      const isMyResearch = await new ResearchService().findAResearch({
+        researcher_id: req.user.user_id,
+        research_id: research_id,
+      });
+      if (!isMyResearch) {
+        return next(
+          createError(HTTP.OK, [
+            {
+              status: RESPONSE.SUCCESS,
+              message: "This Research Does Not Exist/UnAuthorize",
+              statusCode: HTTP.OK,
+              data: null,
+              code: HTTP.OK,
+            },
+          ])
+        );
+      } else {
+        if (was_draft === true) {
+          // search for draft Tokenomics
+          const draftTokenomics = await new TokenomicsService().findOne({
+            research_id: research_id,
+            is_draft: true,
+          });
+          // update info and compute tokenomics check
+          if (draftTokenomics) {
+            // update Tokenomics Data
+            const updateTokenomics = await new TokenomicsService().update(
+              { researcher_id: research_id },
+              { is_draft: false, ...req.body }
+            );
+            // get Prem check results from criteria
+            const coinData = {
+              number_of_tradeable_tokens,
+              is_main_token,
+              has_enough_utility,
+              token_type,
+              allocation_data,
+              has_dao,
+            };
+            const { error, message, data } = await ComputeTokenomicsHealth(
+              coinData
+            );
+            if (error) {
+              return next(
+                createError(HTTP.OK, [
+                  {
+                    status: RESPONSE.SUCCESS,
+                    message: message,
+                    statusCode: HTTP.OK,
+                    data,
+                    code: HTTP.OK,
+                  },
+                ])
+              );
+            } else {
+              const tokenomicsResults = {
+                research_id: research_id,
+                tokenomicsResults: {
+                  message,
+                  score: data,
+                },
+              };
+              // update base research
+              const dataToUpdateResearch = {
+                research_price,
+                tokenomics_rating: message,
+                verdit_score: data,
+                verdit: message,
+              };
+              const updatedResearch = await new ResearchService().update(
+                {
+                  _id: research_id,
+                },
+                dataToUpdateResearch
+              );
+              return createResponse(`${message}`, tokenomicsResults)(
+                res,
+                HTTP.OK
+              );
+            }
+          } else {
+            return next(
+              createError(HTTP.OK, [
+                {
+                  status: RESPONSE.SUCCESS,
+                  message: "This Draft Is Invalid",
+                  statusCode: HTTP.OK,
+                  data: null,
+                  code: HTTP.OK,
+                },
+              ])
+            );
+          }
+        } else {
+          // get associated Research
+          const research = await new ResearchService().findAResearch({
+            research_id: research_id,
+          });
+          if (research) {
+            // create tokenomics
+            const dataToTokenomics = {
+              research_id: research_id,
+              number_of_tradeable_tokens,
+              is_main_token,
+              has_enough_utility,
+              token_type,
+              circulating_supply,
+              total_supply,
+              max_supply,
+              allocation_data,
+              has_dao,
+              is_draft: false
+            };
+            const researchTokenomics = await new TokenomicsService().create(
+              dataToTokenomics
+            );
+            // get Tokenomics results from criteria
+            const coinData = {
+              number_of_tradeable_tokens,
+              is_main_token,
+              has_enough_utility,
+              token_type,
+              allocation_data,
+              has_dao,
+            };
+            const { error, message, data } = await ComputeTokenomicsHealth(
+              coinData
+            );
+            if (error) {
+              return next(
+                createError(HTTP.OK, [
+                  {
+                    status: RESPONSE.SUCCESS,
+                    message: message,
+                    statusCode: HTTP.OK,
+                    data,
+                    code: HTTP.OK,
+                  },
+                ])
+              );
+            } else {
+              const tokenomicsResults = {
+                research_id: research_id,
+                tokenomicsResults: {
+                  message,
+                  score: data,
+                },
+              };
+              // update base research
+              const dataToUpdateResearch = {
+                research_price,
+                tokenomics_rating: message,
+                verdit_score: data,
+                verdit: message,
+              };
+              const updatedResearch = await new ResearchService().update(
+                {
+                  _id: research_id,
+                },
+                dataToUpdateResearch
+              );
+              return createResponse(`${message}`, tokenomicsResults)(
+                res,
+                HTTP.OK
+              );
+            }
+          } else {
+            return next(
+              createError(HTTP.OK, [
+                {
+                  status: RESPONSE.SUCCESS,
+                  message: "This Research Does Not Exist/UnAuthorize",
+                  statusCode: HTTP.OK,
+                  data: null,
+                  code: HTTP.OK,
+                },
+              ])
+            );
+          }
+        }
       }
     }
   } catch (err) {

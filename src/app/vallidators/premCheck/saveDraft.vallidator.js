@@ -2,13 +2,12 @@ const Joi = require("joi").extend(require("@joi/date"));
 Joi.objectId = require("joi-objectid")(Joi);
 
 exports.saveDraftPremCheckSchema = Joi.object().keys({
-  was_draft: Joi.boolean().required(),
-  coin_name: Joi.string().optional(),
-  twitter_url: Joi.string().uri().optional(),
+  coin_name: Joi.string().required(),
+  twitter_url: Joi.string().uri().required(),
   twitter_createdAt: Joi.date()
     .format(["YYYY-MM-DD", "DD-MM-YYYY", "DD/MM/YYYY"])
     .utc()
-    .optional(),
+    .required(),
   twitter_account_age: Joi.number().optional(),
   date_of_project_launch: Joi.date()
     .format(["YYYY-MM-DD", "DD-MM-YYYY", "DD/MM/YYYY"])

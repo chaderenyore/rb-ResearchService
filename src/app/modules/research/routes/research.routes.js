@@ -14,6 +14,11 @@ const GetAllUserResearchSchema = require("../../../vallidators/research/getAllUs
 const GetAllCoinComparisonDraftsSchema = require("../../../vallidators/research/allComparisonDraft.validator");
 const GetAllAdoptionAndRecognitionDraftsSchema = require("../../../vallidators/research/getDraft.validator");
 const UpdateResearchInfoSchema = require("../../../vallidators/research/updaTeResearchInfo.validator");
+const GetAllSuggestedSchema = require("../../../vallidators/research/getSuggestedResearch.validator");
+const DeleteResearchSchema = require("../../../vallidators/research/deleteResearch.validator");
+const ResearchByIdSchema = require("../../../vallidators/research/getSingleResearch.validator");
+
+
 
 
 // controllers
@@ -26,7 +31,10 @@ const GetAllLeadersResearchInfoController = require('../controllers/getLeadersRe
 const GetAllUserResearchController = require('../controllers/getAllUsersResearch.controller');
 const GetAllCoinComparisonDraftsController = require('../controllers/getAllCoinComparisonDraft.controller');
 const GetAllAdoptionAndRecognitionDraftsController = require('../controllers/getAdoptionAndRecongintionDraft.controller');
-const UpdateResearchInfoSchemaController = require('../controllers/updateResearchInfo.controller');
+const UpdateResearchInfoController = require('../controllers/updateResearchInfo.controller');
+const FetchSuggetedResearchController = require('../controllers/getSugestedResearch.controller');
+const DeleteResearchController = require('../controllers/deleteResearch.controller');
+const ResearchByIdController = require('../controllers/getSingleResearchByid.controller');
 
 
 
@@ -99,10 +107,32 @@ router.get(
 );
 
 router.put(
-  '/',
+  '/update-research/:research_id',
   authorize(['user','org']),
   validateRequest(UpdateResearchInfoSchema.updateResearchInfoSchema, "body"),
-  UpdateResearchInfoSchemaController.updateResearchInfo
+  validateRequest(UpdateResearchInfoSchema.updateResearchInfoParamsSchema, "params"),
+  UpdateResearchInfoController.updateResearchInfo
+);
+
+router.get(
+  '/suggested',
+  authorize(['user','org']),
+  validateRequest(GetAllSuggestedSchema.getSugestedResearchSchema, "query"),
+  FetchSuggetedResearchController.getSuggestedResearch
+);
+
+router.delete(
+  '/:research_id',
+  authorize(['user','org']),
+  validateRequest(DeleteResearchSchema.deleteResearchSchema, "params"),
+  DeleteResearchController.deleteResearch
+);
+
+router.get(
+  '/research/:research_id',
+  authorize(['user','org']),
+  validateRequest(ResearchByIdSchema.singleResearchParamsSchema, "params"),
+  ResearchByIdController.getSingleResearchById
 );
 
 

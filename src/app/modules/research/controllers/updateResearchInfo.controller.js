@@ -24,7 +24,7 @@ exports.updateResearchInfo = async (req, res, next) => {
       );
     } else {
       const research = await new ResearchService().findAResearch({
-        _id: req.query.research_id,
+        _id: req.params.research_id,
         researcher_id: req.user.user_id,
       });
       if (!research) {
@@ -45,7 +45,7 @@ exports.updateResearchInfo = async (req, res, next) => {
           ...req.body,
         };
         const updatedResearch = await new ResearchService().update(
-          { _id: req.query.research_id, researcher_id: req.user.user_id },
+          { _id: req.params.research_id, researcher_id: req.user.user_id },
           dataToUpdateResearch
         );
         //  update community research
@@ -54,7 +54,7 @@ exports.updateResearchInfo = async (req, res, next) => {
           ...req.body,
         };
         const researchInCommunity = await new CommunityResearchService().update(
-          { original_research_id: req.query.research_id, researcher_id: req.user.user_id },
+          { original_research_id: req.params.research_id, researcher_id: req.user.user_id },
           dataToUpdateCommunity
         );
 
@@ -63,7 +63,7 @@ exports.updateResearchInfo = async (req, res, next) => {
             ...req.body,
           };
           const researchInSavedCOllection = await new SavedResearchService().updateMany(
-            { original_research_id: req.query.research_id, researcher_id: req.user.user_id },
+            { original_research_id: req.params.research_id, researcher_id: req.user.user_id },
             dataToUpdateSavedResearch
           );
         return createResponse(`Research Updated`, updatedResearch)(res, HTTP.OK);

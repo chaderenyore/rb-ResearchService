@@ -27,14 +27,14 @@ router.post(
   AddCommentController.createComment
 );
 
-router.post(
-  '/edit',
+router.put(
+  '/',
   authorize(['user','org']),
   validateRequest(EditComment.editCommentSchema, "body"),
   EditCommentController.editComment
 );
 router.delete(
-  '/',
+  '/research-comment',
   authorize(['user','org']),
   validateRequest(DeleteComment.deleteCommentSchema, "query"),
   DeleteCommentController.deleteComment

@@ -28,6 +28,11 @@ class ResearchService {
 
   }
 
+  async deleteOne (condition) {
+    return this.ResearchRepository.deleteOne (condition)
+
+  }
+
 
   async all (limit, page, data) {
     return this.ResearchRepository.all (limit, page, data)
