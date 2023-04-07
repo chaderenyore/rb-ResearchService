@@ -9,6 +9,7 @@ const schema = mongoose.Schema(
     media_links: {type: Array},
     marketing_stage: {type: String},
     is_draft: {type: Boolean},
+    is_saved: {type: Boolean},
   },
   {
     timestamps: { createdAt: "created_at", updatedAt: "updated_at" },

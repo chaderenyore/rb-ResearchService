@@ -28,6 +28,11 @@ class ResearchComparisonService {
 
   }
 
+  async deleteOne (condition) {
+    return this.ResearchComparisonRepository.deleteOne (condition)
+
+  }
+
 
   async all (limit, page, data) {
     return this.ResearchComparisonRepository.all (limit, page, data)

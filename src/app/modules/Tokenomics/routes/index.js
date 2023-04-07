@@ -8,7 +8,7 @@ const ComputeTokenomicsSchema = require('../../../vallidators/tokenomics/compute
 const ComputeTokenomicsAllocationSchema = require('../../../vallidators/tokenomics/calculateTokenomicsALlocation.validators');
 const SaveTokenomcisDraft = require("../../../vallidators/tokenomics/saveDraftTokenomics.validator");
 const GetAllDraftsDarfts = require("../../../vallidators/tokenomics/getAllTokenomicsDraft.validator");
-
+const GetResearchTokenomics = require("../../../vallidators/tokenomics/getResearchTokenomics.validator");
 
 
 // controllers
@@ -16,6 +16,8 @@ const ComputeTokenomicsController = require('../controllers/computeTokenomics.co
 const ComputeAllocationController = require('../controllers/calculateTokenomicsAllocation.controller');
 const SaveDraftsController = require('../controllers/saveDraftTokenomics.controller');
 const GetAllTokenomicsDraftController = require('../controllers/getAllDraftTokenmics.controller');
+const GetSingleResearchTokenomicsController = require('../controllers/getResearchTokenomics.controller');
+
 
 
 const router = Router();
@@ -31,7 +33,7 @@ router.post(
   '/allocation',
   authorize(['user','org']),
   validateRequest(ComputeTokenomicsAllocationSchema.calculateTokenomicsAllocationSchema, 'body'),
-  ComputeAllocationController.computeTokenomicsAllocation
+  ComputeAllocationController.computeTokenomicsAllocationPercentages
 );
 
 router.post(
@@ -47,6 +49,13 @@ router.get(
   authorize(['user','org']),
   validateRequest(GetAllDraftsDarfts.getAllTokenomicsDraftsSchema, "query"),
   GetAllTokenomicsDraftController.getTokenomicsDraftCheck
+);
+
+router.get(
+  '/research/:research_id',
+  authorize(['user','org']),
+  validateRequest(GetResearchTokenomics.getSingleResearchTokenomicsSchema, "params"),
+  GetSingleResearchTokenomicsController.getSingleResearchTokenomics
 );
 
 

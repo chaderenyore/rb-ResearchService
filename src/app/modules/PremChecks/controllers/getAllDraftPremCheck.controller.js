@@ -1,4 +1,4 @@
-const axios = require("axios").default;
+const { RESPONSE } = require("../../../../_constants/response");
 const { HTTP } = require("../../../../_constants/http");
 const createError = require("../../../../_helpers/createError");
 const { createResponse } = require("../../../../_helpers/createResponse");
@@ -13,7 +13,7 @@ exports.getDraftPremCheck = async (req, res, next) => {
       req.query.page,
       { researcher_id: req.user.user_id, is_draft: true }
     );
-    if (allDraftPremCheck.data.length === 0) {
+    if (allDraftPremCheck && allDraftPremCheck.data.length === 0) {
       return next(
         createError(HTTP.OK, [
           {

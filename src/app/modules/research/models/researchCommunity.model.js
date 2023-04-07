@@ -10,6 +10,7 @@ const schema = mongoose.Schema(
     project_expectation: {type: String},
     final_comments: {type: String},
     is_draft: {type: Boolean},
+    is_saved: {type: Boolean},
   },
   {
     timestamps: { createdAt: "created_at", updatedAt: "updated_at" },

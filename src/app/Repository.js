@@ -44,6 +44,12 @@ class Repository {
     );
   }
 
+  deleteOne (condition) {
+    return this.Model.deleteOne (
+      condition,
+    );
+  }
+
   update (condition, update) {
     return this.Model.findOneAndUpdate (condition, update, {
       new: true,

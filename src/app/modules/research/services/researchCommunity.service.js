@@ -27,6 +27,10 @@ class ResearchCommunityService {
     return this.ResearchCommunityRepository.deleteMany (condition)
 
   }
+  async deleteOne (condition) {
+    return this.ResearchCommunityRepository.deleteOne (condition)
+
+  }
 
 
   async all (limit, page, data) {

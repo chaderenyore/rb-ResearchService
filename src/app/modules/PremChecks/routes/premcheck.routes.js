@@ -4,11 +4,11 @@ const validateRequest = require("../../../middlewares/vallidate");
 
 
 // vallidators
-const CheckACcountAgeSchema = require('../../../vallidators/premCheck/getAccountAge.validator');
-const CheckPremResultsSchema = require('../../../vallidators/premCheck/premCheck.vallidator');
-const GetAllPremCheckDrafts = require("../../../vallidators/premCheck/getDraftsPremCheck.validator");
-const SavePremCheckDarfts = require("../../../vallidators/premCheck/saveDraft.vallidator");
-const GetResearchPremCheck = require("../../../vallidators/premCheck/getSingleResearchpremCheck.validator");
+const CheckACcountAgeSchema = require('../../../vallidators/premcheck/getAccountAge.validator');
+const CheckPremResultsSchema = require('../../../vallidators/premcheck/premCheck.vallidator');
+const GetAllPremCheckDrafts = require("../../../vallidators/premcheck/getDraftsPremCheck.validator");
+const SavePremCheckDarfts = require("../../../vallidators/premcheck/saveDraft.vallidator");
+const GetResearchPremCheck = require("../../../vallidators/premcheck/getSingleResearchpremCheck.validator");
 
 
 
@@ -23,14 +23,14 @@ const GetResearchPremCheckController = require('../controllers/getResearchPremCh
 const router = Router();
 
 router.post(
-  '/accont-age',
+  '/account-age',
   authorize(['user','org']),
   validateRequest(CheckACcountAgeSchema.getAccountSchema, 'query'),
   CheckAccountAgeController.checkAccountAge
 );
 
 router.post(
-  '/premcheck',
+  '/',
   authorize(['user','org']),
   validateRequest(CheckPremResultsSchema.premCheckSchema, "body"),
   CheckPremResultsController.premCheck

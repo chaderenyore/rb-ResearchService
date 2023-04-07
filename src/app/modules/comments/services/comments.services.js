@@ -22,7 +22,7 @@ class CommentService {
   }
 
   async deleteAll(condition) {
-    return this.CommentRepository.deleteMany(condition);
+    return this.CommentRepository.delete(condition);
   }
   async deletOne(condition) {
     return this.CommentRepository.delete(condition);

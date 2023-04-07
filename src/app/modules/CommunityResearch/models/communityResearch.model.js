@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const schema = mongoose.Schema(
   {
     researcher_id: { type: String},
+    poster_id:{type: String},
     researcher_image_url: { type: String},
     original_research_id: {type: String},
     researcher_username: {type: String},
@@ -30,9 +31,10 @@ const schema = mongoose.Schema(
     research_price: {type: String},
     current_price: {type: String},
     is_visible: {type :Boolean},
+    original_post_isVisible: {type: Boolean, default: true},
     is_sponsored: {type :Boolean},
     is_shared:{type: Boolean},
-    tags: {type: Array},
+    tags: {type: [String]},
     number_of_downloads: {type: Number, default: 0},
     type: {type: String}
   },

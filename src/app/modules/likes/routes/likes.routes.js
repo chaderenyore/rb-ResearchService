@@ -21,7 +21,7 @@ const UnlikeACommentController = require("../controllers/comments/unlike.control
 const router = Router();
 
 router.post(
-  "/like-research",
+  "/research",
   authorize(['user','org']),
   validateRequest(LikeAResearchSchema.likeAResearchQuerySchema, "query"),
   LikeAResearchController.likeARsearch
@@ -35,14 +35,14 @@ router.post(
 );
 
 router.get(
-    "/research-likes/all",
+    "/research-likes",
     authorize(['user','org']),
     validateRequest( GetAResearchLikes.getAllResearchLikesQuerySchema, "query"),
     GetAllResearchLikesController.getAResearchLikes
   );
 
 router.post(
-  "/like-comment",
+  "/comment",
   authorize(['user','org']),
   validateRequest(LikeAComment.likeACommentQuerySchema, "query"),
   LikeACommentController.likeAComment
@@ -55,8 +55,8 @@ router.post(
   UnlikeACommentController.unLikeAComment
 );
 
-router.post(
-    "/comments-likes/all",
+router.get(
+    "/comment-likes",
     authorize(['user','org']),
     validateRequest( GetACommentsLikes.getCommentsLikesQuerySchema, "query"),
     GetAllCOmmentLikesController.getACommentLikes

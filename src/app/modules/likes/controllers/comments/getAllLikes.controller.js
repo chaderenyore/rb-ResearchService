@@ -11,7 +11,7 @@ exports.getACommentLikes = async (req, res, next) => {
     const dataToQuery = {
         comment_id: req.query.comment_id
     } 
-    const Likes = await new CommentLikeService().GetAllRecords(req.query.limit, req.query.page, dataToQuery);
+    const Likes = await new CommentLikeService().all(req.query.limit, req.query.page, dataToQuery);
     if (Likes.data.length === 0) {
       return next(
         createError(HTTP.OK, [

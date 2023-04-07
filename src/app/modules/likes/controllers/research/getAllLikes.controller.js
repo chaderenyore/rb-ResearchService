@@ -9,9 +9,9 @@ exports.getAResearchLikes = async (req, res, next) => {
   try {
     // query data
     const dataToQuery = {
-        post_id: req.query.original_research_id
+        research_id: req.query.original_research_id
     } 
-    const likes = await new ResearchLikeService().GetAllRecords(req.query.limit, req.query.page, dataToQuery);
+    const likes = await new ResearchLikeService().all(req.query.limit, req.query.page, dataToQuery);
     if (likes.data.length === 0) {
       return next(
         createError(HTTP.OK, [
@@ -25,7 +25,7 @@ exports.getAResearchLikes = async (req, res, next) => {
         ])
       );
     } else {
-        return createResponse("Rsearch Likes Retreived", likes)(res, HTTP.OK);
+        return createResponse("Research Likes Retreived", likes)(res, HTTP.OK);
       } 
   } catch (err) {
     logger.error(err);

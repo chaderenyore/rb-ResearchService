@@ -4,6 +4,5 @@ Joi.objectId = require("joi-objectid")(Joi);
 
 exports.getAllDraftsPremCheckSchema = Joi.object({
     page: Joi.number().positive().optional(),
-    limit: Joi.number().positive().optional(),
-    researcher_id: Joi.objectId().required()
+    limit: Joi.number().positive().optional()
   });

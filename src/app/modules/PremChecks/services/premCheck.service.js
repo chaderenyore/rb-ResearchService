@@ -24,7 +24,9 @@ class PremCheckService {
   async deleteAll(condition) {
     return this.PremCheckRepository.deleteMany(condition);
   }
-
+  async deleteOne(condition) {
+    return this.PremCheckRepository.deleteOne(condition);
+  }
   async all(limit, page, data) {
     return this.PremCheckRepository.all(limit, page, data);
   }

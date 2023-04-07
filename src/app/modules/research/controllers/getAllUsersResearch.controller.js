@@ -1,5 +1,6 @@
 const axios = require("axios").default;
 const { HTTP } = require("../../../../_constants/http");
+const { RESPONSE } = require("../../../../_constants/response");
 const createError = require("../../../../_helpers/createError");
 const { createResponse } = require("../../../../_helpers/createResponse");
 const logger = require("../../../../../logger.conf");
@@ -8,10 +9,22 @@ const KEYS = require("../../../../_config/keys");
 
 exports.getUsersResearch = async (req, res, next) => {
   try {
+    let querydata;
+    // check for type to be fetched
+    if(req.query.timeline === "true"){
+      querydata = {
+         poster_id: req.user.user_id
+      }
+    } 
+    if(req.query.myresearch === "true"){
+      querydata = {
+        researcher_id: req.user.user_id
+     }
+    }
     const allUsersResearch = await new ResearchService().all(
       req.query.limit,
       req.query.page,
-      { poster_id: req.user.user_id}
+      querydata
     );
     if (allUsersResearch.data.length === 0) {
       return next(

@@ -8,11 +8,13 @@ const schema = mongoose.Schema(
     twitter_createdAt: { type: Date},
     twitter_account_age: {type: String},
     date_of_project_launch: {type: String},
-    project_status: {type: String, enum: ['active', 'in_active', 'not_sure']},
+    project_status: {type: String, enum: ['yes', 'not_yet', 'on_test_net', 'only_staking_for_now','fund_raising']},
     last_tweet_date: {type: Date},
     is_social_media_active:{type: Boolean},
     is_draft: {type: Boolean},
-    tags: {type: Array}
+    is_dependent:{type: String},
+    is_saved: {type: Boolean},
+    tags: {type: [String]}
   },
   {
     timestamps: { createdAt: "created_at", updatedAt: "updated_at" },

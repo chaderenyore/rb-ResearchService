@@ -1,4 +1,5 @@
 const { HTTP } = require("../../../../_constants/http");
+const { RESPONSE } = require("../../../../_constants/response");
 const createError = require("../../../../_helpers/createError");
 const { createResponse } = require("../../../../_helpers/createResponse");
 const logger = require("../../../../../logger.conf");
@@ -12,57 +13,124 @@ const CommunityResearchService = require("../../CommunityResearch/services/commu
 
 exports.launchResearch = async (req, res, next) => {
   try {
-    // check if research exists
-    const researchExist = await new ResearchService().findAResearch({
-      _id: req.query.research_id,
+    // check if research has been launched
+    const researchLaunched = await new ResearchService().findAResearch({
+      _id: req.query.research_id, is_launched: true, researcher_id: req.user.user_id
     });
-    if (researchExist) {
-      // search for all research dependents
-      const researchPremChecks = await new PremCheckService().update(
-        {
-          research_id: req.query.research_id,
-        },
-        {is_saved:true}
-      );
-      const researchTokenomics = await new TokenomicsService().update({
-        research_id: req.query.research_id,
-      },
-      {is_saved:true, is_draft:false});
-      const researchAdoptionAndRecognition =
-        await new AdoptionAndRecognitionService().update({
-          research_id: req.query.research_id,
-        },
-        {is_saved:true, is_draft:false});
-      const researchComparison = await new ResearchComparisonService().update({
-        research_id: req.query.research_id,
-      }, {is_saved:true, is_draft:false});
-      const researchTeamSpirit = await new ResearchCommunityAndSpiritService().update({
-        research_id: req.query.research_id,
-      }, {is_saved:true, is_draft:false});
-      // create community copy
-      const DataToCommunityResearch = {
-        original_research_id: researchExist._id,
-        poster_id: req.user.user_id,
-        ...researchExist
-      }
-      const communityResearch = await new CommunityResearchService().create(DataToCommunityResearch);
-      return createResponse(`Research Launched`, communityResearch)(
-        res,
-        HTTP.OK
-      );
-    } else {
+    console.log(researchLaunched);
+    if(researchLaunched){
       return next(
         createError(HTTP.OK, [
           {
             status: RESPONSE.SUCCESS,
-            message: "Research Does Not Exist",
+            message: "This Research Has Been Launched By You",
             statusCode: HTTP.OK,
-            data: {},
+            data: null,
             code: HTTP.OK,
           },
         ])
       );
+    } else{
+        // check if research exists
+        const researchExist = await new ResearchService().findAResearch({
+          _id: req.query.research_id, researcher_id: req.user.user_id 
+        });
+        if (researchExist) {
+          // search for all research dependents
+          const researchPremChecks = await new PremCheckService().update(
+            {
+              research_id: req.query.research_id,
+            },
+            { is_saved: true }
+          );
+          const researchTokenomics = await new TokenomicsService().update(
+            {
+              research_id: req.query.research_id,
+            },
+            { is_saved: true, is_draft: false }
+          );
+          const researchAdoptionAndRecognition =
+            await new AdoptionAndRecognitionService().update(
+              {
+                research_id: req.query.research_id,
+              },
+              { is_saved: true, is_draft: false }
+            );
+          const researchComparison = await new ResearchComparisonService().update(
+            {
+              research_id: req.query.research_id,
+            },
+            { is_saved: true, is_draft: false }
+          );
+          const researchTeamSpirit =
+            await new ResearchCommunityAndSpiritService().update(
+              {
+                research_id: req.query.research_id,
+              },
+              { is_saved: true, is_draft: false }
+            );
+          // check if research is broken or full
+          if (
+            !researchTeamSpirit ||
+            !researchComparison ||
+            !researchAdoptionAndRecognition ||
+            !researchTokenomics ||
+            !researchPremChecks
+          ) {
+            return next(
+              createError(HTTP.OK, [
+                {
+                  status: RESPONSE.SUCCESS,
+                  message: "This Was Not Fully Researched, Hence Broken",
+                  statusCode: HTTP.OK,
+                  data: {},
+                  code: HTTP.OK,
+                },
+              ])
+            );
+          } else {
+            // update base research
+            const DataToResearch = {
+              original_research_id: researchExist._id,
+              poster_id: req.user.user_id,
+              is_launched:true,
+              is_draft: false,
+              is_visible: req.query.is_visible
+            };
+            const updatedResearch = await new ResearchService().update({_id: researchExist._id},
+              DataToResearch
+            );
+            // create community copy
+            const DataToCommunityResearch = {
+              is_visible: req.query.is_visible,
+              original_research_id: researchExist._id,
+              poster_id: req.user.user_id,
+              tags: researchExist.tags,
+              ...researchExist,
+            };
+            const communityResearch = await new CommunityResearchService().create(
+              DataToCommunityResearch
+            );
+            return createResponse(`Research Launched`, communityResearch)(
+              res,
+              HTTP.OK
+            );
+          }
+        } else {
+          return next(
+            createError(HTTP.OK, [
+              {
+                status: RESPONSE.SUCCESS,
+                message: "Research Does Not Exist or UnAuthorised",
+                statusCode: HTTP.OK,
+                data: {},
+                code: HTTP.OK,
+              },
+            ])
+          );
+        }
     }
+
   } catch (err) {
     console.error(err);
     return next(createError.InternalServerError(err));

@@ -8,30 +8,81 @@ const KEYS = require("../../../../_config/keys");
 
 exports.getLeadersResearch = async (req, res, next) => {
   try {
-    // pass the user id to the follwoing model
-    // for every entry retrieved search for a research 
-    const allUsersResearch = await new ResearchService().all(
-      req.query.limit,
-      req.query.page,
-      { poster_id: req.user.user_id}
+    let followingIdsArray = [];
+    let follwingResearches = [];
+    // pass the user id to the following from user sevice
+    const DataToUserService = {};
+    const followingData = await axios.post(
+      `${KEYS.USER_SERVICE_URI}/userss/v1/following-all?platform=web&limit=${req.query.limit}&page=${req.query.page}`,
+      Data,
+      {
+        headers: {
+          Authorization: `Bearer ${req.token}`,
+        },
+      }
     );
-    if (allUsersResearch.data.length === 0) {
+    if (user && user.data && user.data.code === 200) {
+      // saved ids of evry entry retrieved
+      for (let i = 0; i < user.data.data.data.length; i++) {
+        followingIdsArray.push(user.data.data.data[i].following_id);
+      }
+      if (followingIdsArray.lenth === 0) {
+        return next(
+          createError(HTTP.OK, [
+            {
+              status: RESPONSE.SUCCESS,
+              message: "You Are Not Folloiwng Any User Yet",
+              statusCode: HTTP.OK,
+              data: {},
+              code: HTTP.OK,
+            },
+          ])
+        );
+      } else {
+        // search for research created by the following i reasearch array that are visible
+        console.log("FOLLOWING IDS  ============= ", followingIdsArray);
+        for (let i = 0; i < followingIdsArray.length; i++) {
+          const followingResearch = await new ResearchService().findAResearch({
+            is_shared: false,
+            is_visible: true,
+            researcher_id: followingIdsArray[i],
+          });
+          follwingResearches.push(followingResearch);
+        }
+        console.log("FOllowingResearhes ============ ", follwingResearches);
+        if (follwingResearches.length === 0) {
+          return next(
+            createError(HTTP.OK, [
+              {
+                status: RESPONSE.SUCCESS,
+                message: "No Research Found For Your Following",
+                statusCode: HTTP.OK,
+                data: {},
+                code: HTTP.OK,
+              },
+            ])
+          );
+        } else {
+          // add pagination to retrn data
+          follwingResearches.push(user.data.data.pagination);
+          return createResponse(
+            `All Leaders Research Retrieved`,
+            follwingResearches
+          )(res, HTTP.OK);
+        }
+      }
+    } else {
       return next(
         createError(HTTP.OK, [
           {
             status: RESPONSE.SUCCESS,
-            message: "No Research Found",
+            message: "Following Dtailed Not Retrieved, We Know We are on it",
             statusCode: HTTP.OK,
             data: {},
             code: HTTP.OK,
           },
         ])
       );
-    } else {
-      return createResponse(
-        `All Leaders Research Retrieved`,
-        allUsersResearch
-      )(res, HTTP.OK);
     }
   } catch (err) {
     console.error(err);

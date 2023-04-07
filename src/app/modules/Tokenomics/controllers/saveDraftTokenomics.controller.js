@@ -14,7 +14,7 @@ exports.saveDraftTokenomics = async (req, res, next) => {
       if (research) {
         // create tokenomics entry
         const dataToTokenomics = {
-          research_id: research_id,
+          research_id: req.body.research_id,
           is_draft: true,
           ...req.body,
         };

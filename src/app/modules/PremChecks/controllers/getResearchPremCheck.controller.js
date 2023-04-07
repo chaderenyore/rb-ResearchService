@@ -9,14 +9,14 @@ const KEYS = require("../../../../_config/keys");
 exports.getSingleResearchPremCheck = async (req, res, next) => {
   try {
     const singlePremCheck = await new PremCheckService().findOne(
-      { research_id: req.body.research_id }
+      { research_id: req.params.research_id, researcher_id: req.user.user_id }
     );
     if (!singlePremCheck) {
       return next(
         createError(HTTP.OK, [
           {
             status: RESPONSE.SUCCESS,
-            message: "No PremCheck Found",
+            message: "No PremCheck Found/UnAUthorized",
             statusCode: HTTP.OK,
             data: {},
             code: HTTP.OK,
