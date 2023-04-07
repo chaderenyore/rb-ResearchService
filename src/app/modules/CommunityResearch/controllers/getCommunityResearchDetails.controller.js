@@ -44,6 +44,7 @@ exports.getResearchDetails = async (req, res, next) => {
         Adoption_And_Recognition: researchAdoptionAndRecognition || dataMessage,
         Community_And_TeamSpirit: researchCommunityAndTeamSpirit || dataMessage,
         Comparison: researchComparison || dataMessage,
+        BaseResearch: researchExist || dataMessage,
         Tags: researchExist.tags,
       };
       //   update Resaerch Clicks
