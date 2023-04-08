@@ -3,7 +3,7 @@ const { RESPONSE } = require("../../../../_constants/response");
 const createError = require("../../../../_helpers/createError");
 const { createResponse } = require("../../../../_helpers/createResponse");
 const ResearchService = require("../services/research.services");
-const CommunityResearchce = require("../../communityresearch/services/communityResearch.services");
+const CommunityResearch = require("../../communityresearchmodule/services/communityResearch.services");
 const logger = require("../../../../../logger.conf");
 
 exports.changeVisibility = async (req, res, next) => {
@@ -61,7 +61,7 @@ exports.changeVisibility = async (req, res, next) => {
 
       }
       // update Posts in community, posts, blocked, tweets, reposts
-  const updatedCommunityResearchPost = await new CommunityResearchce().update(
+  const updatedCommunityResearchPost = await new CommunityResearch().update(
     { original_research_id: req.body.original_research_id, poster_id: req.user.user_id },
     { original_post_isVisible: visibilityState }
   );

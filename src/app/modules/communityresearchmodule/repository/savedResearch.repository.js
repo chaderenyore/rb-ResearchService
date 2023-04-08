@@ -1,5 +1,5 @@
 const Repository = require("../../../Repository");
-const SavedResearch  = require("../../communityresearch/models/savedResearch.model");
+const SavedResearch  = require("../../communityresearchmodule/models/savedResearch.model");
 
 class SavedResearchRepository extends Repository {
     constructor() {

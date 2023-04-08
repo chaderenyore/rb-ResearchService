@@ -3,8 +3,8 @@ const { RESPONSE } = require("../../../../_constants/response");
 const createError = require("../../../../_helpers/createError");
 const { createResponse } = require("../../../../_helpers/createResponse");
 const ResearchService = require("../../research/services/research.services");
-const CommunityResearchService = require("../../communityresearch/services/communityResearch.services");
-const SavedResearchService = require("../../communityresearch/services/savedResearch.services");
+const CommunityResearchService = require("../../communityresearchmodule/services/communityResearch.services");
+const SavedResearchService = require("../../communityresearchmodule/services/savedResearch.services");
 const CommentService = require('../services/comments.services');
 
 
