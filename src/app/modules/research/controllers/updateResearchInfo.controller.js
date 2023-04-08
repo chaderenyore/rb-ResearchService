@@ -3,8 +3,8 @@ const { RESPONSE } = require("../../../../_constants/response");
 const createError = require("../../../../_helpers/createError");
 const { createResponse } = require("../../../../_helpers/createResponse");
 const ResearchService = require("../services/research.services");
-const SavedResearchService = require("../../CommunityResearch/services/savedResearch.services");
-const CommunityResearchService = require("../../CommunityResearch/services/communityResearch.services");
+const SavedResearchService = require("../../communityresearch/services/savedResearch.services");
+const CommunityResearchService = require("../../communityresearch/services/communityResearch.services");
 const logger = require("../../../../../logger.conf");
 
 exports.updateResearchInfo = async (req, res, next) => {

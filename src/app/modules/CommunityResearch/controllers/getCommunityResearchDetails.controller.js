@@ -3,12 +3,12 @@ const { RESPONSE } = require("../../../../_constants/response");
 const createError = require("../../../../_helpers/createError");
 const { createResponse } = require("../../../../_helpers/createResponse");
 const logger = require("../../../../../logger.conf");
-const PremCheckService = require("../../PremChecks/services/premCheck.service");
-const TokenomicsService = require("../../Tokenomics/services/tokenomics.service");
-const AdoptionAndRecognitionService = require("../../Research/services/researchAdoption.service");
-const ResearchCommunityANdSpiritService = require("../../Research/services/researchCommunity.service");
-const ResearchComparisonService = require("../../Research/services/comparison.services");
-const ResearchService = require("../../Research/services/research.services");
+const PremCheckService = require("../../premchecks/services/premCheck.service");
+const TokenomicsService = require("../../tokenomics/services/tokenomics.service");
+const AdoptionAndRecognitionService = require("../../research/services/researchAdoption.service");
+const ResearchCommunityANdSpiritService = require("../../research/services/researchCommunity.service");
+const ResearchComparisonService = require("../../research/services/comparison.services");
+const ResearchService = require("../../research/services/research.services");
 
 exports.getResearchDetails = async (req, res, next) => {
   try {

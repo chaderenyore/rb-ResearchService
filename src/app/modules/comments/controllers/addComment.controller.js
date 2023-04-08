@@ -4,9 +4,9 @@ const { HTTP } = require('../../../../_constants/http');
 const { RESPONSE } = require('../../../../_constants/response');
 const createError = require('../../../../_helpers/createError');
 const { createResponse } = require('../../../../_helpers/createResponse');
-const ResearchService = require("../../Research/services/research.services");
-const CommunityResearchService = require("../../CommunityResearch/services/communityResearch.services");
-const SavedResearchService = require("../../CommunityResearch/services/savedResearch.services");
+const ResearchService = require("../../research/services/research.services");
+const CommunityResearchService = require("../../communityresearch/services/communityResearch.services");
+const SavedResearchService = require("../../communityresearch/services/savedResearch.services");
 const CommentService = require('../services/comments.services');
 const KEYS = require("../../../../_config/keys");
 

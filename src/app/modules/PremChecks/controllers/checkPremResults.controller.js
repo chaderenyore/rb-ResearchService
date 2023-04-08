@@ -7,7 +7,7 @@ const DoPremCheck =
   require("../../../../_helpers/research/doPremCheck").doPremCheck;
 const UpdateResearchVerditScore =
   require("../../../../_helpers/research/updateVerditScore").updateVerditSore;
-const ResearchService = require("../../Research/services/research.services");
+const ResearchService = require("../../research/services/research.services");
 const logger = require("../../../../../logger.conf");
 const PremCheckService = require("../services/premCheck.service");
 const KEYS = require("../../../../_config/keys");

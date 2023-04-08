@@ -3,7 +3,7 @@ const { HTTP } = require("../../../../_constants/http");
 const { RESPONSE } = require("../../../../_constants/response");
 const createError = require("../../../../_helpers/createError");
 const { createResponse } = require("../../../../_helpers/createResponse");
-const ResearchService = require("../../Research/services/research.services");
+const ResearchService = require("../../research/services/research.services");
 const CommentService = require("../services/comments.services");
 const ReplyService = require("../services/reply.service");
 

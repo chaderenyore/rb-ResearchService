@@ -3,13 +3,13 @@ const { RESPONSE } = require("../../../../_constants/response");
 const createError = require("../../../../_helpers/createError");
 const { createResponse } = require("../../../../_helpers/createResponse");
 const logger = require("../../../../../logger.conf");
-const PremCheckService = require("../../PremChecks/services/premCheck.service");
-const TokenomicsService = require("../../Tokenomics/services/tokenomics.service");
+const PremCheckService = require("../../premchecks/services/premCheck.service");
+const TokenomicsService = require("../../tokenomics/services/tokenomics.service");
 const AdoptionAndRecognitionService = require("../services/researchAdoption.service");
 const ResearchCommunityAndSpiritService = require("../services/researchCommunity.service");
 const ResearchComparisonService = require("../services/comparison.services");
 const ResearchService = require("../services/research.services");
-const CommunityResearchService = require("../../CommunityResearch/services/communityResearch.services");
+const CommunityResearchService = require("../../communityresearch/services/communityResearch.services");
 
 exports.deleteResearch = async (req, res, next) => {
   try {

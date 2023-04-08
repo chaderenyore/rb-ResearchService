@@ -1,12 +1,12 @@
 const { Router } = require("express");
 // const Admin = require("./modules/AdminControl/routes/adminControl.routes")
-const PremCheck = require("./modules/PremChecks/routes/premcheck.routes");
+const PremCheck = require("./modules/premchecks/routes/premcheck.routes");
 
-const Tokenomics = require("./modules/Tokenomics/routes");
-const Research = require("./modules/research/routes/Research.routes");
-const CommunityResearch = require("./modules/CommunityResearch/routes");
-const Likes = require("./modules/Likes/routes/likes.routes");
-const Comments = require("./modules/Comments/routes/comments.routes");
+const Tokenomics = require("./modules/tokenomics/routes");
+const Research = require("./modules/research/routes/research.routes");
+const CommunityResearch = require("./modules/communityresearch/routes");
+const Likes = require("./modules/likes/routes/likes.routes");
+const Comments = require("./modules/comments/routes/comments.routes");
 
 
 
