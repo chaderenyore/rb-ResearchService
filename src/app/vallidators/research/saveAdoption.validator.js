@@ -20,7 +20,7 @@ exports.saveAdoptionAndRecognitionSchema = Joi.object().keys({
       })
     )
     .optional(),
-  marketing_stage: Joi.string().optional(),
+  marketing_stage: Joi.string().valid('on_going', 'just_started', 'starting_soon', 'paused', 'not_yet').required(),
 });
 
 exports.saveAdoptionAndRecQuerySchema = Joi.object().keys({

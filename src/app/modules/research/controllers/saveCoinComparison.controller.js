@@ -5,7 +5,8 @@ const { createResponse } = require("../../../../_helpers/createResponse");
 const logger = require("../../../../../logger.conf");
 const ResearchService = require("../services/research.services");
 const ResearchComparisonService = require("../services/comparison.services");
-
+const UpdateResearchVerditScore =
+  require("../../../../_helpers/research/updateVerditScore").updateVerditSore;
 exports.saveResearchComparisonInfo = async (req, res, next) => {
   try {
     // check if comparison exist for this research
@@ -94,6 +95,13 @@ exports.saveResearchComparisonInfo = async (req, res, next) => {
               },
               updateData
             );
+            // save current verdit
+            const resultData = { type: "comparison", grade: req.body.main_coin_info.average_return };
+            const CummulateVerditScore = await UpdateResearchVerditScore(
+              req.body.research_id,
+              resultData
+            );
+            console.log("RESEARCH UPDATED ======= ", CummulateVerditScore);
             return createResponse(
               `Coin Comparison Data Saved`,
               newRsearchComparisonData

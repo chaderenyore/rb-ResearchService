@@ -17,6 +17,8 @@ const UpdateResearchInfoSchema = require("../../../vallidators/research/updaTeRe
 const GetAllSuggestedSchema = require("../../../vallidators/research/getSuggestedResearch.validator");
 const DeleteResearchSchema = require("../../../vallidators/research/deleteResearch.validator");
 const ResearchByIdSchema = require("../../../vallidators/research/getSingleResearch.validator");
+const ComputeFinalSchema = require("../../../vallidators/research/computeFinalVerdit.controller");
+
 
 
 
@@ -35,6 +37,8 @@ const UpdateResearchInfoController = require('../controllers/updateResearchInfo.
 const FetchSuggetedResearchController = require('../controllers/getSugestedResearch.controller');
 const DeleteResearchController = require('../controllers/deleteResearch.controller');
 const ResearchByIdController = require('../controllers/getSingleResearchByid.controller');
+const ComputeFinalController = require('../controllers/computeFinalVerdit.controller');
+
 
 
 
@@ -133,6 +137,13 @@ router.get(
   authorize(['user','org']),
   validateRequest(ResearchByIdSchema.singleResearchParamsSchema, "params"),
   ResearchByIdController.getSingleResearchById
+);
+
+router.post(
+  '/final-verdit/:research_id',
+  authorize(['user','org']),
+  validateRequest(ComputeFinalSchema.computeFinalVerditSchema, "params"),
+  ComputeFinalController.computeFinalVerdit
 );
 
 
