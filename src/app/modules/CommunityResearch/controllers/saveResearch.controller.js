@@ -4,7 +4,7 @@ const createError = require("../../../../_helpers/createError");
 const { createResponse } = require("../../../../_helpers/createResponse");
 const logger = require("../../../../../logger.conf");
 const MySavedResearchService = require("../services/savedResearch.services");
-const ResearchService = require("../../Research/services/research.services");
+const ResearchService = require("../../research/services/research.services");
 
 exports.saveResearch = async (req, res, next) => {
   try {

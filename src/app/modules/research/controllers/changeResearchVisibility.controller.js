@@ -3,7 +3,7 @@ const { RESPONSE } = require("../../../../_constants/response");
 const createError = require("../../../../_helpers/createError");
 const { createResponse } = require("../../../../_helpers/createResponse");
 const ResearchService = require("../services/research.services");
-const CommunityResearchce = require("../../CommunityResearch/services/communityResearch.services");
+const CommunityResearchce = require("../../communityresearch/services/communityResearch.services");
 const logger = require("../../../../../logger.conf");
 
 exports.changeVisibility = async (req, res, next) => {

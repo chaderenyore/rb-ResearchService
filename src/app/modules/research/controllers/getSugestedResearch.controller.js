@@ -4,7 +4,7 @@ const createError = require("../../../../_helpers/createError");
 const { createResponse } = require("../../../../_helpers/createResponse");
 const logger = require("../../../../../logger.conf");
 const ResearchService = require("../services/research.services");
-const UserLikedResearchService = require("../../Likes/services/userLikedResearch.service");
+const UserLikedResearchService = require("../../likes/services/userLikedResearch.service");
 
 const KEYS = require("../../../../_config/keys");
 
