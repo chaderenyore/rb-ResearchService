@@ -34,12 +34,12 @@ exports.doPremCheck = async (coinData) => {
     // check for points and return acoridngly
     if (totalPoint >= 60) {
       return {
-        message: "Success",
+        message: "pass",
         data: totalPoint,
       };
     } else {
       return {
-        message: "Failure",
+        message: "fail",
         data: totalPoint,
       };
     }

@@ -5,6 +5,8 @@ const createError = require("../../../../_helpers/createError");
 const { createResponse } = require("../../../../_helpers/createResponse");
 const DoPremCheck =
   require("../../../../_helpers/research/doPremCheck").doPremCheck;
+const UpdateResearchVerditScore =
+  require("../../../../_helpers/research/updateVerditScore").updateVerditSore;
 const ResearchService = require("../../Research/services/research.services");
 const logger = require("../../../../../logger.conf");
 const PremCheckService = require("../services/premCheck.service");
@@ -40,9 +42,9 @@ exports.premCheck = async (req, res, next) => {
       const premCheckResults = {
         research_id: newResearch._id,
         premCheckResult: {
-          message,
-          data:{
-            totalPoint: data
+          verdit: message,
+          data: {
+            totalPoint: data,
           },
         },
       };
@@ -50,27 +52,34 @@ exports.premCheck = async (req, res, next) => {
     } else {
       if (was_draft === true) {
         // search for draft Premcheck
-        const draftPrmeCheck = await new PremCheckService().update({
-          research_id: req.body.research_id,
-        },{is_draft:false,...req.body});
+        const draftPrmeCheck = await new PremCheckService().update(
+          {
+            research_id: req.body.research_id,
+          },
+          { is_draft: false, ...req.body }
+        );
         // update info and do prem check
         if (draftPrmeCheck) {
           // get Prem check results from criteria
           const coinData = {
-            twitter_createdAt: draftPrmeCheck.twitter_createdAt || twitter_createdAt,
-            twitter_account_age: draftPrmeCheck.twitter_account_age || twitter_account_age,
-            date_of_project_launch: draftPrmeCheck.date_of_project_launch || date_of_project_launch,
+            twitter_createdAt:
+              draftPrmeCheck.twitter_createdAt || twitter_createdAt,
+            twitter_account_age:
+              draftPrmeCheck.twitter_account_age || twitter_account_age,
+            date_of_project_launch:
+              draftPrmeCheck.date_of_project_launch || date_of_project_launch,
             project_status: draftPrmeCheck.project_status || project_status,
             last_tweet_date: draftPrmeCheck.last_tweet_date || last_tweet_date,
-            is_social_media_active: draftPrmeCheck.is_social_media_active || is_social_media_active,
+            is_social_media_active:
+              draftPrmeCheck.is_social_media_active || is_social_media_active,
           };
           const { message, data } = await DoPremCheck(coinData);
           const premCheckResults = {
             research_id: newResearch._id,
             premCheckResult: {
-              message,
-              data:{
-                totalPoint: data
+              verdit: message,
+              data: {
+                totalPoint: data,
               },
             },
           };
@@ -116,6 +125,7 @@ exports.premCheck = async (req, res, next) => {
               ? user.data.data.image
               : "",
             is_draft: false,
+            is_launched: false,
             coin_image,
             coin_name,
             ...req.body,
@@ -154,12 +164,19 @@ exports.premCheck = async (req, res, next) => {
             const premCheckResults = {
               research_id: newResearch._id,
               premCheckResult: {
-                message,
-                data:{
-                  totalPoint: data
+                verdit: message,
+                data: {
+                  totalPoint: data,
                 },
               },
             };
+            // send current verdit to research service
+            const resultData = { type: "prem", grade: message };
+            const CummulateVerditScore = await UpdateResearchVerditScore(
+              newResearch._id,
+              resultData
+            );
+            console.log("RESEARCH UPDATED ======= ", CummulateVerditScore);
             return createResponse(`${message}`, premCheckResults)(res, HTTP.OK);
           }
         }

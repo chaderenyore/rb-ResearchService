@@ -5,6 +5,8 @@ const { createResponse } = require("../../../../_helpers/createResponse");
 const logger = require("../../../../../logger.conf");
 const ResearchService = require("../services/research.services");
 const AdoptionRecognitionService = require("../services/researchAdoption.service");
+const UpdateResearchVerditScore =
+  require("../../../../_helpers/research/updateVerditScore").updateVerditSore;
 
 exports.saveAdoptionAndRecognitionInfo = async (req, res, next) => {
   try {
@@ -50,6 +52,13 @@ exports.saveAdoptionAndRecognitionInfo = async (req, res, next) => {
                 { research_id: research_id },
                 { is_draft: false, ...req.body }
               );
+          // save current verdit
+            const resultData = { type: "aandd", info: {has_known_partners: req.body.has_known_partners, marketing_stage: req.body.marketing_stage, media_link: req.body.partners_info.link_to_partnership_anouncement, partner_link: req.body.media_links.link } };
+            const CummulateVerditScore = await UpdateResearchVerditScore(
+              req.body.research_id,
+              resultData
+            );
+            console.log("RESEARCH UPDATED ======= ", CummulateVerditScore);
             return createResponse(`Data Saved`, updatedAdoptiuon)(res, HTTP.OK);
           }
         } else {
@@ -66,6 +75,13 @@ exports.saveAdoptionAndRecognitionInfo = async (req, res, next) => {
             };
             const newAdoptionRecognitionData =
               await new AdoptionRecognitionService().create(dataToAdoption);
+                        // save current verdit
+            const resultData = { type: "aandd", info: {has_known_partners: req.body.has_known_partners, marketing_stage: req.body.marketing_stage, media_link: req.body.partners_info.link_to_partnership_anouncement, partner_link: req.body.media_links.link } };
+            const CummulateVerditScore = await UpdateResearchVerditScore(
+              req.body.research_id,
+              resultData
+            );
+            console.log("RESEARCH UPDATED ======= ", CummulateVerditScore);
             return createResponse(`Data Saved`, newAdoptionRecognitionData)(
               res,
               HTTP.OK

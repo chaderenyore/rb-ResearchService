@@ -125,25 +125,25 @@ exports.computeTokenomicsHealth = async (coinData) => {
       } else if (totalPoint === 50) {
         return {
           error: false,
-          message: "Fair",
+          message: "fair",
           data: totalPoint,
         };
       } else if (totalPoint > 50 && totalPoint < 60) {
         return {
           error: false,
-          message: "Fair",
+          message: "fair",
           data: totalPoint,
         };
       } else if (totalPoint >= 60 && totalPoint < 70) {
         return {
           error: false,
-          message: "Good",
+          message: "good",
           data: totalPoint,
         };
       } else if (totalPoint > 70) {
         return {
           error: false,
-          message: "Excellent",
+          message: "excellent",
           data: totalPoint,
         };
       }

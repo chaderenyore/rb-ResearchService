@@ -5,6 +5,8 @@ const { createResponse } = require("../../../../_helpers/createResponse");
 const logger = require("../../../../../logger.conf");
 const ResearchService = require("../services/research.services");
 const CommunityDetailsService = require("../services/researchCommunity.service");
+const UpdateResearchVerditScore =
+  require("../../../../_helpers/research/updateVerditScore").updateVerditSore;
 
 exports.saveCommunitySpiritInfo = async (req, res, next) => {
   try {
@@ -47,9 +49,16 @@ exports.saveCommunitySpiritInfo = async (req, res, next) => {
             // update community details
             const updatedCommunityDetails =
               await new CommunityDetailsService().update(
-                { research_id: research_id },
+                { research_id: req.body.research_id },
                 { ...req.body }
               );
+          // save current verdit
+          const resultData = { type: "team", info: {team_spirit: req.body.team_spirit, community_spirit: req.body.community_spirit } };
+          const CummulateVerditScore = await UpdateResearchVerditScore(
+            req.body.research_id,
+            resultData
+          );
+          console.log("RESEARCH UPDATED ======= ", CummulateVerditScore);
             return createResponse(`Data Saved`, updatedCommunityDetails)(
               res,
               HTTP.OK
@@ -71,6 +80,13 @@ exports.saveCommunitySpiritInfo = async (req, res, next) => {
               await new CommunityDetailsService().create(
                 dataToCommunityDetails
               );
+          // save current verdit
+            const resultData = { type: "team", info: {team_spirit: req.body.team_spirit, community_spirit: req.body.community_spirit } };
+            const CummulateVerditScore = await UpdateResearchVerditScore(
+              req.body.research_id,
+              resultData
+            );
+            console.log("RESEARCH UPDATED ======= ", CummulateVerditScore);
             return createResponse(`Data Saved`, newCommunityDetailsData)(
               res,
               HTTP.OK

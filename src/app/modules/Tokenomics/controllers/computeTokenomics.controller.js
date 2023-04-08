@@ -4,6 +4,8 @@ const createError = require("../../../../_helpers/createError");
 const { createResponse } = require("../../../../_helpers/createResponse");
 const ComputeTokenomicsHealth =
   require("../../../../_helpers/research/tokenomicsHealthCalculator").computeTokenomicsHealth;
+  const UpdateResearchVerditScore =
+  require("../../../../_helpers/research/updateVerditScore").updateVerditSore;
 const ResearchService = require("../../Research/services/research.services");
 const logger = require("../../../../../logger.conf");
 const TokenomicsService = require("../services/tokenomics.service");
@@ -128,15 +130,17 @@ exports.computeTokenomics = async (req, res, next) => {
               // update base research
               const dataToUpdateResearch = {
                 research_price,
-                tokenomics_rating: message,
-                verdit_score: data,
-                verdit: message,
               };
               const updatedResearch = await new ResearchService().update(
                 {
                   _id: research_id,
                 },
                 dataToUpdateResearch
+              );
+              const resultData = { type: "tokenomics", grade: message };
+              const CummulateVerditScore = await UpdateResearchVerditScore(
+                research_id,
+                resultData
               );
               return createResponse(`${message}`, tokenomicsResults)(
                 res,
@@ -214,9 +218,6 @@ exports.computeTokenomics = async (req, res, next) => {
               // update base research
               const dataToUpdateResearch = {
                 research_price,
-                tokenomics_rating: message,
-                verdit_score: data,
-                verdit: message,
               };
               const updatedResearch = await new ResearchService().update(
                 {
@@ -224,6 +225,13 @@ exports.computeTokenomics = async (req, res, next) => {
                 },
                 dataToUpdateResearch
               );
+
+              const resultData = { type: "tokenomics", grade: message };
+              const CummulateVerditScore = await UpdateResearchVerditScore(
+                research_id,
+                resultData
+              );
+              console.log("RESEARCH UPDATED ======= ", CummulateVerditScore);
               return createResponse(`${message}`, tokenomicsResults)(
                 res,
                 HTTP.OK
