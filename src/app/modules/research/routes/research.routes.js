@@ -119,7 +119,7 @@ router.put(
 );
 
 router.get(
-  '/suggested',
+  '/suggested/all',
   authorize(['user','org']),
   validateRequest(GetAllSuggestedSchema.getSugestedResearchSchema, "query"),
   FetchSuggetedResearchController.getSuggestedResearch

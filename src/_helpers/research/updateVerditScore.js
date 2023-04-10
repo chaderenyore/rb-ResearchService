@@ -1,4 +1,4 @@
-const ResearchService = require("../../app/modules/Research/services/research.services");
+const ResearchService = require("../../app/modules/research/services/research.services");
 
 exports.updateVerditSore = async (research_id, verditData) => {
   try {
