@@ -107,6 +107,7 @@ exports.premCheck = async (req, res, next) => {
             },
           }
         );
+        console.log("USER DETAILS ====== ", user.data.data)
         if (user && user.data && user.data.code === 200) {
           // Create Research with tags supplied
           const dataToResearch = {
@@ -114,10 +115,10 @@ exports.premCheck = async (req, res, next) => {
             researcher_username: user.data.data.username
               ? user.data.data.username
               : "",
-            researcher_firstname: user.data.data.firstname
+            researcher_firstname: user.data.data.first_name
               ? user.data.data.firstname
               : "",
-            researcher_lastame: user.data.data.lastname
+            researcher_lastame: user.data.data.last_name
               ? user.data.data.lastname
               : "",
             poster_id: req.user.user_id,

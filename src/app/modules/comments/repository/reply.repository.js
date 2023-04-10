@@ -1,5 +1,5 @@
 const Repository = require("../../../Repository");
-const Reply = require("../../Comments/models/commentReplies.model");
+const Reply = require("../../comments/models/commentReplies.model");
 
 class ReplyRepository extends Repository {
     constructor() {
