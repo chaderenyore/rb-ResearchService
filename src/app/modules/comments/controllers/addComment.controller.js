@@ -43,7 +43,7 @@ exports.createComment = async (req, res, next) => {
             let firstname;
             let fullname;
             if(user.data.data.first_name && user.data.data.firstname !== " "){
-             firstname = user.data.data.firstname;
+             firstname = user.data.data.first_name;
              fullname = firstname;
             }
             if(user.data.data.last_name && user.data.data.last_name !== " "){
