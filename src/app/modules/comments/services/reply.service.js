@@ -16,7 +16,9 @@ class ReplyService {
   async updateARecord(condition, update) {
     return this.ReplyRepository.update(condition, update)
   }
-
+  async updateMany(condition, update) {
+    return this.ReplyRepository.updateMany(condition, update);
+  }
   async GetAllRecords(limit, page, data, selectedFields) {
    return this.ReplyRepository.all(limit, page, data, selectedFields)
 
