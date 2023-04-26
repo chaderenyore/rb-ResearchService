@@ -92,7 +92,7 @@ exports.launchResearch = async (req, res, next) => {
             // update base research
             const DataToResearch = {
               original_research_id: researchExist._id,
-              poster_id: req.user.user_id,
+              researcher_id: req.user.user_id,
               is_launched:true,
               is_draft: false,
               is_visible: req.query.is_visible
@@ -104,7 +104,7 @@ exports.launchResearch = async (req, res, next) => {
             const DataToCommunityResearch = {
               is_visible: req.query.is_visible,
               original_research_id: researchExist._id,
-              poster_id: req.user.user_id,
+              researcher_id: req.user.user_id,
               tags: researchExist.tags,
               ...researchExist,
             };

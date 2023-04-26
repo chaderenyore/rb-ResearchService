@@ -9,7 +9,7 @@ const logger = require("../../../../../logger.conf");
 exports.changeVisibility = async (req, res, next) => {
   try {
     // search if usr owns post
-    const myResearch = await new ResearchService().findAResearch({researcher_id:req.user.user_id, research_id:req.query.research_id});
+    const myResearch = await new ResearchService().findAResearch({researcher_id:req.user.user_id, _id:req.query.research_id});
     if (!myResearch) {
       return next(
         createError(HTTP.UNAUTHORIZED, [

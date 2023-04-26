@@ -16,6 +16,7 @@ exports.deleteResearch = async (req, res, next) => {
     // check if research exists
     const researchExist = await new ResearchService().findAResearch({
       _id: req.params.research_id,
+      researcher_id: req.user.user_id,
     });
     if (researchExist) {
       // search and delete for all research dependents
