@@ -6,7 +6,7 @@ const ResearchCommentConsumer = new Connnection(
   KEYS.AMQP_URI,
   KEYS.UPDATE_USER_RESEARCH_COMMENT_DETAILS,
   async (msg) => {
-    const channel = ResearchCommentConsumer.getChannel();
+    const channel = await ResearchCommentConsumer.getChannel();
     if (msg !== null) {
       const message = msg.content.toString();
       console.info(` [x] Consumed : ${message}`);
@@ -28,8 +28,11 @@ const ResearchCommentConsumer = new Connnection(
         return channel.ack(msg);
       }
     }
-
-    return null;
+    process.on('exit', (code) => {
+      channel.close();
+      console.log(`Closing ${channel} channel`);
+   });
+    // return null;
   }
 );
 
