@@ -25,9 +25,10 @@ mongoose
     });
   }).catch(error => console.log(error));
 
-  
-CommentsLikesConsumer.consume("Update Research Comment Likes");
-CommmnetRepliesConsumer.consume("Update Research Comment Replies");
-ResearchComentsConsumer.consume("Update Research Comments");
-ResearchDetailsConsumer.consume("Update Research Details");
-ResearchLikesConsumer.consume("Update Research Likes");
+(exports._initQueue = async()=>{
+await CommentsLikesConsumer.consume("Update Research Comment Likes");
+await CommmnetRepliesConsumer.consume("Update Research Comment Replies");
+await ResearchComentsConsumer.consume("Update Research Comments");
+await ResearchDetailsConsumer.consume("Update Research Details");
+await ResearchLikesConsumer.consume("Update Research Likes");
+})()
