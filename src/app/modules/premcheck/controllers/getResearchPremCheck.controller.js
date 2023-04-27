@@ -1,5 +1,6 @@
 const axios = require("axios").default;
 const { HTTP } = require("../../../../_constants/http");
+const { RESPONSE } = require("../../../../_constants/response");
 const createError = require("../../../../_helpers/createError");
 const { createResponse } = require("../../../../_helpers/createResponse");
 const logger = require("../../../../../logger.conf");
