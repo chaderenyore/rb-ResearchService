@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 
 const schema = mongoose.Schema(
   {
+    community_id:{type: String},
     researcher_id: { type: String},
     poster_id:{type: String},
     original_research_id:{type: String},

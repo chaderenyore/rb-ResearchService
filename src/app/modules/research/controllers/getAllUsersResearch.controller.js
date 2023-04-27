@@ -21,6 +21,12 @@ exports.getUsersResearch = async (req, res, next) => {
         researcher_id: req.user.user_id
      }
     }
+    if(req.query.shared === "true"){
+      querydata = {
+        poster_id: req.user.user_id,
+        type: "shared",
+     }
+    }
     const allUsersResearch = await new ResearchService().all(
       req.query.limit,
       req.query.page,

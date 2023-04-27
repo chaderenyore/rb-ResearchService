@@ -15,7 +15,7 @@ exports.likeARsearch = async (req, res, next) => {
   try {
       // check if like exists
       const likeExist = await new ResearchLikeService().findARecord({
-        research_id: req.query.original_research_id,
+        community_id: req.query.community_id,
         user_id: req.user.user_id,
       });
       if (likeExist) {
@@ -33,7 +33,7 @@ exports.likeARsearch = async (req, res, next) => {
       }
     // search if user owns research
     const research = await new ResearchService().findAResearch({
-      _id: req.query.original_research_id,
+      community_id: req.query.community_id,
     });
     console.log("Research =================== ", research)
     if (!research) {
@@ -61,16 +61,17 @@ exports.likeARsearch = async (req, res, next) => {
       if (user && user.data && user.data.code === 200) {
         let firstname;
         let fullname;
-        if(user.data.data.first_name && user.data.data.firstname !== " "){
-         firstname = user.data.data.firstname;
+        if(user.data.data.first_name && user.data.data.first_name !== " "){
+         firstname = user.data.data.first_name;
          fullname = firstname;
         }
         if(user.data.data.last_name && user.data.data.last_name !== " "){
+         firstname = user.data.data.first_name;
          fullname = `${firstname} ${user.data.data.last_name}`
         }
         //  save to users repost
         const dataToLikeModel = {
-          research_id: research._id,
+          community_id: research.community_id,
           user_id: req.user.user_id,
           fullname: fullname || "",
           username: user.data.data.username ? user.data.data.username : "",
@@ -80,18 +81,18 @@ exports.likeARsearch = async (req, res, next) => {
         const Like = await new ResearchLikeService().create(dataToLikeModel);
         // increment like count on research
         const updatedCommunityPost = await new CommunityRsearchService().update(
-          { original_research_id: req.query.original_research_id },
+          { _id: req.query.community_id },
           { $inc: { 'total_likes': 1 } }
         );
 
         const updatedBaseResearch = await new ResearchService().update(
-          { _id: req.query.original_research_id },
+          { community_id: req.query.community_id },
           { $inc: { 'total_likes': 1 } }
         );
         // save to likedRsearch Model
         const dataToUserLikedResearch = {
           user_id: req.user.user_id,
-          research_id: req.query.original_research_id,
+          community_id: req.query.community_id,
           research_tags: research.tags
         }
         const userLikedResearch = await new LikeResearchService().create(
@@ -99,7 +100,7 @@ exports.likeARsearch = async (req, res, next) => {
         );
     // update saved research
     const updatedSavedResearch = await new SavedResearchService().update(
-      { research_id: req.query.original_research_id },
+      { community_id: req.query.community_id},
       { $inc: { 'total_likes': 1 } }
     )
 

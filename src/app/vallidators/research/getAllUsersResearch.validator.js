@@ -7,5 +7,6 @@ exports.getAllUsersResearchSchema = Joi.object({
     limit: Joi.number().positive().optional(),
     timeline: Joi.string().optional(),
     myresearch: Joi.string().optional(),
+    shared: Joi.string().optional(),
 
   });
