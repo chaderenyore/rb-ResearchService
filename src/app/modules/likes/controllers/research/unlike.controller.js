@@ -13,7 +13,7 @@ exports.unLikeAResearch = async (req, res, next) => {
   try {
     // search if research exists
     const research = await new ResearchService().findAResearch({
-      _id: req.query.original_research_id,
+      community_id: req.query.community_id,
     });
     if (!research) {
       return next(
@@ -30,7 +30,7 @@ exports.unLikeAResearch = async (req, res, next) => {
     } else {
       // check if like exists
       const likeExist = await new ResearchLikeService().findARecord({
-        post_id: req.query.original_research_id,
+        community_id: req.query.community_id,
         user_id: req.user.user_id,
       });
       if (!likeExist) {
@@ -47,28 +47,28 @@ exports.unLikeAResearch = async (req, res, next) => {
         );
       } else {
         const Like = await new ResearchLikeService().deletOne({
-          post_id: req.query.original_research_id,
+          community_id: req.query.community_id,
           user_id: req.user.user_id,
         });
         // decrement like count on research
         const updatedCommunityPost = await new CommunityRsearchService().update(
-          { original_research_id: req.query.original_research_id },
+          { _id: req.query._id },
           { $inc: { 'total_likes': -1 } }
         );
 
         const updatedResearch = await new ResearchService().update(
-          { _id: req.query.original_research_id },
+          { community_id: req.query.community_id },
           { $inc: { 'total_likes': -1 } }
         );
         // update saved research
         const updatedSavedResearch = await new SavedResearchService().update(
-          { research_id: req.query.original_research_id },
+          { community_id: req.query.community_id },
           { $inc: { 'total_likes': -1 } }
         );
         // update User likedRsearch Model
         const queryDataToUserLikedResearch = {
           user_id: req.user.user_id,
-          research_id: req.query.original_research_id,
+          community_id: req.query.community_id,
         };
         const userLikedResearch = await new LikeResearchService().deletOne(
           queryDataToUserLikedResearch

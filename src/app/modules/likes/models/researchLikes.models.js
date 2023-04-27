@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const schema = mongoose.Schema(
   {
-    research_id: String,
+    community_id: String,
     user_id: String,
     fullname: String,
     username: String,

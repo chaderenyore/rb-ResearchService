@@ -9,7 +9,7 @@ exports.getAResearchLikes = async (req, res, next) => {
   try {
     // query data
     const dataToQuery = {
-        research_id: req.query.original_research_id
+      community_id: req.query.community_id
     } 
     const likes = await new ResearchLikeService().all(req.query.limit, req.query.page, dataToQuery);
     if (likes.data.length === 0) {

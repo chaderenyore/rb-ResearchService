@@ -9,6 +9,8 @@ const GetAResearchLikes = require("../../../vallidators/likes/Research/getAllRes
 const LikeAComment = require("../../../vallidators/likes/comments/likeComent.validator");
 const UnlikeAComment = require("../../../vallidators/likes/comments/unlikeCommnent.validator");
 const GetACommentsLikes = require("../../../vallidators/likes/comments/getAllCommentLikes.validator");
+const ValidateLikes = require("../../../vallidators/likes/validateLike.validators");
+
 
 // controllers
 const LikeAResearchController = require("../controllers/research/like.controller");
@@ -17,6 +19,8 @@ const GetAllResearchLikesController = require("../controllers/research/getAllLik
 const LikeACommentController = require("../controllers/comments/like.controller");
 const GetAllCOmmentLikesController = require("../controllers/comments/getAllLikes.controller");
 const UnlikeACommentController = require("../controllers/comments/unlike.controller");
+const ValidateLikeController = require("../controllers/validate");
+
 
 const router = Router();
 
@@ -62,5 +66,11 @@ router.get(
     GetAllCOmmentLikesController.getACommentLikes
   );
 
+router.post(
+    "/validate",
+    authorize(['user','org']),
+    validateRequest(ValidateLikes.validateLikeQuerySchema, "query"),
+    ValidateLikeController.validateLike
+  );
 
 module.exports = router;

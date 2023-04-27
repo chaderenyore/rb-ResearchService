@@ -111,10 +111,20 @@ exports.launchResearch = async (req, res, next) => {
             const communityResearch = await new CommunityResearchService().create(
               DataToCommunityResearch
             );
-            return createResponse(`Research Launched`, communityResearch)(
-              res,
-              HTTP.OK
-            );
+            // update all research to have community id
+            if(communityResearch){
+              const filterData = {
+                _id: researchExist._id
+              }
+              const dataToUpdate = {
+                community_id: communityResearch._id
+              }
+              const updateResearch = await new ResearchService().update(filterData, dataToUpdate) ;
+              return createResponse(`Research Launched`, communityResearch)(
+                res,
+                HTTP.OK
+              );
+            }
           }
         } else {
           return next(

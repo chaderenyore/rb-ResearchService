@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const schema = mongoose.Schema(
   {
     user_id: String,
-    research_id: String,
+    community_id: String,
     research_tags: {type: [String]},
   },
   {
