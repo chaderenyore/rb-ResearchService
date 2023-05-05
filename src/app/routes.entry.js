@@ -7,6 +7,10 @@ const Research = require("./modules/research/routes/research.routes");
 const CommunityResearch = require("./modules/communityresearchmodule/routes/index");
 const Likes = require("./modules/likes/routes/likes.routes");
 const Comments = require("./modules/comments/routes/comments.routes");
+const CoinNotes = require("./modules/coinAssets/routes/notes.routes");
+const ResearchList = require("./modules/researchList/routes/researchList.routes");
+
+
 
 
 
@@ -20,5 +24,9 @@ module.exports = () => {
   router.use("/community-research", CommunityResearch);
   router.use("/like", Likes);
   router.use("/comment", Comments);
+  router.use("/notes",  CoinNotes);
+  router.use("/list",  ResearchList);
+
+
   return router;
 };
