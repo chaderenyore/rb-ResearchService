@@ -3,21 +3,20 @@ const { RESPONSE } = require("../../../../_constants/response");
 const createError = require("../../../../_helpers/createError");
 const { createResponse } = require("../../../../_helpers/createResponse");
 const logger = require("../../../../../logger.conf");
-const CommunityResearchService = require("../services/communityResearch.services");
+const ResearchListService = require("../services/researchList.services");
 
-exports.fetchAllCommunityResearch = async (req, res, next) => {
+exports.fetchAllResearchList = async (req, res, next) => {
   try {
-    const allResearch = await new CommunityResearchService().all(
+    const allResearchList = await new ResearchListService().all(
       req.query.limit,
-      req.query.page,
-      { is_visible: true}  // is_banned: false TO ADD
+      req.query.page
     );
-    if (allResearch && allResearch.data.length === 0) {
+    if (allResearchList && allResearchList.data.length === 0) {
       return next(
         createError(HTTP.OK, [
           {
             status: RESPONSE.SUCCESS,
-            message: "No Research Found",
+            message: "No List Found",
             statusCode: HTTP.OK,
             data: {},
             code: HTTP.OK,
@@ -26,8 +25,8 @@ exports.fetchAllCommunityResearch = async (req, res, next) => {
       );
     } else {
       return createResponse(
-        `All Community Research Retrieved`,
-        allResearch
+        `Research List Retrieved`,
+        allResearchList
       )(res, HTTP.OK);
     }
   } catch (err) {

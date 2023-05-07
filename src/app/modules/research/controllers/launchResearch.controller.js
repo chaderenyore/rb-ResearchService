@@ -104,6 +104,7 @@ exports.launchResearch = async (req, res, next) => {
             const DataToCommunityResearch = {
               is_visible: req.query.is_visible,
               original_research_id: researchExist._id,
+              research_label:researchExist.research_label,
               researcher_id: req.user.user_id,
               tags: researchExist.tags,
               ...researchExist,
@@ -117,7 +118,8 @@ exports.launchResearch = async (req, res, next) => {
                 _id: researchExist._id
               }
               const dataToUpdate = {
-                community_id: communityResearch._id
+                community_id: communityResearch._id,
+                is_draft: false,
               }
               const updateResearch = await new ResearchService().update(filterData, dataToUpdate) ;
               return createResponse(`Research Launched`, communityResearch)(

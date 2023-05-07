@@ -41,7 +41,7 @@ router.put(
 );
 
 router.delete(
-    '/',
+    '/delete',
     authorize(['user','org']),
     validateRequest(DeleteCoinNote.deleteNotesQuerySchema, "query"),
     DeleteCoinNoteController.deleteResearchNote

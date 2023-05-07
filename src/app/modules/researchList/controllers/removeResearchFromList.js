@@ -8,15 +8,16 @@ const ListDetailService = require("../services/listDetail.service");
 
 exports.deleteResearchList = async (req, res, next) => {
   try {
-    const deletedList = await new ResearchListService().deletOne({
-      _id: req.query.list_id,
+    const deletedResearch = await new ListDetailService().deletOne({
+      research_id: req.query.research_id,
+      list_id: req.query.list_id,
     });
-    if(deletedList && deletedList.deletedCount === 0){
+    if(deletedResearch && deletedResearch.deletedCount === 0){
       return next(
         createError(HTTP.OK, [
           {
             status: RESPONSE.SUCCESS,
-            message: "List Does Not Exist/UnAuthorised",
+            message: "Note Does Not Exist/UnAuthorised",
             statusCode: HTTP.Ok,
             data: {},
             code: HTTP.Ok,
@@ -24,9 +25,12 @@ exports.deleteResearchList = async (req, res, next) => {
         ])
       );
     } else {
-      // unlink all lsit research belongs to
-      const deletedResearchDetails = await new ListDetailService().deleteAll({list_id:req.query.list_id});
-      return createResponse("Research List Deleted", deletedList)(res, HTTP.OK);
+      // update research in list count
+      const updatedList = await new ResearchListService().update(
+        { _id: req.query.list_id },
+        { $inc: { 'no_in_list': -1 } }
+      )
+      return createResponse(`Research Deleted From List ${updatedList.list_name}`, {})(res, HTTP.OK);
     }
   } catch (err) {
     console.log(err);

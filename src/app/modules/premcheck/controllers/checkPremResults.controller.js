@@ -125,10 +125,11 @@ exports.premCheck = async (req, res, next) => {
             researcher_image_url: user.data.data.image
               ? user.data.data.image
               : "",
-            is_draft: false,
+            is_draft: true,
             is_launched: false,
             coin_image,
             coin_name,
+            research_label:req.body.research_label,
             ...req.body,
           };
           const newResearch = await new ResearchService().createResearch(
@@ -177,7 +178,6 @@ exports.premCheck = async (req, res, next) => {
               newResearch._id,
               resultData
             );
-            console.log("RESEARCH UPDATED ======= ", CummulateVerditScore);
             return createResponse(`${message}`, premCheckResults)(res, HTTP.OK);
           }
         }

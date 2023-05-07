@@ -24,6 +24,21 @@ exports.createNote = async (req, res, next) => {
         ])
       );
     } else {
+    //   //  check if note exist for coin
+    // const coinNoteExists = await new CoinNotesService().findARecord({user_id: req.user_id, community_id: research.community_id});
+    // if(coinNoteExists){
+    //   return next(
+    //     createError(HTTP.OK, [
+    //       {
+    //         status: RESPONSE.SUCCESS,
+    //         message: "Coin Note Exists On Reserach",
+    //         statusCode: HTTP.Ok,
+    //         data: {},
+    //         code: HTTP.Ok,
+    //       },
+    //     ])
+    //   );
+    // }
       const dataToCoinNoteModel = {
         user_id: req.user.user_id,
         research_id: research._id,

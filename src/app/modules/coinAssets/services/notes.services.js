@@ -25,7 +25,7 @@ class CoinNotesService {
     return this.CoinNotesRepository.deleteMany(condition);
   }
   async deletOne(condition) {
-    return this.CoinNotesRepository.delete(condition);
+    return this.CoinNotesRepository.deleteOne(condition);
   }
 
   async all(limit, page, data) {

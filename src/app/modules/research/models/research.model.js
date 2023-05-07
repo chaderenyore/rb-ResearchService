@@ -5,7 +5,7 @@ const schema = mongoose.Schema(
     community_id:{type: String},
     researcher_id: { type: String},
     poster_id:{type: String},
-    research_list_id:{type: String},
+    research_label:{type: String},
     original_research_id:{type: String},
     research_child:{type: Object},
     researcher_image_url: { type: String},

@@ -22,10 +22,10 @@ class ResearchListService {
   }
 
   async deleteAll(condition) {
-    return this.ResearchListRepository.deleteMany(condition);
+    return this.ResearchListRepository.delete(condition);
   }
   async deletOne(condition) {
-    return this.ResearchListRepository.delete(condition);
+    return this.ResearchListRepository.deleteOne(condition);
   }
 
   async all(limit, page, data) {

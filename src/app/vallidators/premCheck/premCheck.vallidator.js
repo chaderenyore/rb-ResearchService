@@ -6,6 +6,7 @@ exports.premCheckSchema = Joi.object().keys({
   was_draft: Joi.boolean().required(),
   coin_name: Joi.string().required(),
   coin_image: Joi.string().required(),
+  research_label: Joi.string().optional(),
   twitter_url: Joi.string().uri().required(),
   twitter_createdAt: Joi.date()
     .format(["YYYY-MM-DD", "DD-MM-YYYY", "DD/MM/YYYY"])
