@@ -1,0 +1,37 @@
+const { HTTP } = require("../../../../../_constants/http");
+const { RESPONSE } = require("../../../../../_constants/response");
+const createError = require("../../../../../_helpers/createError");
+const { createResponse } = require("../../../../../_helpers/createResponse");
+const logger = require("../../../../../../logger.conf");
+const ResearchService = require("../../../research/services/research.services");
+
+exports.adminFetchSingleUserResearch = async (req, res, next) => {
+  try {
+    const allResearch = await new ResearchService().all(
+      req.query.limit,
+      req.query.page,
+      {researcher_id: req.query.user_id}
+    );
+    if (allResearch && allResearch.data.length === 0) {
+      return next(
+        createError(HTTP.OK, [
+          {
+            status: RESPONSE.SUCCESS,
+            message: "No Research Found/Incorrect User id",
+            statusCode: HTTP.OK,
+            data: {},
+            code: HTTP.OK,
+          },
+        ])
+      );
+    } else {
+      return createResponse(
+        `All Research For User ${req.query.user_id} Fetched`,
+        allResearch
+      )(res, HTTP.OK);
+    }
+  } catch (err) {
+    console.error(err);
+    return next(createError.InternalServerError(err));
+  }
+};

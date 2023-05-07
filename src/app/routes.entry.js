@@ -1,5 +1,5 @@
 const { Router } = require("express");
-// const Admin = require("./modules/AdminControl/routes/adminControl.routes")
+const Admin = require("./modules/adminControl/routes/adminControl.routes")
 const PremCheck = require("./modules/premcheck/routes/premcheck.routes");
 
 const Tokenomics = require("./modules/tokenomicsHealth/routes/index");
@@ -17,7 +17,7 @@ const ResearchList = require("./modules/researchList/routes/researchList.routes"
 module.exports = () => {
   
   const router = Router();
-  // router.use("/admin",   Admin);
+  router.use("/admin",   Admin);
   router.use("/premcheck", PremCheck);
   router.use("/tokenomics", Tokenomics);
   router.use("/", Research);

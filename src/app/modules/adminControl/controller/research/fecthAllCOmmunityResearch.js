@@ -1,16 +1,15 @@
-const { HTTP } = require("../../../../_constants/http");
-const { RESPONSE } = require("../../../../_constants/response");
-const createError = require("../../../../_helpers/createError");
-const { createResponse } = require("../../../../_helpers/createResponse");
-const logger = require("../../../../../logger.conf");
-const CommunityResearchService = require("../services/communityResearch.services");
+const { HTTP } = require("../../../../../_constants/http");
+const { RESPONSE } = require("../../../../../_constants/response");
+const createError = require("../../../../../_helpers/createError");
+const { createResponse } = require("../../../../../_helpers/createResponse");
+const logger = require("../../../../../../logger.conf");
+const CommunityResearchService = require("../../../communityresearchmodule/services/communityResearch.services");
 
-exports.fetchAllCommunityResearch = async (req, res, next) => {
+exports.adminFetchAllCommunityResearch = async (req, res, next) => {
   try {
     const allResearch = await new CommunityResearchService().all(
       req.query.limit,
       req.query.page,
-      { is_visible: true}  // is_banned: false TO ADD
     );
     if (allResearch && allResearch.data.length === 0) {
       return next(

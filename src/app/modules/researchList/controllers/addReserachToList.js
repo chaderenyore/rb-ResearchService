@@ -3,14 +3,14 @@ const { RESPONSE } = require("../../../../_constants/response");
 const createError = require("../../../../_helpers/createError");
 const { createResponse } = require("../../../../_helpers/createResponse");
 const ResearchListService = require("../services/researchList.services");
+const ListDetailService = require("../services/listDetail.service");
 const ResearchService = require("../../research/services/research.services");
-const CommunityResearchService = require("../../communityresearchmodule/services/communityResearch.services");
 
 exports.addResearchToList = async (req, res, next) => {
   try {
     //   check if research exists
     const researchExist = await new ResearchService().findAResearch({
-      community_id: req.body.research_community_id,
+      _id: req.query.research_id,
       researcher_id: req.user.user_id,
     });
     if (!researchExist) {
@@ -18,7 +18,7 @@ exports.addResearchToList = async (req, res, next) => {
         createError(HTTP.OK, [
           {
             status: RESPONSE.SUCCESS,
-            message: "Thsi Research Does Not Exists/ UnAuthorised",
+            message: "This Research Does Not Exists/ UnAuthorised",
             statusCode: HTTP.Ok,
             data: {},
             code: HTTP.Ok,
@@ -26,16 +26,16 @@ exports.addResearchToList = async (req, res, next) => {
         ])
       );
     } else {
-      //  check if lst is valid/exists
+      //  check if list is valid/exists
       const listIsValid = await new ResearchListService().findARecord({
-        _id: req.body.list_id,
+        _id: req.query.list_id,
       });
       if (!listIsValid) {
         return next(
           createError(HTTP.OK, [
             {
               status: RESPONSE.SUCCESS,
-              message: "List Invalid. Please Creata To Continue",
+              message: "List Invalid",
               statusCode: HTTP.Ok,
               data: {},
               code: HTTP.Ok,
@@ -43,22 +43,40 @@ exports.addResearchToList = async (req, res, next) => {
           ])
         );
       } else {
-        // update Research with List id
-        const updatedResearch = await new ResearchService().update(
-          { community_id: req.body.research_community_id },
-          { research_list_id: listIsValid._id }
-        );
-        // update community service
-        const updatedCommunityResearch =
-          await new CommunityResearchService().update(
-            { community_id: req.body.research_community_id },
-            { research_list_id: listIsValid._id }
+        // check if research is already in list
+        const isInList = await new ListDetailService().findARecord({
+          list_id: listIsValid._id,
+          research_id: req.query.research_id,
+        });
+        if(isInList){
+          return next(
+            createError(HTTP.OK, [
+              {
+                status: RESPONSE.SUCCESS,
+                message: `Research Exists In ${listIsValid.list_name.toUpperCase()} List`,
+                statusCode: HTTP.Ok,
+                data: {},
+                code: HTTP.Ok,
+              },
+            ])
           );
-        if (updatedCommunityResearch && updatedResearch) {
-          return createResponse(
-            `Research Added To ${listIsValid.list_title} List`,
-            updatedResearch
-          )(res, HTTP.OK);
+        } else {
+          // push to research List Detail model
+          const listDetail = await new ListDetailService().create({
+            list_id: listIsValid._id,
+            research_id: req.query.research_id,
+          });
+          if (listDetail) {
+            // update number in list
+            const updatedList = await new ResearchListService().update(
+              { _id: req.query.list_id },
+              { $inc: { 'no_in_list': 1 } }
+            );
+            return createResponse(
+              `Research Added To ${listIsValid.list_name} List`,
+              updatedList
+            )(res, HTTP.OK);
+          }
         }
       }
     }
