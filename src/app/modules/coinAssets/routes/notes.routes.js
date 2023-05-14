@@ -22,7 +22,6 @@ router.post(
   '/',
   authorize(['user','org']),
   validateRequest(AddCoinNote.addCoinNotesBodySchema, 'body'),
-  validateRequest(AddCoinNote.addCoinNotesQuerySchema, 'query'),
   AddCoinNoteController.createNote
 );
 
@@ -30,7 +29,7 @@ router.get(
   '/',
   authorize(['user','org']),
   validateRequest(GetCoinNote.coinNotesQuerySchema, "query"),
-  GetCoinNoteController.getResearchNote
+  GetCoinNoteController.getCoinNote
 );
 router.put(
   '/',
@@ -44,7 +43,7 @@ router.delete(
     '/delete',
     authorize(['user','org']),
     validateRequest(DeleteCoinNote.deleteNotesQuerySchema, "query"),
-    DeleteCoinNoteController.deleteResearchNote
+    DeleteCoinNoteController.deleteNote
   );
 
 

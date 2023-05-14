@@ -5,7 +5,7 @@ const createError = require("../../../../_helpers/createError");
 const CoinNotesService = require("../services/notes.services");
 
 
-exports.deleteResearchNote = async (req, res, next) => {
+exports.deleteNote = async (req, res, next) => {
   try {
     // check if research exist
     const deletedNote = await new CoinNotesService().deletOne({
