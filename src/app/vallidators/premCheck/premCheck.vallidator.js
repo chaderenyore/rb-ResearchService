@@ -26,5 +26,6 @@ exports.premCheckSchema = Joi.object().keys({
     .utc()
     .required(),
   is_social_media_active: Joi.boolean().required(),
-  tags: Joi.array().required()
+  tags: Joi.array().required(),
+  is_visible: Joi.boolean().required()
 });

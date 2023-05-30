@@ -10,6 +10,7 @@ const schema = mongoose.Schema(
     date_of_project_launch: {type: String},
     project_status: {type: String, enum: ['yes', 'not_yet', 'on_test_net', 'only_staking_for_now','fund_raising']},
     last_tweet_date: {type: Date},
+    is_visible: {type: Boolean},
     is_social_media_active:{type: Boolean},
     is_draft: {type: Boolean},
     is_dependent:{type: String},
