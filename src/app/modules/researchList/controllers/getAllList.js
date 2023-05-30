@@ -10,6 +10,7 @@ exports.fetchAllResearchList = async (req, res, next) => {
     const allResearchList = await new ResearchListService().all(
       req.query.limit,
       req.query.page
+      {user_id: req.user.user_id}
     );
     if (allResearchList && allResearchList.data.length === 0) {
       return next(
