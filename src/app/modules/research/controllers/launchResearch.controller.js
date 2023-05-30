@@ -10,7 +10,7 @@ const ResearchCommunityAndSpiritService = require("../services/researchCommunity
 const ResearchComparisonService = require("../services/comparison.services");
 const ResearchService = require("../services/research.services");
 const CommunityResearchService = require("../../communityresearchmodule/services/communityResearch.services");
-
+const PublishToUpdateUserQueue = require("../../../../_queue/publishers/updateUserDetails.publisher");
 exports.launchResearch = async (req, res, next) => {
   try {
     // check if research has been launched
@@ -92,6 +92,7 @@ exports.launchResearch = async (req, res, next) => {
             // update base research
             const DataToResearch = {
               original_research_id: researchExist._id,
+              poster_id:req.user.user_id,
               researcher_id: req.user.user_id,
               is_launched:true,
               is_draft: false,
@@ -121,7 +122,12 @@ exports.launchResearch = async (req, res, next) => {
                 community_id: communityResearch._id,
                 is_draft: false,
               }
-              const updateResearch = await new ResearchService().update(filterData, dataToUpdate) ;
+              const updateResearch = await new ResearchService().update(filterData, dataToUpdate);
+              // // publsih increment to user details queue
+              await PublishToUpdateUserQueue.publishToUpdateUserQueue(
+                req.user.user_id,
+                { $inc: { 'total_public_post': 1 } }
+              );
               return createResponse(`Research Launched`, communityResearch)(
                 res,
                 HTTP.OK

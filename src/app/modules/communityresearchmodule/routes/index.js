@@ -10,6 +10,7 @@ const GetCommunityResearchDetailsSchema = require("../../../vallidators/communit
 const GetMySavedResearchSchema = require("../../../vallidators/community/getMysavedResearch.validator");
 const SaveResearchSchema = require("../../../vallidators/community/saveResearch.validator");
 const ShareResearchSchema = require("../../../vallidators/community/shareResearch.validator");
+const ViewUsersPublicResearchSchema = require("../../../vallidators/community/publicResearch.validator");
 
 
 // controllers
@@ -19,6 +20,8 @@ const GetCommunityResearchDetailsController = require('../controllers/getCommuni
 const GetMySavedResearchController = require('../controllers/getMySavedResearch.controller');
 const SaveResearchController = require('../controllers/saveResearch.controller');
 const ShareResearchController = require('../controllers/shareResearch.controller');
+const ViewUsersPublicResearchController = require('../controllers/viewUserPublicResearch');
+
 
 
 
@@ -65,6 +68,13 @@ router.post(
   authorize(['user','org']),
   validateRequest(ShareResearchSchema.shareResearchQuerySchema, "query"),
   ShareResearchController.shareResearch
+);
+
+router.get(
+  '/user/public',
+  authorize(['user','org']),
+  validateRequest(ViewUsersPublicResearchSchema.viewUsersPublicResearchQuerySchema, "query"),
+  ViewUsersPublicResearchController.fetchAllCommunityResearch
 );
 
 module.exports = router;

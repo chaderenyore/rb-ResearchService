@@ -9,7 +9,7 @@ const { combine, timestamp, label, printf } = format;
           
           const logger = createLogger({
             level: "debug",
-            format: combine(label({ label: 'AUTH SERVICE' }), timestamp(), customFormat),
+            format: combine(label({ label: 'RESEARCH SERVICE' }), timestamp(), customFormat),
             transports: [new transports.Console()],
           });
 

@@ -126,6 +126,7 @@ exports.premCheck = async (req, res, next) => {
               ? user.data.data.image
               : "",
             is_draft: true,
+            is_visible: req.body.is_visible,
             is_launched: false,
             coin_image,
             coin_name,
