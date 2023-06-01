@@ -130,6 +130,7 @@ exports.premCheck = async (req, res, next) => {
             is_launched: false,
             coin_image,
             coin_name,
+            project_about: req.body.project_about,
             research_label:req.body.research_label,
             ...req.body,
           };
@@ -146,6 +147,7 @@ exports.premCheck = async (req, res, next) => {
               twitter_createdAt,
               date_of_project_launch,
               project_status,
+              project_about: req.body.project_about,
               last_tweet_date,
               is_social_media_active,
               is_saved: false,

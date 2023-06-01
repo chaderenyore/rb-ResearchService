@@ -4,6 +4,7 @@ const schema = mongoose.Schema(
   {
     research_id: { type: String},
     researcher_id:{type: String},
+    project_about:{type: String},
     twitter_url: {type: String},
     twitter_createdAt: { type: Date},
     twitter_account_age: {type: String},
