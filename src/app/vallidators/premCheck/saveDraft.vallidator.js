@@ -15,12 +15,19 @@ exports.saveDraftPremCheckSchema = Joi.object().keys({
     .optional(),
   project_status: Joi.string()
     .trim()
-    .valid("active", "inactive", "not_sure")
+    .valid(
+      "yes",
+      "not_yet",
+      "on_test_net",
+      "only_staking_for_now",
+      "fund_raising"
+    )
     .optional(),
   last_tweet_date: Joi.date()
     .format(["YYYY-MM-DD", "DD-MM-YYYY", "DD/MM/YYYY"])
     .utc()
     .optional(),
   is_social_media_active: Joi.boolean().optional(),
-  tags: Joi.array().optional()
+  tags: Joi.array().optional(),
+  project_about: Joi.string().optional()
 });

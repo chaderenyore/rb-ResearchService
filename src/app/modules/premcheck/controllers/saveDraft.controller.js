@@ -46,7 +46,6 @@ exports.saveDraftPremCheck = async (req, res, next) => {
         const draftPremCheck = await new PremCheckService().create(
           dataToPremCheck
         );
-        console.log("drafts ================ ", draftPremCheck)
         return createResponse(`Draft Saved`, draftPremCheck)(res, HTTP.OK);
       }
     }
