@@ -169,7 +169,7 @@ exports.premCheck = async (req, res, next) => {
             const premCheckResults = {
               research_id: newResearch._id,
               premCheckResult: {
-                verdit: message,
+                verdict: message,
                 data: {
                   totalPoint: data,
                 },

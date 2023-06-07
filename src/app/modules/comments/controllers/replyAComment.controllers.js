@@ -6,6 +6,7 @@ const { createResponse } = require("../../../../_helpers/createResponse");
 const ResearchService = require("../../research/services/research.services");
 const CommentService = require("../services/comments.services");
 const ReplyService = require("../services/reply.service");
+const InAppNotificationQueue = require("../../../../_queue/publishers/inAppNotifcation.publishers");
 
 const KEYS = require("../../../../_config/keys");
 
@@ -68,7 +69,22 @@ exports.replyAComment = async (req, res, next) => {
           { _id: comment._id },
           { $inc: { 'total_replies': 1 } }
         );
-        console.log("UPDATED COMMENT ========== ", updatedComment);
+        if(comment.user_id !== req.user.user_id){
+          // publish to InApp Notificaton
+        // build data
+        const dataToInnAppQueue = {
+         user_id: comment.user_id,
+         notification_type: 'comment',
+         message: `${user.data.data.username} just Replied Your Comment`,
+         notifier_image:user.data.data.image ? user.data.data.image : "",
+         notifier_username: user.data.data.username,
+         notifier_fullname: `${fullname}`,
+         origin_service: 'Research',
+         origin_platform: req.query.platform
+       }
+       // publish here
+       await InAppNotificationQueue.publishInAppNotifcation(research.poster_id, dataToInnAppQueue);
+  }
         return createResponse(`Replied A Comment Successfuly`, newCommentReply)(res, HTTP.OK);
         } else {
             return next(

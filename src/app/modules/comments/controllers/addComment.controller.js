@@ -80,22 +80,22 @@ exports.createComment = async (req, res, next) => {
           { _id: req.body.research_id },
           { $inc: { 'total_comments': 1 } }
         );
-     
-       // publish to InApp Notificaton
-        // build data
-        const dataToInnAppQueue = {
-          user_id: research.poster_id,
-          notification_type: 'comment',
-          message: `${user.data.data.username} just Commented On Your Reserach `,
-          notifier_image:user.data.data.image ? user.data.data.image : "",
-          notifier_username: user.data.data.username,
-          notifier_fullname: `${fullname}`,
-          origin_service: 'Research',
-          origin_platform: req.query.platform
-        }
-        // publish here
-        await InAppNotificationQueue.publishInAppNotifcation(research.poster_id, dataToInnAppQueue);
-
+     if(research.researcher_id !== req.user.user_id){
+             // publish to InApp Notificaton
+           // build data
+           const dataToInnAppQueue = {
+            user_id: research.poster_id,
+            notification_type: 'comment',
+            message: `${user.data.data.username} just Commented On Your Research `,
+            notifier_image:user.data.data.image ? user.data.data.image : "",
+            notifier_username: user.data.data.username,
+            notifier_fullname: `${fullname}`,
+            origin_service: 'Research',
+            origin_platform: req.query.platform
+          }
+          // publish here
+          await InAppNotificationQueue.publishInAppNotifcation(research.poster_id, dataToInnAppQueue);
+     }
         return createResponse("Comment Created", newComment)(res, HTTP.OK);
       }
     }
