@@ -40,9 +40,8 @@ exports.premCheck = async (req, res, next) => {
       };
       const { message, data } = await DoPremCheck(coinData);
       const premCheckResults = {
-        research_id: newResearch._id,
         premCheckResult: {
-          verdit: message,
+          verdict: message,
           data: {
             totalPoint: data,
           },
@@ -75,9 +74,9 @@ exports.premCheck = async (req, res, next) => {
           };
           const { message, data } = await DoPremCheck(coinData);
           const premCheckResults = {
-            research_id: newResearch._id,
+            research_id: req.body.research_id,
             premCheckResult: {
-              verdit: message,
+              verdict: message,
               data: {
                 totalPoint: data,
               },
