@@ -106,7 +106,7 @@ exports.premCheck = async (req, res, next) => {
             },
           }
         );
-        console.log("USER DETAILS ====== ", user.data.data)
+        console.log("USER DETAILS ====== ", user.data.data);
         if (user && user.data && user.data.code === 200) {
           // Create Research with tags supplied
           const dataToResearch = {
@@ -131,11 +131,13 @@ exports.premCheck = async (req, res, next) => {
             coin_name,
             project_about: req.body.project_about,
             research_label:req.body.research_label,
+            is_working_product: req.body.project_status === "yes" ? true : false,
             ...req.body,
           };
           const newResearch = await new ResearchService().createResearch(
             dataToResearch
           );
+          console.log("NEW RESEARCH ===== ", newResearch);
           if (newResearch) {
             // create prem check entry
             const dataToPremCheck = {

@@ -11,6 +11,8 @@ const ResearchComparisonService = require("../services/comparison.services");
 const ResearchService = require("../services/research.services");
 const CommunityResearchService = require("../../communityresearchmodule/services/communityResearch.services");
 const PublishToUpdateUserQueue = require("../../../../_queue/publishers/updateUserDetails.publisher");
+const PublishToNotifyFollowersQueue = require("../../../../_queue/publishers/bulkFollowers.publisher");
+
 exports.launchResearch = async (req, res, next) => {
   try {
     // check if research has been launched
@@ -32,10 +34,13 @@ exports.launchResearch = async (req, res, next) => {
       );
     } else{
         // check if research exists
+        console.log("QUERY ===== ", req.query.research_id);
+        console.log("USER ID  ===== ", req.user.user_id);
         const researchExist = await new ResearchService().findAResearch({
           _id: req.query.research_id, researcher_id: req.user.user_id 
         });
-        if (researchExist) {
+        console.log("RESEARCH ====== ", researchExist)
+        if (researchExist) {;
           // search for all research dependents
           const researchPremChecks = await new PremCheckService().update(
             {
@@ -101,14 +106,26 @@ exports.launchResearch = async (req, res, next) => {
             const updatedResearch = await new ResearchService().update({_id: researchExist._id},
               DataToResearch
             );
+            console.log("Research In memory", researchExist);
+            console.log("UPDATED RESEARCH ", updatedResearch);
             // create community copy
             const DataToCommunityResearch = {
+              researcher_image_url: researchExist.researcher_image_url,
+              researcher_username: researchExist.researcher_username,
+              researcher_firstname: researchExist.researcher_firstname,
+              researcher_lastame: researchExist.researcher_lastame,
+              research_label: researchExist.research_label,
+              coin_name: researchExist.coin_name,
+              coin_image: researchExist.coin_image,
+              tokenomics_rating: researchTokenomics.tokenomics_rating,
+              research_price: researchExist.research_price,
+              verdict: researchExist.verdit,
+              verdit_score: researchExist.verdit_score,
               is_visible: req.query.is_visible,
               original_research_id: researchExist._id,
               research_label:researchExist.research_label,
               researcher_id: req.user.user_id,
               tags: researchExist.tags,
-              ...researchExist,
             };
             const communityResearch = await new CommunityResearchService().create(
               DataToCommunityResearch
@@ -127,6 +144,21 @@ exports.launchResearch = async (req, res, next) => {
               await PublishToUpdateUserQueue.publishToUpdateUserQueue(
                 req.user.user_id,
                 { $inc: { 'total_public_post': 1 } }
+              );
+
+              // publsih to notify followers queue
+              // build data
+           const dataToInnAppQueue = {
+            user_id: req.user.user_id,
+            notification_type: 'following_launch_research',
+            message: `${updatedResearch.researcher_username} just Launched A New Research `,
+            notifier_image:updatedResearch.researcher_image_url ? updatedResearch.researcher_image_url : "",
+            origin_service: 'Research',
+            origin_platform: req.query.platform
+          }
+              await PublishToNotifyFollowersQueue.publishAllFollowersNotifcation(
+                req.user.user_id,
+                dataToInnAppQueue
               );
               return createResponse(`Research Launched`, communityResearch)(
                 res,

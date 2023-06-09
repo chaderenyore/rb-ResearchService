@@ -74,7 +74,7 @@ exports.replyAComment = async (req, res, next) => {
         // build data
         const dataToInnAppQueue = {
          user_id: comment.user_id,
-         notification_type: 'comment',
+         notification_type: 'research_comment_reply',
          message: `${user.data.data.username} just Replied Your Comment`,
          notifier_image:user.data.data.image ? user.data.data.image : "",
          notifier_username: user.data.data.username,

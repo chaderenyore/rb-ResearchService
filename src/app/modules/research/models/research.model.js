@@ -23,7 +23,7 @@ const schema = mongoose.Schema(
     total_times_shared: {type: Number, default: 0},
     total_times_saved: {type: Number, default: 0},
     age: {type: Number},
-    tokenomics_rating: {type: String, enum: ['Excellent', 'Good', 'Very Poor', 'Fair', 'Poor', 'Very Good']},
+    tokenomics_rating: {type: String, enum: ['excellent', 'good', 'Very Poor', 'fair', 'Poor']},
     potential_return: {type: Number},
     verdit:{type: String},
     verdit_score: {type: Number, default: 0},
