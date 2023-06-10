@@ -52,8 +52,6 @@ exports.computeTokenomics = async (req, res, next) => {
           ])
         );
       } else {
-        console.log("MESSAGE ================== ", message);
-        console.log("Data ================== ", data);
         const tokenomicsResults = {
           research_id: research_id,
           tokenomicsResults: {
@@ -67,8 +65,9 @@ exports.computeTokenomics = async (req, res, next) => {
       // check if User owns this research
       const isMyResearch = await new ResearchService().findAResearch({
         researcher_id: req.user.user_id,
-        research_id: research_id,
+        _id: String(research_id),
       });
+      console.log("RESEARCH AT TOKENOMICS ===== ", isMyResearch)
       if (!isMyResearch) {
         return next(
           createError(HTTP.OK, [
@@ -92,7 +91,7 @@ exports.computeTokenomics = async (req, res, next) => {
           if (draftTokenomics) {
             // update Tokenomics Data
             const updateTokenomics = await new TokenomicsService().update(
-              { researcher_id: research_id },
+              { research_id: research_id },
               { is_draft: false, ...req.body }
             );
             // get Prem check results from criteria
@@ -134,9 +133,11 @@ exports.computeTokenomics = async (req, res, next) => {
               const updatedResearch = await new ResearchService().update(
                 {
                   _id: research_id,
+                  researcher_id: req.user.user_id
                 },
                 dataToUpdateResearch
               );
+              console.log("UPDATE RESEARCH ====== ", updatedResearch)
               const resultData = { type: "tokenomics", grade: message };
               const CummulateVerditScore = await UpdateResearchVerditScore(
                 research_id,
@@ -161,11 +162,6 @@ exports.computeTokenomics = async (req, res, next) => {
             );
           }
         } else {
-          // get associated Research
-          const research = await new ResearchService().findAResearch({
-            research_id: research_id,
-          });
-          if (research) {
             // create tokenomics
             const dataToTokenomics = {
               research_id: research_id,
@@ -217,11 +213,12 @@ exports.computeTokenomics = async (req, res, next) => {
               };
               // update base research
               const dataToUpdateResearch = {
-                research_price,
+                tokenomics_rating: message
               };
               const updatedResearch = await new ResearchService().update(
                 {
                   _id: research_id,
+                  researcher_id:req.user.user_id
                 },
                 dataToUpdateResearch
               );
@@ -237,19 +234,7 @@ exports.computeTokenomics = async (req, res, next) => {
                 HTTP.OK
               );
             }
-          } else {
-            return next(
-              createError(HTTP.OK, [
-                {
-                  status: RESPONSE.SUCCESS,
-                  message: "This Research Does Not Exist/UnAuthorize",
-                  statusCode: HTTP.OK,
-                  data: null,
-                  code: HTTP.OK,
-                },
-              ])
-            );
-          }
+          
         }
       }
     }

@@ -11,6 +11,8 @@ const GetMySavedResearchSchema = require("../../../vallidators/community/getMysa
 const SaveResearchSchema = require("../../../vallidators/community/saveResearch.validator");
 const ShareResearchSchema = require("../../../vallidators/community/shareResearch.validator");
 const ViewUsersPublicResearchSchema = require("../../../vallidators/community/publicResearch.validator");
+const ResearchGlobalSearchSchema = require("../../../vallidators/community/globalSearch.validator");
+
 
 
 // controllers
@@ -21,6 +23,7 @@ const GetMySavedResearchController = require('../controllers/getMySavedResearch.
 const SaveResearchController = require('../controllers/saveResearch.controller');
 const ShareResearchController = require('../controllers/shareResearch.controller');
 const ViewUsersPublicResearchController = require('../controllers/viewUserPublicResearch');
+const ResearchGlobalSearchController = require('../controllers/globalSearchCommunityResearch.controller');
 
 
 
@@ -75,6 +78,13 @@ router.get(
   authorize(['user','org']),
   validateRequest(ViewUsersPublicResearchSchema.viewUsersPublicResearchQuerySchema, "query"),
   ViewUsersPublicResearchController.fetchAllCommunityResearch
+);
+
+router.get(
+  '/communityglobalsearch',
+  authorize(['user','org']),
+  validateRequest(ResearchGlobalSearchSchema.globalQuerySchema, 'query'),
+  ResearchGlobalSearchController.searchResearchGlobally
 );
 
 module.exports = router;

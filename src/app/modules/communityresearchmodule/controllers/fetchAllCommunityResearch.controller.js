@@ -10,7 +10,7 @@ exports.fetchAllCommunityResearch = async (req, res, next) => {
     const allResearch = await new CommunityResearchService().all(
       req.query.limit,
       req.query.page,
-      { is_visible: true}  // is_banned: false TO ADD
+      { is_visible: true, is_banned: false}  // is_banned: false TO ADD
     );
     if (allResearch && allResearch.data.length === 0) {
       return next(

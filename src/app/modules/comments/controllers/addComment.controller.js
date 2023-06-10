@@ -85,7 +85,7 @@ exports.createComment = async (req, res, next) => {
            // build data
            const dataToInnAppQueue = {
             user_id: research.poster_id,
-            notification_type: 'comment',
+            notification_type: 'research_comment',
             message: `${user.data.data.username} just Commented On Your Research `,
             notifier_image:user.data.data.image ? user.data.data.image : "",
             notifier_username: user.data.data.username,
