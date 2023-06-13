@@ -25,7 +25,7 @@ const schema = mongoose.Schema(
     total_comments: {type: Number, min:0, default: 0},
     total_views: {type: Number, default: 0},
     total_clicks:{type: Number},
-    age: {type: Number},
+    age: {type: String},
     tokenomics_rating: {type: String, enum: ['Excellent', 'Good', 'Very Bad', 'Fair', 'Poor']},
     potential_return: {type: String},
     verdict:{type: String},

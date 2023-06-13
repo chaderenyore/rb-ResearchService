@@ -46,7 +46,7 @@ exports.computePotentialReturn = async (
       }
     const returnData = {
       coins_comparisons_info: comparisonInfo,
-      main_coin_AVR: AVR,
+      main_coin_AVR: AVR.toFixed(2),
       verdict: verdictMessage,
     };
 
