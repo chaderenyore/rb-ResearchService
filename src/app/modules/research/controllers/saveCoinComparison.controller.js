@@ -5,15 +5,18 @@ const { createResponse } = require("../../../../_helpers/createResponse");
 const logger = require("../../../../../logger.conf");
 const ResearchService = require("../services/research.services");
 const ResearchComparisonService = require("../services/comparison.services");
+const ComputePotentialReturn = require("../../../../_helpers/research/computePotentialReturn");
 const UpdateResearchVerditScore =
   require("../../../../_helpers/research/updateVerditScore").updateVerditSore;
 exports.saveResearchComparisonInfo = async (req, res, next) => {
   try {
     // check if comparison exist for this research
-    const researchComparisExist =
-      await new ResearchComparisonService().findOne({
-        research_id: req.body.research_id, is_draft:false
-      });
+    const researchComparisExist = await new ResearchComparisonService().findOne(
+      {
+        research_id: req.body.research_id,
+        is_draft: false,
+      }
+    );
     if (researchComparisExist) {
       return next(
         createError(HTTP.OK, [
@@ -27,6 +30,12 @@ exports.saveResearchComparisonInfo = async (req, res, next) => {
         ])
       );
     } else {
+      // compute AVERAGE POTENTIAL RETURN
+      main_coin_info: Joi.object();
+      const AVRData = await ComputePotentialReturn.computePotentialReturn(
+        Number(req.body.main_coin_info.market_cap),
+        req.body.reference_coins_data
+      );
       // check if action is to save as draft
       if (req.query.save_as_draft === true) {
         const dataToComparison = {
@@ -42,7 +51,8 @@ exports.saveResearchComparisonInfo = async (req, res, next) => {
           // search for draft Details
           const researchComparisonDraft =
             await new ResearchComparisonService().findOne({
-              research_id: req.body.research_id, is_draft:true
+              research_id: req.body.research_id,
+              is_draft: true,
             });
           if (researchComparisonDraft) {
             // update community details
@@ -54,7 +64,7 @@ exports.saveResearchComparisonInfo = async (req, res, next) => {
             // update Research
             const updateData = {
               research_price: req.body.main_coin_info.current_price,
-              potential_return: req.body.main_coin_info.average_return,
+              potential_return: AVRData.potential_return,
             };
             const updatedResearch = await new ResearchService().update(
               {
@@ -62,9 +72,14 @@ exports.saveResearchComparisonInfo = async (req, res, next) => {
               },
               updateData
             );
+            // dataToReturn
+            const dataToReturn = {
+              ComparisonData: updatedResearchComparison,
+              Potential_ReturnData: AVRData,
+            };
             return createResponse(
               `Coin Comparison Data Saved`,
-              updatedResearchComparison
+              dataToReturn
             )(res, HTTP.OK);
           }
         } else {
@@ -87,7 +102,7 @@ exports.saveResearchComparisonInfo = async (req, res, next) => {
             // update Research
             const updateData = {
               research_price: req.body.main_coin_info.current_price,
-              potential_return: req.body.main_coin_info.average_return,
+              potential_return: AVRData.potential_return,
             };
             const updatedResearch = await new ResearchService().update(
               {
@@ -96,16 +111,23 @@ exports.saveResearchComparisonInfo = async (req, res, next) => {
               updateData
             );
             // save current verdit
-            const resultData = { type: "comparison", grade: req.body.main_coin_info.average_return };
+            const resultData = {
+              type: "comparison",
+              grade: req.body.main_coin_info.average_return,
+            };
             const CummulateVerditScore = await UpdateResearchVerditScore(
               req.body.research_id,
               resultData
             );
-            console.log("RESEARCH UPDATED ======= ", CummulateVerditScore);
-            return createResponse(
-              `Coin Comparison Data Saved`,
-              newRsearchComparisonData
-            )(res, HTTP.OK);
+            // dataToReturn
+            const dataToReturn = {
+              ComparisonData: newRsearchComparisonData,
+              Potential_ReturnData: AVRData,
+            };
+            return createResponse(`Coin Comparison Data Saved`, dataToReturn)(
+              res,
+              HTTP.OK
+            );
           }
         }
       }

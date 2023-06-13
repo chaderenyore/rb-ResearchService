@@ -4,12 +4,19 @@ const schema = mongoose.Schema(
   {
     admin_id: { type: String},
     admin_username: { type: String},
-    tradeable_token:{type: Object}, // 4 :::: 1 for each point
-    is_main_token:{type: Object}, // yes = 5, no 0
-    has_enough_utils:{type: Object}, // yes =5 , no 0
-    token_type: {type: Object}, // deflatioinary = 5, infaltionary = 0
-    negative_indicators:{type: Object}, // if sum greater than 50% of max supply , bad token
-    positive_indicators: {type:Object} // if sum greater than 50, good token:::: if negative indicators and positive are equal, fair token
+    name:{type: String, enum:['tokenomics']},
+    tradeable_token_score:{type: Number, min:0, max:100},
+    is_main_token_score:{type: Number, min:0, max:100},
+    has_enough_utils_score:{type: Number, min:0, max: 100},
+    has_dao_score:{type: Number, min:0, max: 100}, 
+    token_type_deflationary_score: {type: Number, min: 0, max: 100},
+    negative_indicators:{type: [Object]},
+    positive_indicators: {type:[Object]},
+    upperLimit_for_excellence: {type: Number, min: 70, max:100},
+    upperLimit_for_good: {type: Number, min: 50, max:100},
+    upperlimit_for_fair: {type: Number, min: 0, max:100},
+    upperlimit_for_poor: {type: Number, min: 0, max:100},
+    upperlimit_for_vpoor: {type: Number, min: 0, max:100},
   },
   {
     timestamps: { createdAt: "created_at", updatedAt: "updated_at" },
