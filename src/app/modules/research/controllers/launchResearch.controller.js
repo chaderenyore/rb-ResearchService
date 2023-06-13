@@ -118,6 +118,7 @@ exports.launchResearch = async (req, res, next) => {
               verdict: researchExist.verdit,
               verdit_score: researchExist.verdit_score,
               potential_return: researchExist.potential_return,
+              age: researchExist.age,
               verdit_score: researchExist.verdit_score,
               is_working_product:researchExist.is_working_product,
               is_visible: req.query.is_visible,
