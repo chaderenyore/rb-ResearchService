@@ -34,12 +34,9 @@ exports.launchResearch = async (req, res, next) => {
       );
     } else{
         // check if research exists
-        console.log("QUERY ===== ", req.query.research_id);
-        console.log("USER ID  ===== ", req.user.user_id);
         const researchExist = await new ResearchService().findAResearch({
           _id: req.query.research_id, researcher_id: req.user.user_id 
         });
-        console.log("RESEARCH ====== ", researchExist)
         if (researchExist) {;
           // search for all research dependents
           const researchPremChecks = await new PremCheckService().update(
@@ -107,7 +104,6 @@ exports.launchResearch = async (req, res, next) => {
               DataToResearch
             );
             console.log("Research In memory", researchExist);
-            console.log("UPDATED RESEARCH ", updatedResearch);
             // create community copy
             const DataToCommunityResearch = {
               researcher_image_url: researchExist.researcher_image_url,
@@ -121,6 +117,9 @@ exports.launchResearch = async (req, res, next) => {
               research_price: researchExist.research_price,
               verdict: researchExist.verdit,
               verdit_score: researchExist.verdit_score,
+              potential_return: researchExist.potential_return,
+              verdit_score: researchExist.verdit_score,
+              is_working_product:researchExist.is_working_product,
               is_visible: req.query.is_visible,
               original_research_id: researchExist._id,
               research_label:researchExist.research_label,

@@ -39,11 +39,6 @@ exports.computeFinalVerdit = async (req, res, next) => {
       let dataMessage = {
         message: "Not Found"
       }
-    //   build final veridt info
-    const finalverditInfo = {
-
-    }
-    // check for score
     let ResearchBuddyVerdit;
     if(Number(researchExist.verdit_score) < 50){
         ResearchBuddyVerdit = {
@@ -81,6 +76,8 @@ exports.computeFinalVerdit = async (req, res, next) => {
             Score:Number(researchExist.verdit_score)
         }
     }
+    // update base reserach info with verdict data
+    const updatedResearch = await new ResearchService().update({_id: req.params.research_id}, {verdit: ResearchBuddyVerdit.Verdit})
       const DataToClient = {
         PremChecks: researchPremChecks || dataMessage,
         Tokenomics: researchTokenomics || dataMessage,
@@ -89,7 +86,7 @@ exports.computeFinalVerdit = async (req, res, next) => {
         Comparison: researchComparison || dataMessage,
         ResearchBuddyVerdit,
       };
-      return createResponse(`Final Verdit Comuted Successfully`, DataToClient)(
+      return createResponse(`Final Verdit Computed Successfully`, DataToClient)(
         res,
         HTTP.OK
       );

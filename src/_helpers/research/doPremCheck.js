@@ -32,11 +32,13 @@ exports.doPremCheck = async (coinData) => {
     if (totalPoint >= 60) {
       return {
         message: "pass",
+        accountAge: TwitterAgeInMonths.fullAge,
         data: totalPoint,
       };
     } else {
       return {
         message: "fail",
+        accountAge: TwitterAgeInMonths.fullAge,
         data: totalPoint,
       };
     }

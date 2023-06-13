@@ -8,10 +8,9 @@ exports.saveComparisonSchema = Joi.object().keys({
   main_coin_info: Joi.object()
     .keys({
       current_price: Joi.number().positive().required(),
-      market_cap: Joi.number().positive().optional(),
+      market_cap: Joi.number().positive().required(),
       user: Joi.number().positive().optional(),
-      volume: Joi.number().positive().optional(),
-      average_return: Joi.number().positive().optional(),
+      volume: Joi.number().positive().optional()
     })
     .required(),
   reference_coins_data: Joi.array()
