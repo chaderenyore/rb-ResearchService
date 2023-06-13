@@ -9,6 +9,7 @@ const schema = mongoose.Schema(
     comments_about: {type: String},
     project_expectation: {type: String},
     final_comments: {type: String},
+    known_industry_players:{type: String},
     verdict_info: {type: Object},
     is_draft: {type: Boolean},
     is_saved: {type: Boolean},

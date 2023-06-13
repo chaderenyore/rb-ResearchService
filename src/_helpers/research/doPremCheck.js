@@ -3,15 +3,12 @@ const PremCheckMaps = require("./tokenomicsIndicator");
 const calculateAge = require("./ageCalculator").calculateAge
 exports.doPremCheck = async (coinData) => {
   try {
-    console.log("COIN DATA ============ ", coinData);
     // points tracker
     let  totalPoint = 0
     const passMark = 60;
     // calculate age form twitter cretaedAt
     const TwitterAgeInMonths = await calculateAge(coinData.twitter_createdAt);
     const LaunchDateAgeInMonths = await calculateAge(coinData.date_of_project_launch);
-    console.log("Twitter AGE IN MONTHS ============ ", TwitterAgeInMonths)
-    console.log("Launch AGE IN MONTHS ============ ", LaunchDateAgeInMonths)
 
     if(TwitterAgeInMonths.ageConvertedToMonths || LaunchDateAgeInMonths.ageConvertedToMonths ){
       if (TwitterAgeInMonths.ageConvertedToMonths >= 4 || LaunchDateAgeInMonths.ageConvertedToMonths >= 4) {

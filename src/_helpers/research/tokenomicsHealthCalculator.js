@@ -2,7 +2,6 @@ const AllPuposeIndicator = require("./tokenomicsIndicator");
 
 exports.computeTokenomicsHealth = async (coinData) => {
   try {
-    console.log("COIN DATA =============== ", coinData);
     let positivetiveIndexes = AllPuposeIndicator.positivetiveIndicators,
       negativeIndexes = AllPuposeIndicator.negativeIndicators,
       negativePercentageScoreArray = [],
@@ -39,7 +38,6 @@ exports.computeTokenomicsHealth = async (coinData) => {
         //   add 1
         totalPoint += 1;
       }
-      console.log("TOTAL POINT ============ ", totalPoint);
       // get token indicators score
       for (let i = 0; i < coinData.allocation_data.length; i++) {
         if (positivetiveIndexes.includes(coinData.allocation_data[i].name)) {
@@ -53,56 +51,50 @@ exports.computeTokenomicsHealth = async (coinData) => {
           );
         }
       }
-      console.log(
-        "Positive Indicator Passed =================== ",
-        positivePercentageScoreArray
-      );
-      console.log(
-        "Negative Indicator Passed =================== ",
-        negativePercentageScoreArray
-      );
       // get sums of negative and positives
-      console.log("POSITIVE SUM LENGTH ========= ", positivePercentageScoreArray.length !== 0);
-    
-        positiveSum = (positivePercentageScoreArray.length !== 0) ? positivePercentageScoreArray.reduce(function (a, b) {
-          return a + b;
-        }): 0;
-        negativeSum = (negativePercentageScoreArray.length !== 0) ? negativePercentageScoreArray.reduce(function (a, b) {
-          return a + b;
-        }) : 0;
-        console.log("NEGATIVE SUM ============ ", negativeSum);
-        console.log("PositIVE SUM ============ ", positiveSum);
 
-        //   compare sum values and increment total point as required
-        if (negativeSum === positiveSum) {
-          totalPoint += 40;
-          console.log("condition 1")
-        }
-        if (negativeSum > positiveSum && negativeSum < 70) {
-          totalPoint += 0;
-          console.log("condition 2")
-        }
-        if (negativeSum < positiveSum && positiveSum < 70) {
-          totalPoint += 50;
-          console.log("condition 3")
-        }
-        if (positiveSum >= 70 && positiveSum < 100) {
-          totalPoint += 70;
-          console.log("condition 4")
-        }
-        if (negativeSum >= 70) {
-          totalPoint += 0;
-          console.log("condition 5")
-        }
-        if (positiveSum === 100) {
-          totalPoint += 80;
-          console.log("condition 5")
-        }
-        console.log(
-          "TOTAL POINTS AFTER MAIN INDICATORS ANALYSIS  ========= ",
-          totalPoint
-        );
-      
+      positiveSum =
+        positivePercentageScoreArray.length !== 0
+          ? positivePercentageScoreArray.reduce(function (a, b) {
+              return a + b;
+            })
+          : 0;
+      negativeSum =
+        negativePercentageScoreArray.length !== 0
+          ? negativePercentageScoreArray.reduce(function (a, b) {
+              return a + b;
+            })
+          : 0;
+
+      //   compare sum values and increment total point as required
+      if (negativeSum === positiveSum) {
+        totalPoint += 40;
+        console.log("condition 1");
+      }
+      if (negativeSum > positiveSum && negativeSum < 70) {
+        totalPoint += 0;
+        console.log("condition 2");
+      }
+      if (negativeSum < positiveSum && positiveSum < 70) {
+        totalPoint += 50;
+        console.log("condition 3");
+      }
+      if (positiveSum >= 70 && positiveSum < 100) {
+        totalPoint += 70;
+        console.log("condition 4");
+      }
+      if (negativeSum >= 70) {
+        totalPoint += 0;
+        console.log("condition 5");
+      }
+      if (positiveSum === 100) {
+        totalPoint += 80;
+        console.log("condition 5");
+      }
+      console.log(
+        "TOTAL POINTS AFTER MAIN INDICATORS ANALYSIS  ========= ",
+        totalPoint
+      );
       //  check if indicators where passed //
       if (totalPoint === 0) {
         return {
