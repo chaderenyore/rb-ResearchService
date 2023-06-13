@@ -29,6 +29,7 @@ const schema = mongoose.Schema(
     tokenomics_rating: {type: String, enum: ['Excellent', 'Good', 'Very Bad', 'Fair', 'Poor']},
     potential_return: {type: String},
     verdict:{type: String},
+    verdit_score:{type: Number},
     is_working_product:{type: Boolean},
     research_price: {type: String},
     current_price: {type: String},

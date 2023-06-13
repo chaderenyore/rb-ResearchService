@@ -10,19 +10,16 @@ const UpdateResearchVerditScore =
   require("../../../../_helpers/research/updateVerditScore").updateVerditSore;
 exports.saveResearchComparisonInfo = async (req, res, next) => {
   try {
-    // check if comparison exist for this research
-    const researchComparisExist = await new ResearchComparisonService().findOne(
-      {
-        research_id: req.body.research_id,
-        is_draft: false,
-      }
-    );
-    if (researchComparisExist) {
+    // check if research exists
+    const researchExists = await new ResearchService().findAResearch({
+      _id: req.body.research_id,
+    });
+    if (!researchExists) {
       return next(
         createError(HTTP.OK, [
           {
             status: RESPONSE.SUCCESS,
-            message: "Research Comparison Exists",
+            message: "Research Does Not Exist",
             statusCode: HTTP.OK,
             data: null,
             code: HTTP.OK,
@@ -31,14 +28,16 @@ exports.saveResearchComparisonInfo = async (req, res, next) => {
       );
     } else {
       // compute AVERAGE POTENTIAL RETURN
-      main_coin_info: Joi.object();
       const AVRData = await ComputePotentialReturn.computePotentialReturn(
         Number(req.body.main_coin_info.market_cap),
         req.body.reference_coins_data
       );
+      console.log("AVR DATA ====== ", AVRData);
       // check if action is to save as draft
       if (req.query.save_as_draft === true) {
         const dataToComparison = {
+          average_potential_return_info: AVRData || {},
+          main_coin_AVR: AVRData.main_coin_AVR,
           is_draft: true,
           ...req.body,
         };
@@ -59,50 +58,16 @@ exports.saveResearchComparisonInfo = async (req, res, next) => {
             const updatedResearchComparison =
               await new ResearchComparisonService().update(
                 { research_id: req.body.research_id },
-                { ...req.body }
+                {
+                  ...req.body,
+                  average_potential_return_info: AVRData,
+                  main_coin_AVR: AVRData.main_coin_AVR,
+                }
               );
             // update Research
             const updateData = {
               research_price: req.body.main_coin_info.current_price,
-              potential_return: AVRData.potential_return,
-            };
-            const updatedResearch = await new ResearchService().update(
-              {
-                _id: req.body.research_id,
-              },
-              updateData
-            );
-            // dataToReturn
-            const dataToReturn = {
-              ComparisonData: updatedResearchComparison,
-              Potential_ReturnData: AVRData,
-            };
-            return createResponse(
-              `Coin Comparison Data Saved`,
-              dataToReturn
-            )(res, HTTP.OK);
-          }
-        } else {
-          // search for research
-          const research = await new ResearchService().findAResearch({
-            _id: req.body.research_id,
-          });
-          if (research) {
-            // create Community Detail  entry
-            const dataToResearchComparison = {
-              research_id: req.body.research_id,
-              main_coin_name: research.coin_name,
-              is_draft: false,
-              ...req.body,
-            };
-            const newRsearchComparisonData =
-              await new ResearchComparisonService().create(
-                dataToResearchComparison
-              );
-            // update Research
-            const updateData = {
-              research_price: req.body.main_coin_info.current_price,
-              potential_return: AVRData.potential_return,
+              potential_return: AVRData.main_coin_AVR,
             };
             const updatedResearch = await new ResearchService().update(
               {
@@ -113,7 +78,83 @@ exports.saveResearchComparisonInfo = async (req, res, next) => {
             // save current verdit
             const resultData = {
               type: "comparison",
-              grade: req.body.main_coin_info.average_return,
+              grade: AVRData.main_coin_AVR,
+            };
+            const CummulateVerditScore = await UpdateResearchVerditScore(
+              req.body.research_id,
+              resultData
+            );
+            // dataToReturn
+            const dataToReturn = {
+              ComparisonData: updatedResearchComparison,
+              MainCoinPotentialReturn: `${AVRData.main_coin_AVR}x`,
+              Verdict: AVRData.verdict,
+            };
+            return createResponse(`Coin Comparison Data Saved`, dataToReturn)(
+              res,
+              HTTP.OK
+            );
+          } else {
+            return next(
+              createError(HTTP.OK, [
+                {
+                  status: RESPONSE.SUCCESS,
+                  message: "Coin Comparison Draft Does Not Exist",
+                  statusCode: HTTP.OK,
+                  data: null,
+                  code: HTTP.OK,
+                },
+              ])
+            );
+          }
+        } else {
+          // search if comparison info exist
+          const comparisonInfoExists =
+            await new ResearchComparisonService().findOne({
+              research_id: req.body.research_id,
+            });
+          if (comparisonInfoExists) {
+            return next(
+              createError(HTTP.OK, [
+                {
+                  status: RESPONSE.SUCCESS,
+                  message:
+                    "This Research Has A Compariosn Info, Retrieve As Draft To Continue Research",
+                  statusCode: HTTP.OK,
+                  data: null,
+                  code: HTTP.OK,
+                },
+              ])
+            );
+          } else {
+            // create Comparison Detail  entry
+            const dataToResearchComparison = {
+              research_id: req.body.research_id,
+              main_coin_name: researchExists.coin_name,
+              is_draft: false,
+              average_potential_return_info: AVRData.coins_comparisons_info,
+              main_coin_info: AVRData.main_coin_AVR,
+              ...req.body,
+            };
+            const newRsearchComparisonData =
+              await new ResearchComparisonService().create(
+                dataToResearchComparison
+              );
+            // update Research
+            const updateResearchData = {
+              research_price: req.body.main_coin_info.current_price,
+              potential_return: AVRData.main_coin_AVR,
+            };
+            const updatedResearch = await new ResearchService().update(
+              {
+                _id: req.body.research_id,
+              },
+              updateResearchData
+            );
+            // save current verdit
+            const resultData = {
+              type: "comparison",
+              grade: AVRData.main_coin_AVR,
             };
             const CummulateVerditScore = await UpdateResearchVerditScore(
               req.body.research_id,
@@ -122,7 +163,8 @@ exports.saveResearchComparisonInfo = async (req, res, next) => {
             // dataToReturn
             const dataToReturn = {
               ComparisonData: newRsearchComparisonData,
-              Potential_ReturnData: AVRData,
+              MainCoinPotentialReturn: `${AVRData.main_coin_AVR}x`,
+              Verdict: AVRData.verdict,
             };
             return createResponse(`Coin Comparison Data Saved`, dataToReturn)(
               res,

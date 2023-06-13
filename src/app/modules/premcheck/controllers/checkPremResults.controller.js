@@ -18,11 +18,13 @@ exports.premCheck = async (req, res, next) => {
     const {
       coin_name,
       coin_image,
+      research_label,
       twitter_url,
       twitter_account_age,
       twitter_createdAt,
       date_of_project_launch,
       project_status,
+      project_about,
       last_tweet_date,
       is_social_media_active,
       tags,
@@ -38,7 +40,7 @@ exports.premCheck = async (req, res, next) => {
         last_tweet_date,
         is_social_media_active,
       };
-      const { message, data } = await DoPremCheck(coinData);
+      const { message, data, accountAge } = await DoPremCheck(coinData);
       const premCheckResults = {
         premCheckResult: {
           verdict: message,
@@ -72,7 +74,7 @@ exports.premCheck = async (req, res, next) => {
             is_social_media_active:
               draftPrmeCheck.is_social_media_active || is_social_media_active,
           };
-          const { message, data } = await DoPremCheck(coinData);
+          const { message, data, accountAge } = await DoPremCheck(coinData);
           const premCheckResults = {
             research_id: req.body.research_id,
             premCheckResult: {
@@ -82,6 +84,17 @@ exports.premCheck = async (req, res, next) => {
               },
             },
           };
+          // update Research
+          const updatedResearch = await new ResearchService().update(
+            { _id: req.body.research_id },
+            { ...req.body, age: accountAge}
+          );
+          // send current verdit to research service
+          const resultData = { type: "prem", grade: message };
+          const CummulateVerditScore = await UpdateResearchVerditScore(
+            updatedResearch._id,
+            resultData
+          );
           return createResponse(`${message}`, premCheckResults)(res, HTTP.OK);
         } else {
           return next(
@@ -106,7 +119,6 @@ exports.premCheck = async (req, res, next) => {
             },
           }
         );
-        console.log("USER DETAILS ====== ", user.data.data);
         if (user && user.data && user.data.code === 200) {
           // Create Research with tags supplied
           const dataToResearch = {
@@ -129,15 +141,15 @@ exports.premCheck = async (req, res, next) => {
             is_launched: false,
             coin_image,
             coin_name,
-            project_about: req.body.project_about,
-            research_label:req.body.research_label,
-            is_working_product: req.body.project_status === "yes" ? true : false,
+            project_about,
+            research_label,
+            is_working_product:
+              req.body.project_status === "yes" ? "true" : "false",
             ...req.body,
           };
           const newResearch = await new ResearchService().createResearch(
             dataToResearch
           );
-          console.log("NEW RESEARCH ===== ", newResearch);
           if (newResearch) {
             // create prem check entry
             const dataToPremCheck = {
@@ -166,7 +178,7 @@ exports.premCheck = async (req, res, next) => {
               last_tweet_date,
               is_social_media_active,
             };
-            const { message, data } = await DoPremCheck(coinData);
+            const { message, data, accountAge } = await DoPremCheck(coinData);
             const premCheckResults = {
               research_id: newResearch._id,
               premCheckResult: {
@@ -176,6 +188,8 @@ exports.premCheck = async (req, res, next) => {
                 },
               },
             };
+            // update Research Age Info
+            const updatedResearchAge = await new ResearchService().update({_id:  newResearch._id}, {age: accountAge})
             // send current verdit to research service
             const resultData = { type: "prem", grade: message };
             const CummulateVerditScore = await UpdateResearchVerditScore(

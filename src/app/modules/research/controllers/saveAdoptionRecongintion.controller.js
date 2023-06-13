@@ -10,18 +10,16 @@ const UpdateResearchVerditScore =
 
 exports.saveAdoptionAndRecognitionInfo = async (req, res, next) => {
   try {
-    // check if data exist for this research
-    const dataExist = await new AdoptionRecognitionService().findOne({
-      research_id: req.body.research_id,
-      is_draft: false,
+    // check if research exists
+    const researchExists = await new ResearchService().findAResearch({
+      _id: req.body.research_id,
     });
-    if (dataExist) {
+    if (!researchExists) {
       return next(
         createError(HTTP.OK, [
           {
             status: RESPONSE.SUCCESS,
-            message:
-              "Adoption And Recognition Data Already Exists For This Research",
+            message: "Research Does Not Exist",
             statusCode: HTTP.OK,
             data: null,
             code: HTTP.OK,
@@ -52,21 +50,56 @@ exports.saveAdoptionAndRecognitionInfo = async (req, res, next) => {
                 { research_id: research_id },
                 { is_draft: false, ...req.body }
               );
-          // save current verdit
-            const resultData = { type: "aandd", info: {has_known_partners: req.body.has_known_partners, marketing_stage: req.body.marketing_stage, media_link: req.body.partners_info.link_to_partnership_anouncement, partner_link: req.body.media_links.link } };
+            // save current verdit
+            const resultData = {
+              type: "aandd",
+              info: {
+                has_known_partners: req.body.has_known_partners,
+                marketing_stage: req.body.marketing_stage,
+                media_link:
+                  req.body.partners_info.link_to_partnership_anouncement,
+                partner_link: req.body.media_links.link,
+              },
+            };
             const CummulateVerditScore = await UpdateResearchVerditScore(
               req.body.research_id,
               resultData
             );
             console.log("RESEARCH UPDATED ======= ", CummulateVerditScore);
             return createResponse(`Data Saved`, updatedAdoptiuon)(res, HTTP.OK);
+          } else {
+            return next(
+              createError(HTTP.OK, [
+                {
+                  status: RESPONSE.SUCCESS,
+                  message: "Adoption And Recognition Draft Does Not Exist",
+                  statusCode: HTTP.OK,
+                  data: null,
+                  code: HTTP.OK,
+                },
+              ])
+            );
           }
         } else {
-          // search for research
-          const research = await new ResearchService().findAResearch({
-            _id: req.body.research_id,
-          });
-          if (research) {
+          // search if  info exist
+          const AdoptionAndRecognitionInfoExists =
+            await new AdoptionRecognitionService().findOne({
+              research_id: req.body.research_id,
+            });
+          if (AdoptionAndRecognitionInfoExists) {
+            return next(
+              createError(HTTP.OK, [
+                {
+                  status: RESPONSE.SUCCESS,
+                  message:
+                    "This Research Has Adoption And Recognition Info, Retrieve As Draft To Continue Research",
+                  statusCode: HTTP.OK,
+                  data: null,
+                  code: HTTP.OK,
+                },
+              ])
+            );
+          } else {
             // create Adoption ANd Recognition  entry
             const dataToAdoption = {
               research_id: req.body.research_id,
@@ -75,8 +108,17 @@ exports.saveAdoptionAndRecognitionInfo = async (req, res, next) => {
             };
             const newAdoptionRecognitionData =
               await new AdoptionRecognitionService().create(dataToAdoption);
-                        // save current verdit
-            const resultData = { type: "aandd", info: {has_known_partners: req.body.has_known_partners, marketing_stage: req.body.marketing_stage, media_link: req.body.partners_info.link_to_partnership_anouncement, partner_link: req.body.media_links.link } };
+            // save current verdit
+            const resultData = {
+              type: "aandd",
+              info: {
+                has_known_partners: req.body.has_known_partners,
+                marketing_stage: req.body.marketing_stage,
+                media_link:
+                  req.body.partners_info.link_to_partnership_anouncement,
+                partner_link: req.body.media_links.link,
+              },
+            };
             const CummulateVerditScore = await UpdateResearchVerditScore(
               req.body.research_id,
               resultData
