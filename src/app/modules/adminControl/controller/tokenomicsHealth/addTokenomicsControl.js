@@ -5,7 +5,7 @@ const { createResponse } = require("../../../../../_helpers/createResponse");
 const TokenomicsControlService = require("../../services/tokenomicsControl.service");
 const logger = require("../../../../../../logger.conf");
 
-exports.addPremCheckControl = async (req, res, next) => {
+exports.addTokenomicsControl = async (req, res, next) => {
   try {
     let messageData;
     let dataToReturn;
@@ -41,7 +41,7 @@ exports.addPremCheckControl = async (req, res, next) => {
         createError(HTTP.OK, [
           {
             status: RESPONSE.SUCCESS,
-            message: `Sum Of All Indicators Must Total 100percent, re-compute`,
+            message: `Sum Of All Indicators Must Total 100percent, Re-Compute`,
             statusCode: HTTP.OK,
             data: {},
             code: HTTP.OK,
@@ -57,12 +57,19 @@ exports.addPremCheckControl = async (req, res, next) => {
       // update
       const updatedTokenomics = await new TokenomicsControlService().update(
         { name: "tokenomics" },
-        req.body
+        {...req.body}
       );
       dataToReturn = updatedTokenomics;
-    } else {
+    } 
+    if(!tokenomicsExist){
+      let dataToCreateReturn = {
+        admin_id: req.user.user_id,
+        admin_username: req.user.username,
+        name:"tokenomics",
+        ...req.body
+      }
       // create new prem Check control
-      const newTokenomics = await new TokenomicsControlService().create(req.body);
+      const newTokenomics = await new TokenomicsControlService().create(dataToCreateReturn);
       messageData = "Added";
       dataToReturn = newTokenomics;
     }

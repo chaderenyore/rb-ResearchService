@@ -10,22 +10,26 @@ exports.addTokenomicsControlSchema = Joi.object().keys({
   negative_indicators: Joi.array()
     .items(
       Joi.object().keys({
-        indicator_name: Joi.string().required(),
-        indicator_score: Joi.number().required(),
+        indicator_name: Joi.string().optional(),
+        indicator_score: Joi.number().optional(),
       })
     )
     .optional(),
   positive_indicators: Joi.array()
     .items(
       Joi.object().keys({
-        indicator_name: Joi.string().required(),
-        indicator_score: Joi.number().required(),
+        indicator_name: Joi.string().optional(),
+        indicator_score: Joi.number().optional(),
       })
     )
     .optional(),
-  upperLimit_for_excellence: Joi.number().optional(),
+  lower_limit_for_excellence: Joi.number().optional(),
   upperLimit_for_good: Joi.number().optional(),
   upperlimit_for_fair: Joi.number().optional(),
   upperlimit_for_poor: Joi.number().optional(),
   upperlimit_for_vpoor: Joi.number().optional(),
+  lower_limit_for_good: Joi.number().optional(),
+  lower_limit_for_fair: Joi.number().optional(),
+  lower_limit_for_poor: Joi.number().optional(),
+  lower_limit_for_vpoor: Joi.number().optional(),
 });

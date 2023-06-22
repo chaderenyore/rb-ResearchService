@@ -5,7 +5,9 @@ const schema = mongoose.Schema(
     saver_id:{type: String},
     research_id:{type: String},
     researcher_id:{type: String},
-    research_info:{type: Object}
+    research_info:{type: Object},
+    is_banned: {type: Boolean, default: false},
+    original_is_deleted: {type: Boolean, default: false}
   },
   {
     timestamps: { createdAt: "created_at", updatedAt: "updated_at" },

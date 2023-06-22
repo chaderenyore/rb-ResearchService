@@ -20,6 +20,25 @@ const AllResearchController = require("../controller/research/fetchAllResearch")
 const AllCommunityResearchController = require("../controller/research/fecthAllCOmmunityResearch");
 const SingleUsersResearchController = require("../controller/research/getSingleUsersResearch");
 
+// Research Controls Validators
+const PremCheckControlSchema = require("../../../vallidators/adminControl/premCheckControl/addPremCheckControl.validator");
+const TokenomicsControlSchema = require("../../../vallidators/adminControl/tokenomicsControl/addTokenomicsControl.validator");
+const AllResearchControlSchema = require("../../../vallidators/adminControl/research/fetchAllResearchControls.validator");
+const BannedResearchSchema = require("../../../vallidators/adminControl/research/banResearch.validator");
+const AllBannedResearchSchema = require("../../../vallidators/adminControl/research/banResearch.validator");
+const DeleteResearchSchema = require("../../../vallidators/adminControl/research/deleteResearch.validator");
+
+
+// research controls controllers
+const PremCheckControlController = require("../controller/premCheck/addPremCheckControl");
+const TokenomicsControlController = require("../controller/tokenomicsHealth/addTokenomicsControl");
+const AllResearchControlsController = require("../controller/research/fetchAllResearchControl");
+const BannedResearchControlsController = require("../controller/research/banResearch");
+const FetchAllBannedResearchController = require("../controller/research/fetchAllBannedResearch");
+const DeleteResearchController = require("../controller/research/deleteResearch");
+
+
+
 const router = Router();
 
 router.post(
@@ -71,11 +90,46 @@ router.get(
   AllCommunityResearchController .adminFetchAllCommunityResearch
 );
 
-router.get(
-  "/user/all-research",
-  authorizeAdmin(["super", "admin", "moderator", "account-view", "account-edit"]),
-  validateRequest(FetchSingleUserResearch.getSingleUserResearchSchema, "query"),
-  SingleUsersResearchController.adminFetchSingleUserResearch
+// research Controls
+router.post(
+  "/premcheck-control",
+  authorizeAdmin(["super", "admin", "moderator"]),
+  validateRequest(PremCheckControlSchema.addPremCheckControlSchema, "body"),
+  PremCheckControlController.addPremCheckControl
 );
 
+router.post(
+  "/tokenomics-control",
+  authorizeAdmin(["super", "admin", "moderator", "account-view", "account-edit"]),
+  validateRequest(TokenomicsControlSchema.addTokenomicsControlSchema, "body"),
+  TokenomicsControlController.addTokenomicsControl
+);
+
+router.get(
+  "/all-controls",
+  authorizeAdmin(["super", "admin", "moderator"]),
+  validateRequest(AllResearchControlSchema.getAllResearchControlsSchema, "query"),
+  AllResearchControlsController.adminFetchAllResearchControl
+);
+
+router.put(
+  "/ban-research",
+  authorizeAdmin(["super", "admin", "moderator", "account-view", "account-edit"]),
+  validateRequest( BannedResearchSchema.banResearchSchema, "query"),
+  BannedResearchControlsController.banResearch
+);
+
+router.get(
+  "/all-bannedresearch",
+  authorizeAdmin(["super", "admin", "moderator", "account-view", "account-edit"]),
+  validateRequest(AllBannedResearchSchema.banResearchSchema, "query"),
+  FetchAllBannedResearchController.adminFetchAllBannedResearch
+);
+
+router.delete(
+  "/delete-research",
+  authorizeAdmin(["super", "admin", "moderator", "account-view", "account-edit"]),
+  validateRequest(DeleteResearchSchema.deleteResearchSchema, "query"),
+  DeleteResearchController.bulkDeleteResearch
+);
 module.exports = router;

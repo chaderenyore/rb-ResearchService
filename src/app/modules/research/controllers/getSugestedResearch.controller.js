@@ -15,7 +15,7 @@ exports.getSuggestedResearch = async (req, res, next) => {
     const allUsersResearch = await new UserLikedResearchService().all(
       req.query.limit,
       req.query.page,
-      { user_id: req.user.user_id }
+      { user_id: req.user.user_id, is_banned: false, is_visible:true }
     );
     if (allUsersResearch && allUsersResearch.data.length === 0) {
       return next(

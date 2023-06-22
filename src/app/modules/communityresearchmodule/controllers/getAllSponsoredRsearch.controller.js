@@ -10,7 +10,7 @@ exports.fetchAllSponsoredResearch = async (req, res, next) => {
     const allSponsoredResearch = await new CommunityResearchService().all(
       req.query.limit,
       req.query.page,
-      { is_visible: true, is_sponsored: true }
+      { is_visible: true, is_sponsored: true, is_banned: false }
     );
     if (allSponsoredResearch && allSponsoredResearch.data.length === 0) {
       return next(

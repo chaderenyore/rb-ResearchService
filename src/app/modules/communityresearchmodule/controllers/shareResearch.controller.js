@@ -94,15 +94,21 @@ exports.shareResearch = async (req, res, next) => {
         const communityResearch = await new CommunityResearchService().create(
           dataToCommunityResearchModel
         );
-        // update save count 
+        // update save count
         const queryUpdate = {
           _id: req.query.original_research_id,
-        }
-  
+        };
+        // update base Research
         const updatedBaseResearch = await new ResearchService().update(
           queryUpdate,
           { $inc: { 'total_times_shared': 1 } }
-        )
+        );
+
+        // update base Research
+        const updatedCommunityResearch = await new CommunityResearchService().update(
+          {_id: research.community_id},
+          { $inc: { 'total_times_shared': 1 } }
+        );
         return createResponse("Research Shared Successfuly", communityResearch)(
           res,
           HTTP.OK

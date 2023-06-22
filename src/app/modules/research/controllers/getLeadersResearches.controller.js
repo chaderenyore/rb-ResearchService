@@ -45,6 +45,7 @@ exports.getLeadersResearch = async (req, res, next) => {
           const followingResearch = await new ResearchService().findAResearch({
             is_shared: false,
             is_visible: true,
+            is_banned: false,
             researcher_id: followingIdsArray[i],
           });
           follwingResearches.push(followingResearch);
@@ -76,7 +77,7 @@ exports.getLeadersResearch = async (req, res, next) => {
         createError(HTTP.OK, [
           {
             status: RESPONSE.SUCCESS,
-            message: "Following Dtailed Not Retrieved, We Know We are on it",
+            message: "Following Details Not Retrieved, We Know We are on it",
             statusCode: HTTP.OK,
             data: {},
             code: HTTP.OK,

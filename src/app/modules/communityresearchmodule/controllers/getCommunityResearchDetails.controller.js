@@ -14,7 +14,7 @@ exports.getResearchDetails = async (req, res, next) => {
   try {
     // check if research exists
     const researchExist = await new ResearchService().findAResearch({
-      _id: req.query.research_id,
+      _id: req.query.research_id, is_banned: false, is_visible:true
     });
     if (researchExist) {
       // search for all research dependents
@@ -61,7 +61,7 @@ exports.getResearchDetails = async (req, res, next) => {
         createError(HTTP.OK, [
           {
             status: RESPONSE.SUCCESS,
-            message: "Research Does Not Exist",
+            message: "Research Does Not Exist/Cannot Access Research",
             statusCode: HTTP.OK,
             data: {},
             code: HTTP.OK,

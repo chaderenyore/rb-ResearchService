@@ -3,21 +3,22 @@ const { RESPONSE } = require("../../../../_constants/response");
 const createError = require("../../../../_helpers/createError");
 const { createResponse } = require("../../../../_helpers/createResponse");
 const logger = require("../../../../../logger.conf");
-const SavedResearchService = require("../services/savedResearch.services");
+const CommunityResearchService = require("../services/communityResearch.services");
 
-exports.fetchMySavedResearch = async (req, res, next) => {
+exports.fetchAllPopularResearch = async (req, res, next) => {
   try {
-    const allSavedResearch = await new SavedResearchService().all(
+    const popularResearch = await new CommunityResearchService().fetchAllOrderBy(
       req.query.limit,
       req.query.page,
-      { is_visible: true, is_banned: false, saver_id: req.user.user_id }
+      _,
+     {'total_comments':-1},
     );
-    if (allSavedResearch && allSavedResearch.data.length === 0) {
+    if (popularResearch && popularResearch.data.length === 0) {
       return next(
         createError(HTTP.OK, [
           {
             status: RESPONSE.SUCCESS,
-            message: "You Have No Saved Research",
+            message: "No Popular Reasearch Found",
             statusCode: HTTP.OK,
             data: {},
             code: HTTP.OK,
@@ -26,8 +27,8 @@ exports.fetchMySavedResearch = async (req, res, next) => {
       );
     } else {
       return createResponse(
-        `Saved Research Retrieved`,
-        allSavedResearch
+        `Popular Research Retrieved`,
+        popularResearch
       )(res, HTTP.OK);
     }
   } catch (err) {

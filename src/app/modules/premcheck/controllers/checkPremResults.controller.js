@@ -129,7 +129,7 @@ exports.premCheck = async (req, res, next) => {
             researcher_firstname: user.data.data.first_name
               ? user.data.data.first_name
               : "",
-            researcher_lastame: user.data.data.last_name
+            researcher_lastname: user.data.data.last_name
               ? user.data.data.last_name
               : "",
             poster_id: req.user.user_id,
