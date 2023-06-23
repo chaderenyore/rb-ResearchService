@@ -25,7 +25,7 @@ exports.doPremCheck = async (coinData) => {
     ) {
       let twitterAgeLimit = premCheckControl ? Number(premCheckControl.twitter_age_limit) || 4 : 4;
       let launchAgeLimit = premCheckControl ? Number(premCheckControl.launch_age_limit) || 4 : 4;
-      let agePoint = premCheckControl ?  Number(premCheckControl.launch_age_point) || Number(premCheckControl.twitter_age_point) || 40 : 40;
+      let agePoint = premCheckControl ? Number(premCheckControl.twitter_age_point) || Number(premCheckControl.launch_age_point) || 40 : 40;
       if (
         TwitterAgeInMonths.ageConvertedToMonths >= twitterAgeLimit ||
         LaunchDateAgeInMonths.ageConvertedToMonths >= launchAgeLimit

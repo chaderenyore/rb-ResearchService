@@ -11,47 +11,70 @@ exports.addPremCheckControl = async (req, res, next) => {
     let dataToReturn;
     // check if the sum of prem check values is valid
     const {
-      LastTweetTimeInDays_limit,
+      lastTweetTimeInDays_limit,
+      lastTweetTimeInDays_point,
       launch_age_point,
       twitter_age_point,
       active_on_social_media_point,
       project_satus_point,
       total_pass_mark,
     } = req.body;
+    console.log("BODY PAYLOAD  ====== ", req.body);
+    // check validity of LastTweetTimeInDays_limit
+    if (lastTweetTimeInDays_limit > 31) {
+      return next(
+        createError(HTTP.OK, [
+          {
+            status: RESPONSE.SUCCESS,
+            message: `${LastTweetTimeInDays_limit} days is Invalid`,
+            statusCode: HTTP.OK,
+            data: {},
+            code: HTTP.OK,
+          },
+        ])
+      );
+    }
     // check if premcheck control exists
     const premcheckExist = await new PremCheckControlService().findOne({
       name: "premCheck",
     });
     if (premcheckExist) {
+      let payloadSumHolder = [];
+      let totalSumHolder = [];
       messageData = "Updated";
       // compute total score
-      let premCheckControlHolder = [
-        Number(launch_age_point) || 0,
-        Number(twitter_age_point) || 0,
-        Number(active_on_social_media_point) || 0,
-        Number(project_satus_point) || 0,
-      ];
-      let savedControlHolder = [
-        Number(premcheckExist.launch_age_point) || 0,
-        Number(premcheckExist.twitter_age_point) || 0,
-        Number(premcheckExist.active_on_social_media_point) || 0,
-        Number(premcheckExist.project_satus_point) || 0,
-      ];
+      let premCheckControlHolder = {
+        launch_age_point: Number(launch_age_point) || 0,
+        twitter_age_point: Number(twitter_age_point) || 0,
+        active_on_social_media_point:
+          Number(active_on_social_media_point) || 0,
+        project_satus_point: Number(project_satus_point) || 0,
+      };
+      // compare payload with saved sum
+      let controlsNamesNotUpdated = [];
+      for (const [key, value] of Object.entries(premCheckControlHolder)) {
+        console.log(key);
+        console.log(value);
+        if (value === 0) {
+          // push value saved to sum holder
+          controlsNamesNotUpdated.push(key);
+        }
+        payloadSumHolder.push(value);
+      }
+      // get premcheck sums
+      for (let i = 0; i < controlsNamesNotUpdated.length; i++) {
+        totalSumHolder.push(premcheckExist[controlsNamesNotUpdated[i]]);
+      }
+      let allSums = [...totalSumHolder, ...payloadSumHolder];
       // check sum up
-      let savedSum =
-        savedControlHolder.length !== 0
-          ? savedControlHolder.reduce(function (a, b) {
-              return a + b;
-            })
-          : 0;
-      let payloadSum =
-        premCheckControlHolder.length !== 0
-          ? premCheckControlHolder.reduce(function (a, b) {
+      let totalSumValue =
+        allSums.length !== 0
+          ? allSums.reduce(function (a, b) {
               return a + b;
             })
           : 0;
       // sum must not be greater than 100
-      if (savedSum + payloadSum > 100) {
+      if (totalSumValue !== 100) {
         return next(
           createError(HTTP.OK, [
             {
@@ -60,9 +83,7 @@ exports.addPremCheckControl = async (req, res, next) => {
               statusCode: HTTP.OK,
               data: {
                 payloadControl: premCheckControlHolder,
-                payloadSum: payloadSum,
-                ExistingControl: savedControlHolder,
-                existingSum: savedSum,
+                totalSumValue,
               },
               code: HTTP.OK,
             },
@@ -76,33 +97,20 @@ exports.addPremCheckControl = async (req, res, next) => {
       );
       dataToReturn = updatedPrecheck;
     }
-    // check validity of LastTweetTimeInDays_limit
-    if (LastTweetTimeInDays_limit > 31) {
-      return next(
-        createError(HTTP.OK, [
-          {
-            status: RESPONSE.SUCCESS,
-            message: `${LastTweetTimeInDays_limit} days is Invalid`,
-            statusCode: HTTP.OK,
-            data: {},
-            code: HTTP.OK,
-          },
-        ])
-      );
-    }
     if (!premcheckExist) {
       // check sum of all indicators(must be less than 100)
-      let ageIndicator = launch_age_point || twitter_age_point;
+      let ageIndicator = Number(twitter_age_point) || Number(launch_age_point);
       let sumOfPoints =
         Number(ageIndicator) +
         Number(active_on_social_media_point) +
+        Number(lastTweetTimeInDays_point) +
         Number(project_satus_point);
-      if (sumOfPoints > 100) {
+      if (sumOfPoints !== 100) {
         return next(
           createError(HTTP.OK, [
             {
               status: RESPONSE.SUCCESS,
-              message: `The follwing Indicators Must Total 100percent [Twitter Age or Launchdate date Points, active oscial media point and project status point]`,
+              message: `Points Must Sum Up To 100percent [Twitter Age or Launchdate date Points, active oscial media point and project status point]`,
               statusCode: HTTP.OK,
               data: {},
               code: HTTP.OK,
@@ -114,10 +122,12 @@ exports.addPremCheckControl = async (req, res, next) => {
       let dataToCreateModel = {
         admin_id: req.user.user_id,
         admin_username: req.user.username,
-        name:"premCheck",
-        ...req.body
-      }
-      const newPremCheck = await new PremCheckControlService().create(dataToCreateModel);
+        name: "premCheck",
+        ...req.body,
+      };
+      const newPremCheck = await new PremCheckControlService().create(
+        dataToCreateModel
+      );
       messageData = "Added";
       dataToReturn = newPremCheck;
     }

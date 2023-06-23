@@ -7,12 +7,26 @@ const logger = require("../../../../../../logger.conf");
 
 exports.addTokenomicsControl = async (req, res, next) => {
   try {
-    let messageData;
-    let dataToReturn;
-    let sumOfPoints;
-    let sumOfPositiveIndicatorsPoints = 0;
-    // check if the sum of tokenomics values is valid
-    const {
+    // validate if any payload was passed
+    if (Object.entries(req.body).length > 0 === false) {
+      return next(
+        createError(HTTP.OK, [
+          {
+            status: RESPONSE.SUCCESS,
+            message: "No Control Field Entered",
+            statusCode: HTTP.OK,
+            data: {},
+            code: HTTP.OK,
+          },
+        ])
+      );
+    } else {
+      let messageData;
+      let dataToReturn;
+      let sumOfPoints;
+      let sumOfPositiveIndicatorsPoints = 0;
+      // check if the sum of tokenomics values is valid
+      const {
         tradeable_token_score,
         is_main_token_score,
         has_enough_utils_score,
@@ -24,59 +38,69 @@ exports.addTokenomicsControl = async (req, res, next) => {
         upperLimit_for_good,
         upperlimit_for_fair,
         upperlimit_for_poor,
-        upperlimit_for_vpoor
-    } = req.body;
+        upperlimit_for_vpoor,
+      } = req.body;
 
-    // check sum of positive indicators passed
-    for(let i = 0; i < positive_indicators.length; i++){
-        sumOfPositiveIndicatorsPoints += positive_indicators[i].indicator_score;
-    }
-    // check sum of all intitial indicators(must be less than 100)
-     sumOfPoints =
-      Number(tradeable_token_score) + 
-      Number(is_main_token_score) +
-      Number(has_enough_utils_score) + Number(has_dao_score) + Number(token_type_deflationary_score) + sumOfPositiveIndicatorsPoints;
-    if (sumOfPoints > 100) {
-      return next(
-        createError(HTTP.OK, [
-          {
-            status: RESPONSE.SUCCESS,
-            message: `Sum Of All Indicators Must Total 100percent, Re-Compute`,
-            statusCode: HTTP.OK,
-            data: {},
-            code: HTTP.OK,
-          },
-        ])
-      );
-    }
-    const tokenomicsExist = await new TokenomicsControlService().findOne({
-      name: "tokenomics",
-    });
-    if (tokenomicsExist) {
-      messageData = "Updated";
-      // update
-      const updatedTokenomics = await new TokenomicsControlService().update(
-        { name: "tokenomics" },
-        {...req.body}
-      );
-      dataToReturn = updatedTokenomics;
-    } 
-    if(!tokenomicsExist){
-      let dataToCreateReturn = {
-        admin_id: req.user.user_id,
-        admin_username: req.user.username,
-        name:"tokenomics",
-        ...req.body
+      // check sum of positive indicators passed
+      if (positive_indicators) {
+        for (let i = 0; i < positive_indicators.length; i++) {
+          sumOfPositiveIndicatorsPoints +=
+            positive_indicators[i].indicator_score;
+        }
       }
-      // create new prem Check control
-      const newTokenomics = await new TokenomicsControlService().create(dataToCreateReturn);
-      messageData = "Added";
-      dataToReturn = newTokenomics;
+
+      // check sum of all intitial indicators(must be less than 100)
+      sumOfPoints =
+        Number(tradeable_token_score) +
+        Number(is_main_token_score) +
+        Number(has_enough_utils_score) +
+        Number(has_dao_score) +
+        Number(token_type_deflationary_score) +
+        sumOfPositiveIndicatorsPoints;
+      if (sumOfPoints > 100) {
+        return next(
+          createError(HTTP.OK, [
+            {
+              status: RESPONSE.SUCCESS,
+              message: `Sum Of All Indicators Must Total 100percent, Re-Compute`,
+              statusCode: HTTP.OK,
+              data: {},
+              code: HTTP.OK,
+            },
+          ])
+        );
+      }
+      const tokenomicsExist = await new TokenomicsControlService().findOne({
+        name: "tokenomics",
+      });
+      if (tokenomicsExist) {
+        messageData = "Updated";
+        // update
+        const updatedTokenomics = await new TokenomicsControlService().update(
+          { name: "tokenomics" },
+          { ...req.body }
+        );
+        dataToReturn = updatedTokenomics;
+      }
+      if (!tokenomicsExist) {
+        let dataToCreateReturn = {
+          admin_id: req.user._id,
+          admin_username: req.user.username,
+          name: "tokenomics",
+          ...req.body,
+        };
+        // create new prem Check control
+        const newTokenomics = await new TokenomicsControlService().create(
+          dataToCreateReturn
+        );
+        messageData = "Added";
+        dataToReturn = newTokenomics;
+      }
+      return createResponse(`Tokenomics Control ${messageData}`, dataToReturn)(
+        res,
+        HTTP.OK
+      );
     }
-    return createResponse(`Tokenomics Control ${messageData}`, dataToReturn)(
-      res,
-      HTTP.OK
-    );
   } catch (err) {
     console.error(err);
     return next(createError.InternalServerError(err));
