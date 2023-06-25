@@ -1,6 +1,5 @@
 const AllPuposeIndicator = require("./tokenomicsIndicator");
 const TokenomicsControlService = require("../../app/modules/adminControl/services/tokenomicsControl.service");
-const { token } = require("morgan");
 
 exports.computeTokenomicsHealth = async (coinData) => {
   try {
@@ -18,15 +17,11 @@ exports.computeTokenomicsHealth = async (coinData) => {
     // control Indicators
     let positiveControlIndicators = [];
     let negativeControlIndicators = [];
+    // save control indicators
     if (tokenomicsControl) {
       for (let i = 0; i < tokenomicsControl.positive_indicators.length; i++) {
         positiveControlIndicators.push(
-          tokenomicsControl.positive_indicators[i].indicator_name
-        );
-      }
-      for (let i = 0; tokenomicsControl.negative_indicators; i++) {
-        negativeControlIndicators.push(
-          tokenomicsControl.negative_indicators[i].indicator_name
+          tokenomicsControl.positive_indicators[i]
         );
       }
     }

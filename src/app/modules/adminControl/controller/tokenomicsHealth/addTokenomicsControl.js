@@ -32,23 +32,31 @@ exports.addTokenomicsControl = async (req, res, next) => {
         has_enough_utils_score,
         has_dao_score,
         token_type_deflationary_score,
-        negative_indicators,
         positive_indicators,
+        postive_indicators_points,
         upperLimit_for_excellence,
         upperLimit_for_good,
         upperlimit_for_fair,
         upperlimit_for_poor,
         upperlimit_for_vpoor,
       } = req.body;
-
-      // check sum of positive indicators passed
-      if (positive_indicators) {
-        for (let i = 0; i < positive_indicators.length; i++) {
-          sumOfPositiveIndicatorsPoints +=
-            positive_indicators[i].indicator_score;
-        }
+      if (postive_indicators_points === 0 || !postive_indicators_points) {
+        return next(
+          createError(HTTP.OK, [
+            {
+              status: RESPONSE.SUCCESS,
+              message:
+                "Please pass the limt allocation for positive indicators",
+              statusCode: HTTP.OK,
+              data: {},
+              code: HTTP.OK,
+            },
+          ])
+        );
       }
-
+      if (postive_indicators_points) {
+        sumOfPositiveIndicatorsPoints += Number(postive_indicators_points);
+      }
       // check sum of all intitial indicators(must be less than 100)
       sumOfPoints =
         Number(tradeable_token_score) +
@@ -56,19 +64,91 @@ exports.addTokenomicsControl = async (req, res, next) => {
         Number(has_enough_utils_score) +
         Number(has_dao_score) +
         Number(token_type_deflationary_score) +
-        sumOfPositiveIndicatorsPoints;
+        Number(postive_indicators_points);
+
+      // check if sum is greater than 100
       if (sumOfPoints > 100) {
-        return next(
-          createError(HTTP.OK, [
-            {
-              status: RESPONSE.SUCCESS,
-              message: `Sum Of All Indicators Must Total 100percent, Re-Compute`,
-              statusCode: HTTP.OK,
-              data: {},
-              code: HTTP.OK,
-            },
-          ])
-        );
+        // check abnomally
+        let sumOfIntialIndicators =
+          Number(tradeable_token_score) +
+          Number(is_main_token_score) +
+          Number(has_enough_utils_score) +
+          Number(has_dao_score) +
+          Number(token_type_deflationary_score);
+        let positiveIndicatorsPoints = Number(postive_indicators_points);
+        let firstDifferencInSums =
+          positiveIndicatorsPoints - sumOfIntialIndicators;
+        if (firstDifferencInSums > 0) {
+          let valueToAddToInitialIndicators = 100 - positiveIndicatorsPoints;
+          let valueToAddToPositiveIndicators = 100 - sumOfIntialIndicators;
+          return next(
+            createError(HTTP.OK, [
+              {
+                status: RESPONSE.SUCCESS,
+                message: `Sum Of All Indicators Must Total 100, Please Add To Either One Of the Following in data body`,
+                statusCode: HTTP.OK,
+                data: {
+                  positiveIndicators: {
+                    PositiveIndiactorsShouldBe: valueToAddToPositiveIndicators,
+                  },
+                  otherIndicators: {
+                    indiactors: [
+                      "tradeable_token_score",
+                      "is_main_token_score",
+                      "has_enough_utils_score",
+                      "has_dao_score",
+                      "token_type_deflationary_score",
+                    ],
+                    OtherIndicatorsShouldBe: valueToAddToInitialIndicators,
+                  },
+                },
+                code: HTTP.OK,
+              },
+            ])
+          );
+        }
+      }
+      // check if sum is lesss than 100
+      if (sumOfPoints < 100) {
+        // check abnomally
+        let sumOfIntialIndicators =
+          Number(tradeable_token_score) +
+          Number(is_main_token_score) +
+          Number(has_enough_utils_score) +
+          Number(has_dao_score) +
+          Number(token_type_deflationary_score);
+        let positiveIndicatorsPoints = Number(postive_indicators_points);
+        let firstDifferencInSums =
+          positiveIndicatorsPoints - sumOfIntialIndicators;
+        if (firstDifferencInSums > 0) {
+          let valueToAddToInitialIndicators = 100 - positiveIndicatorsPoints;
+          let valueToAddToPositiveIndicators = 100 - sumOfIntialIndicators;
+          return next(
+            createError(HTTP.OK, [
+              {
+                status: RESPONSE.SUCCESS,
+                message: `Sum Of All Indicators Must Total 100, Please Add To Either One Of the Following in data body`,
+                statusCode: HTTP.OK,
+                data: {
+                  positiveIndicators: {
+                    PositiveIndiactorsShouldBe: valueToAddToPositiveIndicators,
+                  },
+                  otherIndicators: {
+                    indiactors: [
+                      "tradeable_token_score",
+                      "is_main_token_score",
+                      "has_enough_utils_score",
+                      "has_dao_score",
+                      "token_type_deflationary_score",
+                    ],
+                    OtherIndicatorsShouldBe: valueToAddToInitialIndicators,
+                  },
+                },
+                code: HTTP.OK,
+              },
+            ])
+          );
+        }
       }
       const tokenomicsExist = await new TokenomicsControlService().findOne({
         name: "tokenomics",

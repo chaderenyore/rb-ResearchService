@@ -7,22 +7,8 @@ exports.addTokenomicsControlSchema = Joi.object().keys({
   has_enough_utils_score: Joi.number().positive().optional(),
   has_dao_score: Joi.number().positive().optional(),
   token_type_deflationary_score: Joi.number().positive().optional(),
-  negative_indicators: Joi.array()
-    .items(
-      Joi.object().keys({
-        indicator_name: Joi.string().optional(),
-        indicator_score: Joi.number().optional(),
-      })
-    )
-    .optional(),
-  positive_indicators: Joi.array()
-    .items(
-      Joi.object().keys({
-        indicator_name: Joi.string().optional(),
-        indicator_score: Joi.number().optional(),
-      })
-    )
-    .optional(),
+  positive_indicators: Joi.array().optional(),
+  postive_indicators_points:Joi.number().positive().optional(),
   lower_limit_for_excellence: Joi.number().optional(),
   upperLimit_for_good: Joi.number().positive().optional(),
   upperlimit_for_fair: Joi.number().positive().optional(),
