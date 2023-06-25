@@ -109,7 +109,7 @@ exports.launchResearch = async (req, res, next) => {
               researcher_image_url: researchExist.researcher_image_url,
               researcher_username: researchExist.researcher_username,
               researcher_firstname: researchExist.researcher_firstname,
-              researcher_lastame: researchExist.researcher_lastame,
+              researcher_lastname: researchExist.researcher_lastame,
               research_label: researchExist.research_label,
               coin_name: researchExist.coin_name,
               coin_image: researchExist.coin_image,

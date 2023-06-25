@@ -32,11 +32,11 @@ exports.adminFetchAllResearchControl = async (req, res, next) => {
         ])
       );
     } else {
-        controlsArr.push(premCheckControl.data);
-        controlsArr.push(tokenomicsHealthControl.data);
+        controlsArr.push(premCheckControl.data[0]);
+        controlsArr.push(tokenomicsHealthControl.data[0]);
         dataToReturn.data = controlsArr;
         dataToReturn.pagination = premCheckControl.pagination;
-        dataToReturn.pagination.totalCount = premCheckControl.pagination.totalCount;
+        dataToReturn.pagination.totalCount = premCheckControl.pagination.totalCount + tokenomicsHealthControl.pagination.totalCount;
         dataToReturn.pagination.pageSize = premCheckControl.pagination.pageSize;
 
 

@@ -42,11 +42,13 @@ const schema = mongoose.Schema(
     is_shared:{type: Boolean},
     tags: {type: [String]},
     number_of_downloads: {type: Number, default: 0},
-    type: {type: String}
+    type: {type: String},
+    deleted_by: {type: String},
+    deleter_id:{type: String}
   },
   {
     timestamps: { createdAt: "created_at", updatedAt: "updated_at" },
   }
 );
 
-module.exports = mongoose.model("ResearchCommunity", schema);
+module.exports = mongoose.model("ResearchRecycleBin", schema);

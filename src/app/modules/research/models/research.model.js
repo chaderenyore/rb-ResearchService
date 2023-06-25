@@ -12,7 +12,7 @@ const schema = mongoose.Schema(
     researcher_image_url: { type: String},
     researcher_username: {type: String},
     researcher_firstname: {type: String},
-    researcher_lastame: {type: String},
+    researcher_lastname: {type: String},
     coin_name: {type: String},
     coin_url: {type: String},
     coin_image: {type: String},
@@ -37,7 +37,8 @@ const schema = mongoose.Schema(
     type: {type: String},
     number_of_downloads: {type: Number, default: 0},
     is_saved: {type: Boolean},
-    is_launched: {type: Boolean, default: false}
+    is_launched: {type: Boolean, default: false},
+    is_banned: {type: Boolean, default: false}
   },
   {
     timestamps: { createdAt: "created_at", updatedAt: "updated_at" },

@@ -30,7 +30,7 @@ exports.getUsersResearch = async (req, res, next) => {
     const allUsersResearch = await new ResearchService().all(
       req.query.limit,
       req.query.page,
-      querydata
+      {is_banned: false, ...querydata}
     );
     if (allUsersResearch.data.length === 0) {
       return next(

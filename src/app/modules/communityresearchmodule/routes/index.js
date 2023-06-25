@@ -12,6 +12,8 @@ const SaveResearchSchema = require("../../../vallidators/community/saveResearch.
 const ShareResearchSchema = require("../../../vallidators/community/shareResearch.validator");
 const ViewUsersPublicResearchSchema = require("../../../vallidators/community/publicResearch.validator");
 const ResearchGlobalSearchSchema = require("../../../vallidators/community/globalSearch.validator");
+const PopularResearchSchema = require("../../../vallidators/community/popularResearch.validator");
+
 
 
 
@@ -24,6 +26,8 @@ const SaveResearchController = require('../controllers/saveResearch.controller')
 const ShareResearchController = require('../controllers/shareResearch.controller');
 const ViewUsersPublicResearchController = require('../controllers/viewUserPublicResearch');
 const ResearchGlobalSearchController = require('../controllers/globalSearchCommunityResearch.controller');
+const PopularResearchController = require('../controllers/fetchPopularResearch');
+
 
 
 
@@ -85,6 +89,13 @@ router.get(
   authorize(['user','org']),
   validateRequest(ResearchGlobalSearchSchema.globalQuerySchema, 'query'),
   ResearchGlobalSearchController.searchResearchGlobally
+);
+
+router.get(
+  '/popular-research',
+  authorize(['user','org']),
+  validateRequest(PopularResearchSchema.popularResearchQuerySchema, 'query'),
+  PopularResearchController.fetchAllPopularResearch
 );
 
 module.exports = router;
