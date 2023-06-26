@@ -22,7 +22,11 @@ class PremCheckControlService {
   }
 
   async deleteAll(condition) {
-    return this.PremCheckControlRepository.deleteMany(condition);
+    return this.PremCheckControlRepository.delete(condition);
+  }
+
+  async deleteOne(condition) {
+    return this.PremCheckControlRepository.deleteOne(condition);
   }
 
   async all(limit, page, data) {

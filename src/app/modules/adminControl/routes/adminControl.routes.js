@@ -27,6 +27,9 @@ const AllResearchControlSchema = require("../../../vallidators/adminControl/rese
 const BannedResearchSchema = require("../../../vallidators/adminControl/research/banResearch.validator");
 const AllBannedResearchSchema = require("../../../vallidators/adminControl/research/banResearch.validator");
 const DeleteResearchSchema = require("../../../vallidators/adminControl/research/deleteResearch.validator");
+const DeletePremcheckControlSchema = require("../../../vallidators/adminControl/premCheckControl/deletePremCheckControl");
+const DeleteTokenomicsControlSchema = require("../../../vallidators/adminControl/tokenomicsControl/deleteTokenomics");
+
 
 
 // research controls controllers
@@ -36,6 +39,9 @@ const AllResearchControlsController = require("../controller/research/fetchAllRe
 const BannedResearchControlsController = require("../controller/research/banResearch");
 const FetchAllBannedResearchController = require("../controller/research/fetchAllBannedResearch");
 const DeleteResearchController = require("../controller/research/deleteResearch");
+const DeletePremcheckControlController = require("../controller/premCheck/deletePremCheckControl");
+const DeleteTokenomicsControlController = require("../controller/tokenomicsHealth/deleteTokenomicsControl");
+
 
 
 
@@ -132,4 +138,20 @@ router.delete(
   validateRequest(DeleteResearchSchema.deleteResearchSchema, "query"),
   DeleteResearchController.bulkDeleteResearch
 );
+
+router.delete(
+  "/tokenomics-control/:id",
+  authorizeAdmin(["super", "admin", "moderator"]),
+  validateRequest(DeletePremcheckControlSchema.deletePremCheckControlParamsSchema, "params"),
+  DeletePremcheckControlController.deletePremCheckControl
+);
+
+router.delete(
+  "/premcheck-control/:id",
+  authorizeAdmin(["super", "admin", "moderator", "account-view", "account-edit"]),
+  validateRequest(DeleteTokenomicsControlSchema.deleteTokenomicsControlParamsSchema, "params"),
+  DeleteTokenomicsControlController.deleteTokenomicsControl
+);
+
+
 module.exports = router;

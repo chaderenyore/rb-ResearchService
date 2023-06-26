@@ -32,13 +32,7 @@ exports.addTokenomicsControl = async (req, res, next) => {
         has_enough_utils_score,
         has_dao_score,
         token_type_deflationary_score,
-        positive_indicators,
         postive_indicators_points,
-        upperLimit_for_excellence,
-        upperLimit_for_good,
-        upperlimit_for_fair,
-        upperlimit_for_poor,
-        upperlimit_for_vpoor,
       } = req.body;
       if (postive_indicators_points === 0 || !postive_indicators_points) {
         return next(
