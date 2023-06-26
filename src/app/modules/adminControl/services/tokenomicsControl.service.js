@@ -22,7 +22,11 @@ class TokenomicsControlService {
   }
 
   async deleteAll(condition) {
-    return this.TokenomicsControlRepository.deleteMany(condition);
+    return this.TokenomicsControlRepository.delete(condition);
+  }
+
+  async deleteOne(condition) {
+    return this.TokenomicsControlRepository.deleteOne(condition);
   }
 
   async all(limit, page, data) {
