@@ -19,7 +19,6 @@ exports.bulkDeleteResearch = async (req, res, next) => {
       // future implementation
       // search for research and if report count exceed a certain value ,delete
       // check if research exist
-      console.log("IDS ============ ", research_ids[i]);
       const research = await new ResearchService().findAResearch({_id: research_ids[i]});
       if(!research){
         return next(
@@ -36,10 +35,9 @@ exports.bulkDeleteResearch = async (req, res, next) => {
       }
       deletedResearch.push(research);
       // search for researchs in community and delete
-      const deletedresearch = await new CommunityResearchService().deletOne({
+      const deletedresearch = await new CommunityResearchService().deleteOne({
         original_research_id: research_ids[i],
       });
-      console.log("DELETED COMMUNITY research ===" , deletedresearch)
       //delete from users researchs
       const deletedUserResearchs = await new ResearchService().deleteOne({
         _id: research_ids[i],

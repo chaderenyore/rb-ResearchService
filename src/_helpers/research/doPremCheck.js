@@ -25,7 +25,7 @@ exports.doPremCheck = async (coinData) => {
     ) {
       let twitterAgeLimit = premCheckControl ? Number(premCheckControl.twitter_age_limit) || 4 : 4;
       let launchAgeLimit = premCheckControl ? Number(premCheckControl.launch_age_limit) || 4 : 4;
-      let agePoint = premCheckControl ? Number(premCheckControl.twitter_age_point) || Number(premCheckControl.launch_age_point) || 40 : 40;
+      let agePoint = premCheckControl ? Number(premCheckControl.twitter_age_point) || Number(premCheckControl.launch_age_point) || 45 : 45;
       if (
         TwitterAgeInMonths.ageConvertedToMonths >= twitterAgeLimit ||
         LaunchDateAgeInMonths.ageConvertedToMonths >= launchAgeLimit
@@ -34,7 +34,7 @@ exports.doPremCheck = async (coinData) => {
         totalPoint += agePoint;
       }
     }
-    let socialMediaActivePoint = premCheckControl ? Number(premCheckControl.active_on_social_media_point) || 20 : 20;
+    let socialMediaActivePoint = premCheckControl ? Number(premCheckControl.active_on_social_media_point) || 25 : 25;
     if (coinData.is_social_media_active == true) {
       //   add points as required here
       totalPoint += socialMediaActivePoint;
@@ -47,7 +47,7 @@ exports.doPremCheck = async (coinData) => {
     if (LastTweetTimeInDays && LastTweetTimeInDays < lastTweetLimit) {
       totalPoint += lastTweetTimePoints;
     }
-    let projectStatusPoint = premCheckControl ? Number(premCheckControl.lastTweetTimeInDays_limit) || 30 : 30;
+    let projectStatusPoint = premCheckControl ? Number(premCheckControl.project_satus_point) || 20 : 20;
     if (coinData.project_status === "yes") {
       totalPoint += projectStatusPoint;
     }
