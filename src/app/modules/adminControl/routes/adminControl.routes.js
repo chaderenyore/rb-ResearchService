@@ -135,7 +135,7 @@ router.get(
 router.delete(
   "/delete-research",
   authorizeAdmin(["super", "admin", "moderator", "account-view", "account-edit"]),
-  validateRequest(DeleteResearchSchema.deleteResearchSchema, "query"),
+  validateRequest(DeleteResearchSchema.deleteResearchSchema, "body"),
   DeleteResearchController.bulkDeleteResearch
 );
 

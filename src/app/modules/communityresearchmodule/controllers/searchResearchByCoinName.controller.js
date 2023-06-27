@@ -8,7 +8,7 @@ const CommunityResearchService = require("../services/communityResearch.services
 exports.searchReserachByCoinName = async (req, res, next) => {
   try {
     const { coin_name } = req.query;
-    const filteredCommunityResearch = await new CommunityResearchService().getAll(
+    const filteredCommunityResearch = await new CommunityResearchService().all(
       req.query.limit,
       req.query.page,
 

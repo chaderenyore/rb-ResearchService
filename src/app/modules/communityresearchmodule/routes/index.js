@@ -17,8 +17,6 @@ const SearchCommunitByCoinNameSchema = require("../../../vallidators/community/s
 
 
 
-
-
 // controllers
 const FetchAllCommunityResearchController = require('../controllers/fetchAllCommunityResearch.controller');
 const GetAllSponsoredController = require('../controllers/getAllSponsoredRsearch.controller');
@@ -30,10 +28,6 @@ const ViewUsersPublicResearchController = require('../controllers/viewUserPublic
 const ResearchGlobalSearchController = require('../controllers/globalSearchCommunityResearch.controller');
 const PopularResearchController = require('../controllers/fetchPopularResearch');
 const SearchCommunitByCoinNameController = require('../controllers/searchResearchByCoinName.controller');
-
-
-
-
 
 
 
@@ -105,7 +99,7 @@ router.get(
 router.get(
   '/filterbycoin',
   authorize(['user','org']),
-  validateRequest(SearchCommunitByCoinNameSchema, 'query'),
+  validateRequest(SearchCommunitByCoinNameSchema.searchByCoinNameQuerySchema, 'query'),
   SearchCommunitByCoinNameController.searchReserachByCoinName
 );
 

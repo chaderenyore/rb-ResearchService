@@ -36,7 +36,7 @@ exports.computeTokenomicsHealth = async (coinData) => {
       // get first step data from coinData and compute score
       if (Number(coinData.number_of_tradeable_tokens)) {
         // increase total points by value
-        totalPoint += Number(coinData.number_of_tradeable_tokens);
+        totalPoint += Number(coinData.number_of_tradeable_tokens) || 4;
       }
       let isMainTokenPoint = tokenomicsControl
         ? Number(tokenomicsControl.is_main_token_score) || 5
@@ -125,8 +125,11 @@ exports.computeTokenomicsHealth = async (coinData) => {
         totalPoint += 0;
         console.log("condition 5");
       }
+      let maxPositiveIndicatorPoints = tokenomicsControl
+      ? Number(tokenomicsControl.postive_indicators_points) || 80
+      : 80;
       if (positiveSum === 100) {
-        totalPoint += 80;
+        totalPoint += Number(maxPositiveIndicatorPoints) || 80;
         console.log("condition 5");
       }
       console.log(
@@ -136,8 +139,8 @@ exports.computeTokenomicsHealth = async (coinData) => {
       //  check if indicators where passed //
       // define limits
       let lowerLimitForExcellence = tokenomicsControl
-        ? Number(tokenomicsControl.lower_limit_for_excellence) || 20
-        : 20;
+        ? Number(tokenomicsControl.lower_limit_for_excellence) || 70
+        : 70;
       let upperLimitForGood = tokenomicsControl
         ? Number(tokenomicsControl.upper_limit_for_good) || 70
         : 70;
