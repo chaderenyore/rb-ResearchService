@@ -41,6 +41,8 @@ const FetchAllBannedResearchController = require("../controller/research/fetchAl
 const DeleteResearchController = require("../controller/research/deleteResearch");
 const DeletePremcheckControlController = require("../controller/premCheck/deletePremCheckControl");
 const DeleteTokenomicsControlController = require("../controller/tokenomicsHealth/deleteTokenomicsControl");
+const TotalResearchController = require("../controller/research/totalNumberOfResearch");
+
 
 
 
@@ -151,6 +153,12 @@ router.delete(
   authorizeAdmin(["super", "admin", "moderator", "account-view", "account-edit"]),
   validateRequest(DeleteTokenomicsControlSchema.deleteTokenomicsControlParamsSchema, "params"),
   DeleteTokenomicsControlController.deleteTokenomicsControl
+);
+
+router.get(
+  "/numberof-research",
+  authorizeAdmin(["super", "admin", "moderator", "account-view", "account-edit"]),
+  TotalResearchController.fetchNumberOfResearch
 );
 
 
