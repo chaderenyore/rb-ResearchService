@@ -54,7 +54,8 @@ exports.adminFetchAllResearchControl = async (req, res, next) => {
           lower_limit_for_poor: tokenomicsHealthControl.data[0].lower_limit_for_poor || 20,
           upper_limit_for_vpoor: tokenomicsHealthControl.data[0].upper_limit_for_vpoor || 20,
           lower_limit_for_vpoor: tokenomicsHealthControl.data[0].lower_limit_for_vpoor || 5,
-        }
+        },
+        created_at: tokenomicsHealthControl.data[0].created_at || Date.now(),
       }
       const premCheckControlObject = {
         _id: premCheckControl.data[0]._id || "Using Default",
@@ -70,7 +71,8 @@ exports.adminFetchAllResearchControl = async (req, res, next) => {
           active_on_social_media_point: premCheckControl.data[0].active_on_social_media_point || 25, 
           project_satus_point: premCheckControl.data[0].project_satus_point || 20,
           total_pass_mark: premCheckControl.data[0].total_pass_mark || 60
-        }
+        },
+        created_at: premCheckControl.data[0].created_at || Date.now(),
       }
         controlsArr.push(tokenomicsControlObject);
         controlsArr.push(premCheckControlObject);

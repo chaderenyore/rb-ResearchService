@@ -41,6 +41,10 @@ class ResearchService {
   async findById (id) {
     return this.ResearchRepository.findById (id)
   }
+
+  async countDocuments (filter = {}) {
+    return this.ResearchRepository.count(filter)
+  }
 }
 
 module.exports = ResearchService;
