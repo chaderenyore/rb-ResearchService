@@ -192,7 +192,7 @@ exports.computeTokenomicsHealth = async (coinData) => {
       } else if (totalPoint === lowerLimitForFair) {
         return {
           error: false,
-          message: "fair",
+          message: "Fair",
           data: totalPoint,
         };
       } else if (
@@ -201,7 +201,7 @@ exports.computeTokenomicsHealth = async (coinData) => {
       ) {
         return {
           error: false,
-          message: "fair",
+          message: "Fair",
           data: totalPoint,
         };
       } else if (
@@ -210,13 +210,13 @@ exports.computeTokenomicsHealth = async (coinData) => {
       ) {
         return {
           error: false,
-          message: "good",
+          message: "Good",
           data: totalPoint,
         };
       } else if (totalPoint > lowerLimitForExcellence) {
         return {
           error: false,
-          message: "excellent",
+          message: "Excellent",
           data: totalPoint,
         };
       }

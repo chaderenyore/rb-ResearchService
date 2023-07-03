@@ -23,7 +23,8 @@ const schema = mongoose.Schema(
     total_times_shared: {type: Number, default: 0},
     total_times_saved: {type: Number, default: 0},
     age: {type: String},
-    tokenomics_rating: {type: String, enum: ['excellent', 'good', 'Very Poor', 'fair', 'Poor']},
+    preliminary_score:{type:String, enum:["pass", "fail"]},
+    tokenomics_rating: {type: String, enum: ['Excellent', 'Good', 'Very Poor', 'Fair', 'Poor']},
     potential_return: {type: Number},
     verdit:{type: String},
     verdit_score: {type: Number, default: 0},
@@ -38,7 +39,8 @@ const schema = mongoose.Schema(
     number_of_downloads: {type: Number, default: 0},
     is_saved: {type: Boolean},
     is_launched: {type: Boolean, default: false},
-    is_banned: {type: Boolean, default: false}
+    is_banned: {type: Boolean, default: false},
+    ResearchBuddyVerdit:{type: Object}
   },
   {
     timestamps: { createdAt: "created_at", updatedAt: "updated_at" },

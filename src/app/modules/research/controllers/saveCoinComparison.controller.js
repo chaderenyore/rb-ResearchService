@@ -32,7 +32,6 @@ exports.saveResearchComparisonInfo = async (req, res, next) => {
         Number(req.body.main_coin_info.market_cap),
         req.body.reference_coins_data
       );
-      console.log("AVR DATA ====== ", AVRData);
       // check if action is to save as draft
       if (req.query.save_as_draft === true) {
         const dataToComparison = {
