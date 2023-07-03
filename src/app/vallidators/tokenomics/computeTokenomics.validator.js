@@ -16,5 +16,7 @@ exports.computeTokenomicsSchema = Joi.object().keys({
   allocation_data: Joi.array().items(Joi.object().keys({
     name: Joi.string().required(),
     percentage:Joi.number().positive().required(),
+    total_allocation : Joi.number()
+    .positive().required()
   })).required(),
 });

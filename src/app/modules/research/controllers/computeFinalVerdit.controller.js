@@ -77,10 +77,12 @@ exports.computeFinalVerdit = async (req, res, next) => {
         }
     }
     // update base reserach info with verdict data
-    const updatedResearch = await new ResearchService().update({_id: req.params.research_id}, {verdit: ResearchBuddyVerdit.Verdit})
+    const updatedResearch = await new ResearchService().update({_id: req.params.research_id}, {verdit: ResearchBuddyVerdit.Verdit, ResearchBuddyVerdit: ResearchBuddyVerdit})
       const DataToClient = {
         PremChecks: researchPremChecks || dataMessage,
+        Preliminary_Results:researchExist.preliminary_score,
         Tokenomics: researchTokenomics || dataMessage,
+        Tokenomics_Rating:researchExist.tokenomics_rating,
         Adoption_And_Recognition: researchAdoptionAndRecognition || dataMessage,
         Community_And_TeamSpirit: researchCommunityAndTeamSpirit || dataMessage,
         Comparison: researchComparison || dataMessage,

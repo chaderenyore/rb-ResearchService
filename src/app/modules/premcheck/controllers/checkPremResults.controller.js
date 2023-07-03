@@ -87,7 +87,7 @@ exports.premCheck = async (req, res, next) => {
           // update Research
           const updatedResearch = await new ResearchService().update(
             { _id: req.body.research_id },
-            { ...req.body, age: accountAge}
+            { ...req.body, age: accountAge, preliminary_score:message}
           );
           // send current verdit to research service
           const resultData = { type: "prem", grade: message };
@@ -189,7 +189,7 @@ exports.premCheck = async (req, res, next) => {
               },
             };
             // update Research Age Info
-            const updatedResearchAge = await new ResearchService().update({_id:  newResearch._id}, {age: accountAge})
+            const updatedResearchAge = await new ResearchService().update({_id:  newResearch._id}, {age: accountAge,preliminary_score:message})
             // send current verdit to research service
             const resultData = { type: "prem", grade: message };
             const CummulateVerditScore = await UpdateResearchVerditScore(

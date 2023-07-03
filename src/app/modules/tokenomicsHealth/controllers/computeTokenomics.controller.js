@@ -67,7 +67,6 @@ exports.computeTokenomics = async (req, res, next) => {
         researcher_id: req.user.user_id,
         _id: String(research_id),
       });
-      console.log("RESEARCH AT TOKENOMICS ===== ", isMyResearch)
       if (!isMyResearch) {
         return next(
           createError(HTTP.OK, [
@@ -228,7 +227,6 @@ exports.computeTokenomics = async (req, res, next) => {
                 research_id,
                 resultData
               );
-              console.log("RESEARCH UPDATED ======= ", CummulateVerditScore);
               return createResponse(`${message}`, tokenomicsResults)(
                 res,
                 HTTP.OK

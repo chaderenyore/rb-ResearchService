@@ -40,12 +40,15 @@ exports.getResearchDetails = async (req, res, next) => {
       }
       const DataToClient = {
         PremChecks: researchPremChecks || dataMessage,
+        Preliminary_Results:researchExist.preliminary_score,
         Tokenomics: researchTokenomics || dataMessage,
+        Tokenomics_Rating:researchExist.tokenomics_rating,
         Adoption_And_Recognition: researchAdoptionAndRecognition || dataMessage,
         Community_And_TeamSpirit: researchCommunityAndTeamSpirit || dataMessage,
         Comparison: researchComparison || dataMessage,
         BaseResearch: researchExist || dataMessage,
         Tags: researchExist.tags,
+        ResearchBuddyVerdit: researchExist.ResearchBuddyVerdit || dataMessage
       };
       //   update Resaerch Clicks
       const UpdateResearhClicks = await new ResearchService().update(
