@@ -14,6 +14,7 @@ const schema = mongoose.Schema(
     researcher_firstname: {type: String},
     researcher_lastname: {type: String},
     coin_name: {type: String},
+    slug:{type:String},
     coin_url: {type: String},
     coin_image: {type: String},
     amount_paid:{type: Number},

@@ -11,6 +11,7 @@ const schema = mongoose.Schema(
     researcher_username: {type: String},
     researcher_firstname: {type: String},
     researcher_lastname: {type: String},
+    slug:{type:String},
     is_original: {type: Boolean},
     original_research: {type: Object},
     reposter_id:{type: String},
