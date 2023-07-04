@@ -5,7 +5,7 @@ exports.saveComparisonSchema = Joi.object().keys({
   research_id: Joi.objectId().required(),
   is_independent: Joi.string().valid("true", "false").optional(),
   main_coin_name: Joi.string().optional(),
-  slug:Joi.string().optional(),
+  slug:Joi.string().required(),
   main_coin_info: Joi.object()
     .keys({
       current_price: Joi.number().positive().required(),

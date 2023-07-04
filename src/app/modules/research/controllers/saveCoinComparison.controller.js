@@ -67,6 +67,7 @@ exports.saveResearchComparisonInfo = async (req, res, next) => {
             const updateData = {
               research_price: req.body.main_coin_info.current_price,
               potential_return: AVRData.main_coin_AVR,
+              slug: req.body.slug
             };
             const updatedResearch = await new ResearchService().update(
               {
@@ -143,6 +144,7 @@ exports.saveResearchComparisonInfo = async (req, res, next) => {
             const updateResearchData = {
               research_price: req.body.main_coin_info.current_price,
               potential_return: AVRData.main_coin_AVR,
+              slug: req.body.slug
             };
             const updatedResearch = await new ResearchService().update(
               {
