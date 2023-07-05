@@ -10,7 +10,7 @@ exports.fetchAllPopularResearch = async (req, res, next) => {
     const popularResearch = await new CommunityResearchService().fetchAllOrderBy(
       req.query.limit,
       req.query.page,
-      _,
+      "-_id",
      {'total_comments':-1},
     );
     if (popularResearch && popularResearch.data.length === 0) {

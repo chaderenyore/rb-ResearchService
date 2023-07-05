@@ -13,6 +13,7 @@ exports.computeTokenomicsSchema = Joi.object().keys({
   total_supply: Joi.number().positive().optional(),
   max_supply: Joi.number().positive().optional(),
   has_dao: Joi.boolean().required(),
+  utility: Joi.string().optional(),
   allocation_data: Joi.array().items(Joi.object().keys({
     name: Joi.string().required(),
     percentage:Joi.number().positive().required(),
