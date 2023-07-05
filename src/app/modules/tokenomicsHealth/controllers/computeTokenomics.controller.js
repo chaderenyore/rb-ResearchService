@@ -23,6 +23,7 @@ exports.computeTokenomics = async (req, res, next) => {
       circulating_supply,
       total_supply,
       max_supply,
+      utility,
       allocation_data,
       has_dao,
       was_draft,
@@ -171,6 +172,7 @@ exports.computeTokenomics = async (req, res, next) => {
               circulating_supply,
               total_supply,
               max_supply,
+              utility,
               allocation_data,
               has_dao,
               is_draft: false

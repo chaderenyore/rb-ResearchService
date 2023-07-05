@@ -11,7 +11,8 @@ exports.saveComparisonSchema = Joi.object().keys({
       current_price: Joi.number().positive().required(),
       market_cap: Joi.number().positive().required(),
       user: Joi.number().positive().optional(),
-      volume: Joi.number().positive().optional()
+      volume: Joi.number().positive().optional(),
+      other_coin_options: Joi.array().items(Joi.object()),
     })
     .required(),
   reference_coins_data: Joi.array()
@@ -22,6 +23,7 @@ exports.saveComparisonSchema = Joi.object().keys({
         market_cap: Joi.number().positive().optional(),
         user: Joi.number().positive().optional(),
         volume: Joi.number().positive().optional(),
+        other_coin_options: Joi.array().items(Joi.object()),
         average_return: Joi.number().positive().optional(),
       })
     )

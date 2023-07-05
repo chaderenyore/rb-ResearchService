@@ -10,6 +10,7 @@ const schema = mongoose.Schema(
     circulating_supply: {type: Number},
     total_supply:{type: Number},
     max_supply:{type: Number},
+    utility:{type: String},
     purpose: {type: Object},
     has_dao:{type: Boolean},
     tags: {type: [String]},
