@@ -37,7 +37,7 @@ const schema = mongoose.Schema(
     is_working_product:{type: Boolean},
     research_price: {type: String},
     current_price: {type: String},
-    is_visible: {type :Boolean},
+    is_visible: {type :Boolean, default: true},
     is_banned:{type: Boolean, default: false},
     original_post_isVisible: {type: Boolean, default: true},
     is_sponsored: {type :Boolean},

@@ -3,6 +3,6 @@ Joi.objectId = require("joi-objectid")(Joi);
 
 
 exports.getAllLeadersResearchSchema = Joi.object({
-    page: Joi.number().positive().optional(),
-    limit: Joi.number().positive().optional(),
+    page: Joi.number().positive().required(),
+    limit: Joi.number().positive().required(),
   });

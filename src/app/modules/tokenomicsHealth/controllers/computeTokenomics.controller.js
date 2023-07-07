@@ -4,11 +4,12 @@ const createError = require("../../../../_helpers/createError");
 const { createResponse } = require("../../../../_helpers/createResponse");
 const ComputeTokenomicsHealth =
   require("../../../../_helpers/research/tokenomicsHealthCalculator").computeTokenomicsHealth;
-  const UpdateResearchVerditScore =
+const UpdateResearchVerditScore =
   require("../../../../_helpers/research/updateVerditScore").updateVerditSore;
 const ResearchService = require("../../research/services/research.services");
 const logger = require("../../../../../logger.conf");
 const TokenomicsService = require("../services/tokenomics.service");
+const TokenomicsAllocationService = require("../services/tokenomicsAllocation.services");
 
 exports.computeTokenomics = async (req, res, next) => {
   try {
@@ -28,6 +29,41 @@ exports.computeTokenomics = async (req, res, next) => {
       has_dao,
       was_draft,
     } = req.body;
+    // Search For allocation data
+    for (let i = 0; i < allocation_data.length; i++) {
+      const allocationDataExists =
+        await new TokenomicsAllocationService().findOne({
+          research_id: research_id,
+          indicator_name: allocation_data[i].name,
+        });
+      if (allocationDataExists && !req.query.is_independent) {
+        // update
+        const updateData = {
+          indicator_percentage: allocation_data[i].percentage,
+          indicator_total_allocation: allocation_data[i].total_allocation,
+        };
+        const UpdatedTokenomicsAllocation =
+          await new TokenomicsAllocationService().update(
+            {
+              research_id: research_id,
+              indicator_name: allocation_data[i].name,
+            },
+            updateData
+          );
+      } else {
+        // create new record
+        const dataToAllocationModel = {
+          research_id: research_id,
+          indicator_name: allocation_data[i].name,
+          indicator_percentage: allocation_data[i].percentage,
+          indicator_total_allocation: allocation_data[i].total_allocation,
+        };
+        const newTokenomicsAllocation =
+          await new TokenomicsAllocationService().create(dataToAllocationModel);
+      console.log("ALLOCATION DATA ====== ", newTokenomicsAllocation)
+      }
+    }
+
     // check if tokenomics is been used as a tool
     if (req.query.is_independent === "true") {
       // get Tokenomics results from criteria
@@ -133,11 +169,11 @@ exports.computeTokenomics = async (req, res, next) => {
               const updatedResearch = await new ResearchService().update(
                 {
                   _id: research_id,
-                  researcher_id: req.user.user_id
+                  researcher_id: req.user.user_id,
                 },
                 dataToUpdateResearch
               );
-              console.log("UPDATE RESEARCH ====== ", updatedResearch)
+              console.log("UPDATE RESEARCH ====== ", updatedResearch);
               const resultData = { type: "tokenomics", grade: message };
               const CummulateVerditScore = await UpdateResearchVerditScore(
                 research_id,
@@ -162,79 +198,78 @@ exports.computeTokenomics = async (req, res, next) => {
             );
           }
         } else {
-            // create tokenomics
-            const dataToTokenomics = {
-              research_id: research_id,
-              number_of_tradeable_tokens,
-              is_main_token,
-              has_enough_utility,
-              token_type,
-              circulating_supply,
-              total_supply,
-              max_supply,
-              utility,
-              allocation_data,
-              has_dao,
-              is_draft: false
-            };
-            const researchTokenomics = await new TokenomicsService().create(
-              dataToTokenomics
-            );
-            // get Tokenomics results from criteria
-            const coinData = {
-              number_of_tradeable_tokens,
-              is_main_token,
-              has_enough_utility,
-              token_type,
-              allocation_data,
-              has_dao,
-            };
-            const { error, message, data } = await ComputeTokenomicsHealth(
-              coinData
-            );
-            if (error) {
-              return next(
-                createError(HTTP.OK, [
-                  {
-                    status: RESPONSE.SUCCESS,
-                    message: message,
-                    statusCode: HTTP.OK,
-                    data,
-                    code: HTTP.OK,
-                  },
-                ])
-              );
-            } else {
-              const tokenomicsResults = {
-                research_id: research_id,
-                tokenomicsResults: {
-                  message,
-                  score: data,
-                },
-              };
-              // update base research
-              const dataToUpdateResearch = {
-                tokenomics_rating: message
-              };
-              const updatedResearch = await new ResearchService().update(
+          // create tokenomics
+          const dataToTokenomics = {
+            research_id: research_id,
+            number_of_tradeable_tokens,
+            is_main_token,
+            has_enough_utility,
+            token_type,
+            circulating_supply,
+            total_supply,
+            max_supply,
+            utility,
+            allocation_data,
+            has_dao,
+            is_draft: false,
+          };
+          const researchTokenomics = await new TokenomicsService().create(
+            dataToTokenomics
+          );
+          // get Tokenomics results from criteria
+          const coinData = {
+            number_of_tradeable_tokens,
+            is_main_token,
+            has_enough_utility,
+            token_type,
+            allocation_data,
+            has_dao,
+          };
+          const { error, message, data } = await ComputeTokenomicsHealth(
+            coinData
+          );
+          if (error) {
+            return next(
+              createError(HTTP.OK, [
                 {
-                  _id: research_id,
-                  researcher_id:req.user.user_id
+                  status: RESPONSE.SUCCESS,
+                  message: message,
+                  statusCode: HTTP.OK,
+                  data,
+                  code: HTTP.OK,
                 },
-                dataToUpdateResearch
-              );
+              ])
+            );
+          } else {
+            const tokenomicsResults = {
+              research_id: research_id,
+              tokenomicsResults: {
+                message,
+                score: data,
+              },
+            };
+            // update base research
+            const dataToUpdateResearch = {
+              tokenomics_rating: message,
+            };
+            const updatedResearch = await new ResearchService().update(
+              {
+                _id: research_id,
+                researcher_id: req.user.user_id,
+              },
+              dataToUpdateResearch
+            );
 
-              const resultData = { type: "tokenomics", grade: message };
-              const CummulateVerditScore = await UpdateResearchVerditScore(
-                research_id,
-                resultData
-              );
-              return createResponse(`${message}`, tokenomicsResults)(
-                res,
-                HTTP.OK
-              );
-            }
-          
+            const resultData = { type: "tokenomics", grade: message };
+            const CummulateVerditScore = await UpdateResearchVerditScore(
+              research_id,
+              resultData
+            );
+            return createResponse(`${message}`, tokenomicsResults)(
+              res,
+              HTTP.OK
+            );
+          }
         }
       }
     }

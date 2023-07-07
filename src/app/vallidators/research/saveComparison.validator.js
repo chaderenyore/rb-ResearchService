@@ -5,7 +5,7 @@ exports.saveComparisonSchema = Joi.object().keys({
   research_id: Joi.objectId().required(),
   is_independent: Joi.string().valid("true", "false").optional(),
   main_coin_name: Joi.string().optional(),
-  slug:Joi.string().required(),
+  ticker:Joi.string().required(),
   main_coin_info: Joi.object()
     .keys({
       current_price: Joi.number().positive().required(),
@@ -18,6 +18,7 @@ exports.saveComparisonSchema = Joi.object().keys({
   reference_coins_data: Joi.array()
     .items(
       Joi.object().keys({
+        asset_id: Joi.string().required(),
         coin_name: Joi.string().required(),
         current_price: Joi.number().positive().required(),
         market_cap: Joi.number().positive().optional(),

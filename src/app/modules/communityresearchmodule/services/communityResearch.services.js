@@ -36,8 +36,8 @@ class ResearchAdoptionService {
     return this.CommunityResearchRepository.all (limit, page, data)
   }
 
-  async fetchAllOrderBy(limit, page, data, selectedFields, sortFilter) {
-    return this.CommunityResearchRepository.fetchAllOrderBy(limit, page, data, selectedFields, sortFilter);
+  async fetchAllOrderBy(limit, page, data, sortFilter) {
+    return this.CommunityResearchRepository.fetchAllOrderBy(limit, page, data, sortFilter);
   }
 
   async findById (id) {
