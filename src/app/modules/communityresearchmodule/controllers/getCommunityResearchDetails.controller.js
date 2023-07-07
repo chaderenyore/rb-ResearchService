@@ -5,6 +5,7 @@ const { createResponse } = require("../../../../_helpers/createResponse");
 const logger = require("../../../../../logger.conf");
 const PremCheckService = require("../../premcheck/services/premCheck.service");
 const TokenomicsService = require("../../tokenomicsHealth/services/tokenomics.service");
+const TokenomicsAllocationService = require("../../tokenomicsHealth/services/tokenomicsAllocation.services");
 const AdoptionAndRecognitionService = require("../../research/services/researchAdoption.service");
 const ResearchCommunityANdSpiritService = require("../../research/services/researchCommunity.service");
 const ResearchComparisonService = require("../../research/services/comparison.services");
@@ -24,6 +25,7 @@ exports.getResearchDetails = async (req, res, next) => {
       const researchTokenomics = await new TokenomicsService().findOne({
         research_id: req.query.research_id,
       });
+      const researchTokenomicsAllocation = await new TokenomicsAllocationService().all({research_id: req.query.research_id,})
       const researchAdoptionAndRecognition =
         await new AdoptionAndRecognitionService().findOne({
           research_id: req.query.research_id,
@@ -42,6 +44,7 @@ exports.getResearchDetails = async (req, res, next) => {
         PremChecks: researchPremChecks || dataMessage,
         Preliminary_Results:researchExist.preliminary_score,
         Tokenomics: researchTokenomics || dataMessage,
+        Tokenomics_AllocationData: researchTokenomicsAllocation.data || dataMessage,
         Tokenomics_Rating:researchExist.tokenomics_rating,
         Adoption_And_Recognition: researchAdoptionAndRecognition || dataMessage,
         Community_And_TeamSpirit: researchCommunityAndTeamSpirit || dataMessage,

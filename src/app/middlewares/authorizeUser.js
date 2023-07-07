@@ -33,7 +33,6 @@ exports.authorize = (role = []) => {
       );
       if (role.includes(String(user.data.data.user_type))) {
         req.user = user.data.data;
-        console.log('REQ USER============ ', req.user);
         req.token = token;
         next();
       } else {

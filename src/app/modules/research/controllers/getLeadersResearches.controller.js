@@ -1,5 +1,6 @@
 const axios = require("axios").default;
 const { HTTP } = require("../../../../_constants/http");
+const { RESPONSE } = require("../../../../_constants/response");
 const createError = require("../../../../_helpers/createError");
 const { createResponse } = require("../../../../_helpers/createResponse");
 const logger = require("../../../../../logger.conf");
@@ -11,10 +12,9 @@ exports.getLeadersResearch = async (req, res, next) => {
     let followingIdsArray = [];
     let follwingResearches = [];
     // pass the user id to the following from user sevice
-    const DataToUserService = {};
-    const followingData = await axios.post(
-      `${KEYS.USER_SERVICE_URI}/userss/v1/following-all?platform=web&limit=${req.query.limit}&page=${req.query.page}`,
-      Data,
+    const LeadersResearchhData = {};
+    const user = await axios.get(
+      `${KEYS.USER_SERVICE_URI}/users/v1/following-all?platform=web&limit=${req.query.limit}&page=${req.query.page}`,
       {
         headers: {
           Authorization: `Bearer ${req.token}`,
@@ -43,12 +43,15 @@ exports.getLeadersResearch = async (req, res, next) => {
         console.log("FOLLOWING IDS  ============= ", followingIdsArray);
         for (let i = 0; i < followingIdsArray.length; i++) {
           const followingResearch = await new ResearchService().findAResearch({
-            is_shared: false,
             is_visible: true,
             is_banned: false,
             researcher_id: followingIdsArray[i],
           });
-          follwingResearches.push(followingResearch);
+          // console.log("FOllowing Research ", followingResearch)
+          if(followingResearch && followingResearch !== null){
+          console.log("FOllowing Research  WHen Found", followingResearch)
+            follwingResearches.push(followingResearch);
+          } 
         }
         console.log("FOllowingResearhes ============ ", follwingResearches);
         if (follwingResearches.length === 0) {
@@ -65,10 +68,15 @@ exports.getLeadersResearch = async (req, res, next) => {
           );
         } else {
           // add pagination to retrn data
-          follwingResearches.push(user.data.data.pagination);
+          console.log("FOllwing Research Array Length ======= ", follwingResearches.length)
+          LeadersResearchhData.data = follwingResearches;
+          LeadersResearchhData.pagination = user.data.data.pagination
+          LeadersResearchhData.pagination.pageSize = Number(req.query.limit);
+          LeadersResearchhData.pagination.totalCount = Number(follwingResearches.length);
+          // set pagination info
           return createResponse(
             `All Leaders Research Retrieved`,
-            follwingResearches
+            LeadersResearchhData
           )(res, HTTP.OK);
         }
       }

@@ -18,6 +18,7 @@ exports.saveComparisonSchema = Joi.object().keys({
   reference_coins_data: Joi.array()
     .items(
       Joi.object().keys({
+        asset_id: Joi.string().required(),
         coin_name: Joi.string().required(),
         current_price: Joi.number().positive().required(),
         market_cap: Joi.number().positive().optional(),

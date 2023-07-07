@@ -1,70 +1,84 @@
-const { getPaginatedRecords } = require ('../_helpers/paginate');
+const { getPaginatedRecords } = require("../_helpers/paginate");
 
 class Repository {
-  constructor (Model) {
+  constructor(Model) {
     this.Model = Model;
   }
 
-  getModel () {
+  getModel() {
     return this.Model;
   }
 
-  create (obj) {
-    return this.Model.create (obj);
+  create(obj) {
+    return this.Model.create(obj);
   }
 
-  findById (id) {
-    return this.Model.findById (id);
+  findById(id) {
+    return this.Model.findById(id);
   }
 
-  findOne (condition = {}) {
-    return this.Model.findOne (
-      condition);
+  findOne(condition = {}) {
+    return this.Model.findOne(condition);
   }
 
-  all (limit, page, data, selectedFields) {
-    return getPaginatedRecords (this.Model, {
-      limit: limit,
-      page: page,
-      data,
-      selectedFields,
-    });
-  }
-
-  fetchAllOrderBy(limit, page, data, selectedFields, sortFilter) {
+  all(limit, page, data, selectedFields) {
     return getPaginatedRecords(this.Model, {
       limit: limit,
       page: page,
       data,
       selectedFields,
-      sortFilter
     });
   }
-  
-  count (condition = {}) {
+
+  async fetchAllOrderBy(
+    specifiedLimit = 10,
+    page,
+    data = {},
+    sortFilter
+  ) {
+    const limit = Math.min(specifiedLimit, 100); // restrict limit to 100
+    const offset = 0 + (Math.abs(page || 1) - 1) * limit;
+
+    const modelData = await this.Model.find({ ...data }).countDocuments();
+
+    const result = await this.Model.find({ ...data })
+      .select("")
+      .skip(offset)
+      .limit(limit)
+      .sort(sortFilter);
+
+    return {
+      data: result,
+      pagination: {
+        pageSize: limit, //number of content yousee per page
+        totalCount: modelData, //Total number of records
+        pageCount: Math.ceil(modelData / limit), //How many pages will be available
+        currentPage: +page, //if you're on page 1 or 18...
+        hasNext: page * limit < modelData,
+      },
+    };
+  }
+
+  count(condition = {}) {
     return this.Model.count(condition);
   }
 
-  delete (condition) {
-    return this.Model.deleteMany (
-      condition,
-    );
+  delete(condition) {
+    return this.Model.deleteMany(condition);
   }
 
-  deleteOne (condition) {
-    return this.Model.deleteOne (
-      condition,
-    );
+  deleteOne(condition) {
+    return this.Model.deleteOne(condition);
   }
 
-  update (condition, update) {
-    return this.Model.findOneAndUpdate (condition, update, {
+  update(condition, update) {
+    return this.Model.findOneAndUpdate(condition, update, {
       new: true,
       lean: true,
     });
   }
 
-  updateMany (condition, update) {
+  updateMany(condition, update) {
     return this.Model.updateMany(condition, update, {
       new: true,
       lean: true,
