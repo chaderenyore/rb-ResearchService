@@ -145,7 +145,7 @@ exports.launchResearch = async (req, res, next) => {
               // // publsih increment to user details queue
               await PublishToUpdateUserQueue.publishToUpdateUserQueue(
                 req.user.user_id,
-                { $inc: { 'total_public_post': 1 } }
+                { $inc: { 'total_public_research': 1 } }
               );
 
               // publsih to notify followers queue
