@@ -3,8 +3,6 @@ exports.computePotentialReturn = async (
   comparisonsCoinsInfo
 ) => {
   try {
-    console.log("MAIN COIN CAP ===== ", main_coin_market_cap);
-    console.log("COMPARISON COIN INFO ===== ", comparisonsCoinsInfo);
     let verdictMessage;
     let AVR;
     let sumOfPR;

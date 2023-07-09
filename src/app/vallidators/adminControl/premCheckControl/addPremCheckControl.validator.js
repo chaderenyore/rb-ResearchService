@@ -10,5 +10,5 @@ exports.addPremCheckControlSchema = Joi.object().keys({
   twitter_age_point:  Joi.number().positive().optional(),
   active_on_social_media_point: Joi.number().positive().optional(),
   project_satus_point: Joi.number().positive().optional(),
-  total_pass_mark: Joi.number().positive().optional(),
+  total_pass_mark: Joi.number().integer().min(0).max(100).optional(),
 });
