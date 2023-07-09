@@ -8,7 +8,7 @@ const ResearchService = require("../services/research.services");
 exports.fetchLastResearch = async (req, res, next) => {
   try {
 
-    const research = await new ResearchService().findOneAndSortBy({researcher_id: req.user.user_id, is_launched: true}, {'created_at': -1})
+    const research = await new ResearchService().findOneAndSortBy({researcher_id: req.query.user_id, is_launched: true}, {'created_at': -1})
     if (!research) {
       return next(
         createError(HTTP.OK, [

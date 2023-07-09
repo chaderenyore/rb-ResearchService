@@ -18,6 +18,8 @@ const GetAllSuggestedSchema = require("../../../vallidators/research/getSuggeste
 const DeleteResearchSchema = require("../../../vallidators/research/deleteResearch.validator");
 const ResearchByIdSchema = require("../../../vallidators/research/getSingleResearch.validator");
 const ComputeFinalSchema = require("../../../vallidators/research/computeFinalVerdit.controller");
+const UsersLastResearchSchema = require("../../../vallidators/research/fetchUsersLastResearch.validator");
+
 
 
 
@@ -101,6 +103,7 @@ router.get(
 router.get(
   '/last-research',
   authorize(['user','org']),
+  validateRequest(UsersLastResearchSchema.UserLastResearchQuerySchema, "query"),
   FetchUserLastController.fetchLastResearch
 );
 
