@@ -9,6 +9,10 @@ class ResearchService {
     return this.ResearchRepository.create (data)
   }
 
+  async findOneAndSortBy(query, sortCodition) {
+    return this.ResearchRepository.findOneAndSortBy(query, sortCodition)
+  }
+
   async findAResearch (query) {
     return this.ResearchRepository.findOne (query)
   }

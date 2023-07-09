@@ -38,6 +38,8 @@ const FetchSuggetedResearchController = require('../controllers/getSugestedResea
 const DeleteResearchController = require('../controllers/deleteResearch.controller');
 const ResearchByIdController = require('../controllers/getSingleResearchByid.controller');
 const ComputeFinalController = require('../controllers/computeFinalVerdit.controller');
+const FetchUserLastController = require('../controllers/fetchLastResearch');
+
 
 
 
@@ -94,6 +96,12 @@ router.get(
   authorize(['user','org']),
   validateRequest(GetAllUserResearchSchema.getAllUsersResearchSchema, "query"),
   GetAllUserResearchController.getUsersResearch
+);
+
+router.get(
+  '/last-research',
+  authorize(['user','org']),
+  FetchUserLastController.fetchLastResearch
 );
 
 router.get(

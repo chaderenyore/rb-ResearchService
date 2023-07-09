@@ -21,6 +21,10 @@ class Repository {
     return this.Model.findOne(condition);
   }
 
+  findOneAndSortBy(condition, sort) {
+    return this.Model.findOne(condition).sort(sort);
+  }
+
   all(limit, page, data, selectedFields) {
     return getPaginatedRecords(this.Model, {
       limit: limit,
