@@ -44,6 +44,7 @@ exports.getLeadersResearch = async (req, res, next) => {
         for (let i = 0; i < followingIdsArray.length; i++) {
           const followingResearch = await new ResearchService().findAResearch({
             is_visible: true,
+            is_launched: true,
             is_banned: false,
             researcher_id: followingIdsArray[i],
           });
