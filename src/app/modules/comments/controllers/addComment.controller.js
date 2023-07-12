@@ -69,7 +69,7 @@ exports.createComment = async (req, res, next) => {
         );
         // update community
         const updatedCommunity = await new CommunityResearchService().update(
-          { original_post_id: req.body.research_id },
+          { original_research_id: req.body.research_id },
           { $inc: { 'total_comments': 1 } }
         );
         // // Real time update frontend

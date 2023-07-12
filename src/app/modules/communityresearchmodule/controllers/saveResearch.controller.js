@@ -36,10 +36,10 @@ exports.saveResearch = async (req, res, next) => {
       });
       if (childResearch) {
         const dataToSavedResearch = {
+          community_id:childResearch.community_id,
           research_id: original_research_id,
           researcher_id: childResearch.researcher_id,
           saver_id: req.user.user_id,
-          research_info: childResearch,
         };
         const savedResearch = await new MySavedResearchService().create(
           dataToSavedResearch
