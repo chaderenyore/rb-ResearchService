@@ -25,7 +25,7 @@ exports.getResearchDetails = async (req, res, next) => {
       const researchTokenomics = await new TokenomicsService().findOne({
         research_id: req.query.research_id,
       });
-      const researchTokenomicsAllocation = await new TokenomicsAllocationService().all({research_id: req.query.research_id,})
+      const researchTokenomicsAllocation = await new TokenomicsAllocationService().all({research_id: req.query.research_id})
       const researchAdoptionAndRecognition =
         await new AdoptionAndRecognitionService().findOne({
           research_id: req.query.research_id,
