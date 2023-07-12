@@ -40,7 +40,6 @@ exports.getLeadersResearch = async (req, res, next) => {
         );
       } else {
         // search for research created by the following i reasearch array that are visible
-        console.log("FOLLOWING IDS  ============= ", followingIdsArray);
         for (let i = 0; i < followingIdsArray.length; i++) {
           const followingResearch = await new ResearchService().findAResearch({
             is_visible: true,
@@ -50,11 +49,9 @@ exports.getLeadersResearch = async (req, res, next) => {
           });
           // console.log("FOllowing Research ", followingResearch)
           if(followingResearch && followingResearch !== null){
-          console.log("FOllowing Research  WHen Found", followingResearch)
             follwingResearches.push(followingResearch);
           } 
         }
-        console.log("FOllowingResearhes ============ ", follwingResearches);
         if (follwingResearches.length === 0) {
           return next(
             createError(HTTP.OK, [

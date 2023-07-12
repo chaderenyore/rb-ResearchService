@@ -28,8 +28,8 @@ class TokenomicsAllocationService {
     return this.TokenomicsAllocationRepository.deleteOne (condition)
 
   }
-  async all(limit, page, data) {
-    return this.TokenomicsAllocationRepository.all(limit, page, data);
+  async all(query) {
+    return this.TokenomicsAllocationRepository.findAll(query);
   }
 
   async findById(id) {

@@ -9,22 +9,24 @@ const logger = require("../../../../../logger.conf");
 exports.validateLike = async (req, res, next) => {
   try {
     // search for likes in any entry related to like
-    const researchLikeExist = await new ResewarchLikeService().findARecord({
-      community_id: req.query.community_id,
-      user_id: req.user.user_id,
-    });
-    console.log("Research LIKE ==== ", researchLikeExist);
-    const commentLikeExist = await new CommentsLikesService().findARecord({
-      comment_id: req.query.comment_id,
-      user_id: req.user.user_id,
-    });
-    console.log("COMMENT LIKE ==== ", commentLikeExist);
-    if (!researchLikeExist && ! commentLikeExist) {
+    if(req.query.community_id){
+      const researchLikeExist = await new ResewarchLikeService().findARecord({
+        community_id: req.query.community_id,
+        user_id: req.user.user_id,
+      });
+    }
+    if(req.query.comment_id){
+      const commentLikeExist = await new CommentsLikesService().findARecord({
+        comment_id: req.query.comment_id,
+        user_id: req.user.user_id,
+      });
+    }
+    if (!researchLikeExist && !commentLikeExist) {
       return next(
         createError(HTTP.OK, [
           {
             status: RESPONSE.SUCCESS,
-            message: "Liked Invalid",
+            message: "Like Invalid",
             statusCode: HTTP.OK,
             data: null,
             code: HTTP.OK,
@@ -32,7 +34,7 @@ exports.validateLike = async (req, res, next) => {
         ])
       );
     } else {
-      return createResponse("Liked Valid", {})(res, HTTP.OK);
+      return createResponse("Like Valid", {})(res, HTTP.OK);
     }
   } catch (err) {
     logger.error(err);

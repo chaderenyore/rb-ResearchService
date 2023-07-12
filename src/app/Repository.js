@@ -34,6 +34,10 @@ class Repository {
     });
   }
 
+  findAll(query) {
+    return this.Model.find(query)
+  }
+
   async fetchAllOrderBy(
     specifiedLimit = 10,
     page,
