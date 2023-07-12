@@ -44,7 +44,7 @@ exports.getResearchDetails = async (req, res, next) => {
         PremChecks: researchPremChecks || dataMessage,
         Preliminary_Results:researchExist.preliminary_score,
         Tokenomics: researchTokenomics || dataMessage,
-        Tokenomics_AllocationData: researchTokenomicsAllocation.data || dataMessage,
+        Tokenomics_AllocationData: researchTokenomicsAllocation || dataMessage,
         Tokenomics_Rating:researchExist.tokenomics_rating,
         Adoption_And_Recognition: researchAdoptionAndRecognition || dataMessage,
         Community_And_TeamSpirit: researchCommunityAndTeamSpirit || dataMessage,
