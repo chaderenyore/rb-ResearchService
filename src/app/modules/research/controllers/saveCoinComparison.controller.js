@@ -33,7 +33,7 @@ exports.saveResearchComparisonInfo = async (req, res, next) => {
         req.body.reference_coins_data
       );
       // check if action is to save as draft
-      if (req.query.save_as_draft === true) {
+      if (req.query.save_as_draft === "true") {
         const dataToComparison = {
           average_potential_return_info: AVRData || {},
           main_coin_AVR: AVRData.main_coin_AVR,
