@@ -5,7 +5,7 @@ const schema = mongoose.Schema(
     research_id: { type: String},
     team_identity: { type: String, enum: ['doxxed', 'anonymous']},
     team_spirit: {type: String},
-    commnunity_spirit: {type: Object},
+    commnunity_spirit: {type: String},
     comments_about: {type: String},
     project_expectation: {type: String},
     final_comments: {type: String},
