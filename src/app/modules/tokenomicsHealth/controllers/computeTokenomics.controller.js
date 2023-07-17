@@ -20,7 +20,6 @@ exports.computeTokenomics = async (req, res, next) => {
       is_main_token,
       has_enough_utility,
       token_type,
-      research_price,
       circulating_supply,
       total_supply,
       max_supply,
@@ -71,28 +70,18 @@ exports.computeTokenomics = async (req, res, next) => {
       let reservedPercentage;
       let newAllocatioonDataArr = [];
       // Search For allocation data
-      console.log("ALLOCATION DATA =====", allocation_data);
       for (let i = 0; i < allocation_data.length; i++) {
         const allocationDataExists =
           await new TokenomicsAllocationService().findOne({
             research_id: research_id,
             indicator_name: allocation_data[i].name,
           });
-        console.log("ALLOCATION Data ===== ", allocationDataExists);
         if (allocationDataExists) {
-          console.log(
-            "ALOCATION ITEM PERCENTAGE ======= ",
-            allocation_data[i].percentage
-          );
           // add total up
           const dataToAdd =
             Number(allocationDataExists.indicator_percentage) ||
             Number(allocation_data[i].percentage);
           totalPercentage += dataToAdd;
-          console.log(
-            "total Percentage for Allocation Exits ",
-            totalPercentage
-          );
           // update
           const updateData = {
             indicator_percentage: allocation_data[i].percentage,
@@ -109,14 +98,12 @@ exports.computeTokenomics = async (req, res, next) => {
         } else {
           // add up total
           totalPercentage += Number(allocation_data[i].percentage);
-          console.log("TOTAL PERCENTAGE FOR NEW ALLOCATION ", totalPercentage);
           // add to newAlocation arr
           newAllocatioonDataArr.push({
             research_id: research_id,
             indicator_name: allocation_data[i].name,
-            indicator_percentage: allocation_data[i].indicator_percentage,
-            indicator_total_allocation:
-              allocation_data[i].indicator_total_allocation,
+            indicator_percentage: allocation_data[i].percentage,
+            indicator_total_allocation: allocation_data[i].total_allocation,
           });
         }
       }
@@ -135,13 +122,16 @@ exports.computeTokenomics = async (req, res, next) => {
         );
       } else {
         if (totalPercentage < 100) {
-          console.log("total Percentage Less Than 100");
           reservedPercentage = 100 - Number(totalPercentage);
         }
-        // save Allocation data
-        for(let i = 0; i < newAllocatioonDataArr.length; i++){
-          const NewTokenomicsAllocation =
-          await new TokenomicsAllocationService().create(newAllocatioonDataArr[i]);
+        // save Allocation data for new data
+        if (newAllocatioonDataArr.length > 0) {
+          for (let i = 0; i < newAllocatioonDataArr.length; i++) {
+            const NewTokenomicsAllocation =
+              await new TokenomicsAllocationService().create(
+                newAllocatioonDataArr[i]
+              );
+          }
         }
         // check if User owns this research
         const isMyResearch = await new ResearchService().findAResearch({
@@ -161,7 +151,7 @@ exports.computeTokenomics = async (req, res, next) => {
             ])
           );
         } else {
-          if (was_draft === true) {
+          if (was_draft === "true") {
             // search for draft Tokenomics
             const draftTokenomics = await new TokenomicsService().findOne({
               research_id: research_id,
@@ -213,7 +203,7 @@ exports.computeTokenomics = async (req, res, next) => {
                 };
                 // update base research
                 const dataToUpdateResearch = {
-                  research_price,
+                  tokenomics_rating: message,
                 };
                 const updatedResearch = await new ResearchService().update(
                   {
@@ -222,12 +212,12 @@ exports.computeTokenomics = async (req, res, next) => {
                   },
                   dataToUpdateResearch
                 );
-                console.log("UPDATE RESEARCH ====== ", updatedResearch);
                 const resultData = { type: "tokenomics", grade: message };
                 const CummulateVerditScore = await UpdateResearchVerditScore(
                   research_id,
                   resultData
                 );
+                // updated tokenomics to computed
                 return createResponse(`${message}`, tokenomicsResults)(
                   res,
                   HTTP.OK

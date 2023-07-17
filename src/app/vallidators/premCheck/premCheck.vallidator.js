@@ -3,11 +3,16 @@ Joi.objectId = require("joi-objectid")(Joi);
 
 exports.premCheckSchema = Joi.object().keys({
   is_independent: Joi.string().valid('true', 'false').optional(),
-  was_draft: Joi.boolean().required(),
-  coin_name: Joi.string().required(),
+  was_draft: Joi.string().required(),
+  coin_name: Joi.string().optional(),
   coin_image: Joi.string().required(),
   research_label: Joi.string().optional(),
-  research_id: Joi.string().optional(),
+  research_id: Joi.string()
+  .when("was_draft", {
+    not: Joi.exist(),
+    then: Joi.optional(),
+    otherwise: Joi.required(),
+  }),
   twitter_url: Joi.string().uri().required(),
   twitter_createdAt: Joi.date()
     .format(["YYYY-MM-DD", "DD-MM-YYYY", "DD/MM/YYYY"])

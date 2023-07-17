@@ -2,6 +2,7 @@ const Joi = require("joi").extend(require("@joi/date"));
 Joi.objectId = require("joi-objectid")(Joi);
 
 exports.saveDraftPremCheckSchema = Joi.object().keys({
+  research_id:Joi.objectId().optional(),
   coin_name: Joi.string().required(),
   twitter_url: Joi.string().uri().required(),
   twitter_createdAt: Joi.date()

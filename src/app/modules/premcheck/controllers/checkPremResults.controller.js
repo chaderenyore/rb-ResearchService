@@ -51,7 +51,7 @@ exports.premCheck = async (req, res, next) => {
       };
       return createResponse(`${message}`, premCheckResults)(res, HTTP.OK);
     } else {
-      if (was_draft === true) {
+      if (was_draft === "true") {
         // search for draft Premcheck
         const draftPrmeCheck = await new PremCheckService().update(
           {
@@ -95,6 +95,7 @@ exports.premCheck = async (req, res, next) => {
             updatedResearch._id,
             resultData
           );
+          console.log("VERDICT FOR THIS STAGE ==== ", CummulateVerditScore)
           return createResponse(`${message}`, premCheckResults)(res, HTTP.OK);
         } else {
           return next(
