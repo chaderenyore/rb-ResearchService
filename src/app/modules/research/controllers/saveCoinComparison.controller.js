@@ -45,7 +45,7 @@ exports.saveResearchComparisonInfo = async (req, res, next) => {
         );
         return createResponse(`Draft Saved`, draftEntry)(res, HTTP.OK);
       } else {
-        if (req.body.was_draft === true) {
+        if (req.query.was_draft === "true") {
           // search for draft Details
           const researchComparisonDraft =
             await new ResearchComparisonService().findOne({
