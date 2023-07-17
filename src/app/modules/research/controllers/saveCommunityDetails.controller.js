@@ -27,128 +27,107 @@ exports.saveCommunitySpiritInfo = async (req, res, next) => {
         ])
       );
     } else {
-      // check if data exist for this research
-      const researchTeamInfoExist = await new CommunityDetailsService().findOne(
-        {
-          research_id: req.body.research_id,
-          is_draft: false,
-        }
-      );
-      if (researchTeamInfoExist) {
-        return next(
-          createError(HTTP.OK, [
-            {
-              status: RESPONSE.SUCCESS,
-              message: "Research Team Info Exists",
-              statusCode: HTTP.OK,
-              data: null,
-              code: HTTP.OK,
-            },
-          ])
+      // check if action is to save as draft
+      if (req.query.save_as_draft === "true") {
+        const dataToCommunitySpirit = {
+          is_draft: true,
+          ...req.body,
+        };
+        const draftEntry = await new CommunityDetailsService().create(
+          dataToCommunitySpirit
         );
+        return createResponse(`Draft Saved`, draftEntry)(res, HTTP.OK);
       } else {
-        // check if action is to save as draft
-        if (req.query.save_as_draft === "true") {
-          const dataToCommunitySpirit = {
-            is_draft: true,
-            ...req.body,
-          };
-          const draftEntry = await new CommunityDetailsService().create(
-            dataToCommunitySpirit
-          );
-          return createResponse(`Draft Saved`, draftEntry)(res, HTTP.OK);
-        } else {
-          if (req.query.was_draft === "true") {
-            // search for draft Com Details
-            const communityDetailsDraft =
-              await new CommunityDetailsService().findOne({
-                research_id: req.body.research_id,
-              });
-            if (communityDetailsDraft) {
-              // update community details
-              const updatedCommunityDetails =
-                await new CommunityDetailsService().update(
-                  { research_id: req.body.research_id },
-                  { ...req.body }
-                );
-              // save current verdit
-              const resultData = {
-                type: "team",
-                info: {
-                  team_spirit: req.body.team_spirit,
-                  community_spirit: req.body.community_spirit,
-                },
-              };
-              const CummulateVerditScore = await UpdateResearchVerditScore(
-                req.body.research_id,
-                resultData
+        if (req.query.was_draft === "true") {
+          // search for draft Com Details
+          const communityDetailsDraft =
+            await new CommunityDetailsService().findOne({
+              research_id: req.body.research_id,
+            });
+          if (communityDetailsDraft) {
+            // update community details
+            const updatedCommunityDetails =
+              await new CommunityDetailsService().update(
+                { research_id: req.body.research_id },
+                { ...req.body }
               );
-              console.log("RESEARCH UPDATED ======= ", CummulateVerditScore);
-              return createResponse(`Data Saved`, updatedCommunityDetails)(
-                res,
-                HTTP.OK
-              );
-            } else {
-              return next(
-                createError(HTTP.OK, [
-                  {
-                    status: RESPONSE.SUCCESS,
-                    message: "Community Team Spirit Info Draft Does Not Exist",
-                    statusCode: HTTP.OK,
-                    data: null,
-                    code: HTTP.OK,
-                  },
-                ])
-              );
-            }
+            // save current verdit
+            const resultData = {
+              type: "team",
+              info: {
+                team_spirit: req.body.team_spirit,
+                community_spirit: req.body.community_spirit,
+              },
+            };
+            const CummulateVerditScore = await UpdateResearchVerditScore(
+              req.body.research_id,
+              resultData
+            );
+            console.log("RESEARCH UPDATED ======= ", CummulateVerditScore);
+            return createResponse(`Data Saved`, updatedCommunityDetails)(
+              res,
+              HTTP.OK
+            );
           } else {
-            // search if COmunity And Team Spirit Info Exist
-            const teamSpiritInfoExists =
-              await new CommunityDetailsService().findOne({
-                research_id: req.body.research_id,
-              });
-            if (teamSpiritInfoExists) {
-              return next(
-                createError(HTTP.OK, [
-                  {
-                    status: RESPONSE.SUCCESS,
-                    message:
-                      "This Research Has A Team SPirit Info, Retrieve As Draft To Continue Research",
-                    statusCode: HTTP.OK,
-                    data: null,
-                    code: HTTP.OK,
-                  },
-                ])
-              );
-            } else {
-              // create Community Detail  entry
-              const dataToCommunityDetails = {
-                research_id: req.body.research_id,
-                is_draft: false,
-                ...req.body,
-              };
-              const newCommunityDetailsData =
-                await new CommunityDetailsService().create(
-                  dataToCommunityDetails
-                );
-              // save current verdit
-              const resultData = {
-                type: "team",
-                info: {
-                  team_spirit: req.body.team_spirit,
-                  community_spirit: req.body.community_spirit,
+            return next(
+              createError(HTTP.OK, [
+                {
+                  status: RESPONSE.SUCCESS,
+                  message: "Community Team Spirit Info Draft Does Not Exist",
+                  statusCode: HTTP.OK,
+                  data: null,
+                  code: HTTP.OK,
                 },
-              };
-              const CummulateVerditScore = await UpdateResearchVerditScore(
-                req.body.research_id,
-                resultData
+              ])
+            );
+          }
+        } else {
+          // check if data exist for this research
+          const researchTeamInfoExist =
+            await new CommunityDetailsService().findOne({
+              research_id: req.body.research_id,
+              is_draft: false,
+            });
+          if (researchTeamInfoExist) {
+            return next(
+              createError(HTTP.OK, [
+                {
+                  status: RESPONSE.SUCCESS,
+                  message: "Research Team Info Exists",
+                  statusCode: HTTP.OK,
+                  data: null,
+                  code: HTTP.OK,
+                },
+              ])
+            );
+          } else {
+            // create Community Detail  entry
+            const dataToCommunityDetails = {
+              research_id: req.body.research_id,
+              is_draft: false,
+              ...req.body,
+            };
+            const newCommunityDetailsData =
+              await new CommunityDetailsService().create(
+                dataToCommunityDetails
               );
-              console.log("RESEARCH UPDATED ======= ", CummulateVerditScore);
-              return createResponse(`Data Saved`, newCommunityDetailsData)(
-                res,
-                HTTP.OK
-              );
-            }
+            // save current verdit
+            const resultData = {
+              type: "team",
+              info: {
+                team_spirit: req.body.team_spirit,
+                community_spirit: req.body.community_spirit,
+              },
+            };
+            const CummulateVerditScore = await UpdateResearchVerditScore(
+              req.body.research_id,
+              resultData
+            );
+            console.log("RESEARCH UPDATED ======= ", CummulateVerditScore);
+            return createResponse(`Data Saved`, newCommunityDetailsData)(
+              res,
+              HTTP.OK
+            );
           }
         }
       }
