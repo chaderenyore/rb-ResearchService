@@ -47,7 +47,7 @@ exports.saveAdoptionAndRecognitionInfo = async (req, res, next) => {
             // update Adoption And Recognition
             const updatedAdoptiuon =
               await new AdoptionRecognitionService().update(
-                { research_id: research_id },
+                { research_id: req.body.research_id },
                 { is_draft: false, ...req.body }
               );
             // save current verdit
