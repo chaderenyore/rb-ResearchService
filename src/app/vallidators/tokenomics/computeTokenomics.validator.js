@@ -3,7 +3,7 @@ Joi.objectId = require("joi-objectid")(Joi);
 
 exports.computeTokenomicsSchema = Joi.object().keys({
   is_independent: Joi.string().valid('true', 'false').optional(),
-  was_draft: Joi.boolean().required(),
+  was_draft: Joi.string().required(),
   research_id: Joi.objectId().required(),
   number_of_tradeable_tokens: Joi.number().positive().required(),
   is_main_token: Joi.boolean().required(),

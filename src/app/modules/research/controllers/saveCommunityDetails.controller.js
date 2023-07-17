@@ -29,14 +29,29 @@ exports.saveCommunitySpiritInfo = async (req, res, next) => {
     } else {
       // check if action is to save as draft
       if (req.query.save_as_draft === "true") {
-        const dataToCommunitySpirit = {
+        // chekc if draft exist
+        const draftExist = await new CommunityDetailsService().findOne({
+          research_id: req.body.research_id,
           is_draft: true,
-          ...req.body,
-        };
-        const draftEntry = await new CommunityDetailsService().create(
-          dataToCommunitySpirit
-        );
-        return createResponse(`Draft Saved`, draftEntry)(res, HTTP.OK);
+        });
+        if (draftExist) {
+          // update
+          const updatedDraftEntry = await new CommunityDetailsService().update(
+            { research_id: req.body.research_id, is_draft: true },
+            { ...req.body }
+          );
+          return createResponse(`Draft Saved`, updatedDraftEntry)(res, HTTP.OK);
+        } else {
+          const dataToCommunitySpirit = {
+            research_id: req.body.research_id,
+            is_draft: true,
+            ...req.body,
+          };
+          const draftEntry = await new CommunityDetailsService().create(
+            dataToCommunitySpirit
+          );
+          return createResponse(`Draft Saved`, draftEntry)(res, HTTP.OK);
+        }
       } else {
         if (req.query.was_draft === "true") {
           // search for draft Com Details
@@ -63,7 +78,6 @@ exports.saveCommunitySpiritInfo = async (req, res, next) => {
               req.body.research_id,
               resultData
             );
-            console.log("RESEARCH UPDATED ======= ", CummulateVerditScore);
             return createResponse(`Data Saved`, updatedCommunityDetails)(
               res,
               HTTP.OK
@@ -123,7 +137,6 @@ exports.saveCommunitySpiritInfo = async (req, res, next) => {
               req.body.research_id,
               resultData
             );
-            console.log("RESEARCH UPDATED ======= ", CummulateVerditScore);
             return createResponse(`Data Saved`, newCommunityDetailsData)(
               res,
               HTTP.OK

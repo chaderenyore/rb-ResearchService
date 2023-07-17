@@ -34,16 +34,32 @@ exports.saveResearchComparisonInfo = async (req, res, next) => {
       );
       // check if action is to save as draft
       if (req.query.save_as_draft === "true") {
-        const dataToComparison = {
-          average_potential_return_info: AVRData || {},
-          main_coin_AVR: AVRData.main_coin_AVR,
+        // check if the draft is been saved again
+        const draftExist = await new ResearchComparisonService().findOne({
+          research_id: req.body.research_id,
           is_draft: true,
-          ...req.body,
-        };
-        const draftEntry = await new ResearchComparisonService().create(
-          dataToComparison
-        );
-        return createResponse(`Draft Saved`, draftEntry)(res, HTTP.OK);
+        });
+        if (draftExist) {
+          // update draft and return
+          const updatedDraft = await new ResearchComparisonService().update(
+            { research_id: req.body.research_id, is_draft: true },
+            { ...req.body }
+          );
+          return createResponse(`Draft Saved`, updatedDraft)(res, HTTP.OK);
+        } else {
+          // create new draft entry
+          const dataToComparison = {
+            research_id: req.body.research_id,
+            average_potential_return_info: AVRData || {},
+            main_coin_AVR: AVRData.main_coin_AVR,
+            is_draft: true,
+            ...req.body,
+          };
+          const draftEntry = await new ResearchComparisonService().create(
+            dataToComparison
+          );
+          return createResponse(`Draft Saved`, draftEntry)(res, HTTP.OK);
+        }
       } else {
         if (req.query.was_draft === "true") {
           // search for draft Details
@@ -67,7 +83,7 @@ exports.saveResearchComparisonInfo = async (req, res, next) => {
             const updateData = {
               research_price: req.body.main_coin_info.current_price,
               potential_return: AVRData.main_coin_AVR,
-              ticker: req.body.ticker
+              ticker: req.body.ticker,
             };
             const updatedResearch = await new ResearchService().update(
               {
@@ -144,7 +160,7 @@ exports.saveResearchComparisonInfo = async (req, res, next) => {
             const updateResearchData = {
               research_price: req.body.main_coin_info.current_price,
               potential_return: AVRData.main_coin_AVR,
-              ticker: req.body.ticker
+              ticker: req.body.ticker,
             };
             const updatedResearch = await new ResearchService().update(
               {

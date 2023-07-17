@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 
 const schema = mongoose.Schema(
   {
+    coin_name:{type: String},
     research_id: { type: String},
     researcher_id:{type: String},
     project_about:{type: String},

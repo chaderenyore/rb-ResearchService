@@ -29,14 +29,30 @@ exports.saveAdoptionAndRecognitionInfo = async (req, res, next) => {
     } else {
       // check if action is to save as draft
       if (req.query.save_as_draft === "true") {
-        const dataToAdoptionAndRec = {
-          is_draft: true,
-          ...req.body,
-        };
-        const draftEntry = await new AdoptionRecognitionService().create(
-          dataToAdoptionAndRec
-        );
-        return createResponse(`Draft Saved`, draftEntry)(res, HTTP.OK);
+        // check if drafts exists
+        const adoptionDraftExist =
+          await new AdoptionRecognitionService().findOne({
+            research_id: req.body.research_id,
+            is_draft: true,
+          });
+        if (adoptionDraftExist) {
+          // update
+          const updatedDraft = await new AdoptionRecognitionService().update(
+            { research_id: req.body.research_id, is_draft: true },
+            { ...req.body }
+          );
+          return createResponse(`Draft Saved`, updatedDraft)(res, HTTP.OK);
+        } else {
+          const dataToAdoptionAndRec = {
+            research_id: req.body.research_id,
+            is_draft: true,
+            ...req.body,
+          };
+          const draftEntry = await new AdoptionRecognitionService().create(
+            dataToAdoptionAndRec
+          );
+          return createResponse(`Draft Saved`, draftEntry)(res, HTTP.OK);
+        }
       } else {
         if (req.query.was_draft === "true") {
           // search for draft Adoption
@@ -65,7 +81,6 @@ exports.saveAdoptionAndRecognitionInfo = async (req, res, next) => {
               req.body.research_id,
               resultData
             );
-            console.log("RESEARCH UPDATED ======= ", CummulateVerditScore);
             return createResponse(`Data Saved`, updatedAdoptiuon)(res, HTTP.OK);
           } else {
             return next(
@@ -123,7 +138,6 @@ exports.saveAdoptionAndRecognitionInfo = async (req, res, next) => {
               req.body.research_id,
               resultData
             );
-            console.log("RESEARCH UPDATED ======= ", CummulateVerditScore);
             return createResponse(`Data Saved`, newAdoptionRecognitionData)(
               res,
               HTTP.OK

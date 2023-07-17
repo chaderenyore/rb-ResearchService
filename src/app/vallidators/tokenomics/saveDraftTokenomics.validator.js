@@ -2,7 +2,6 @@ const Joi = require("joi").extend(require("@joi/date"));
 Joi.objectId = require("joi-objectid")(Joi);
 
 exports.saveDraftTokenomicsSchema = Joi.object().keys({
-  was_draft: Joi.boolean().required(),
   research_id: Joi.objectId().required(),
   number_of_tradeable_tokens: Joi.number().positive().optional(),
   is_main_token: Joi.boolean().optional(),
