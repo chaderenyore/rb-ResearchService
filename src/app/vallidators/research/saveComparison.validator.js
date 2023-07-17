@@ -32,6 +32,6 @@ exports.saveComparisonSchema = Joi.object().keys({
 });
 
 exports.saveComparisonQuerySchema = Joi.object().keys({
-  was_draft: Joi.boolean().optional(),
+  was_draft: Joi.string().optional(),
   save_as_draft: Joi.string().optional(),
 });
