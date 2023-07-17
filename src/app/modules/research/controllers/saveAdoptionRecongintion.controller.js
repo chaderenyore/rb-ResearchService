@@ -28,7 +28,7 @@ exports.saveAdoptionAndRecognitionInfo = async (req, res, next) => {
       );
     } else {
       // check if action is to save as draft
-      if (req.query.save_as_draft === true) {
+      if (req.query.save_as_draft === "true") {
         const dataToAdoptionAndRec = {
           is_draft: true,
           ...req.body,
@@ -38,7 +38,7 @@ exports.saveAdoptionAndRecognitionInfo = async (req, res, next) => {
         );
         return createResponse(`Draft Saved`, draftEntry)(res, HTTP.OK);
       } else {
-        if (req.body.was_draft === true) {
+        if (req.query.was_draft === "true") {
           // search for draft Adoption
           const draftAdoption = await new AdoptionRecognitionService().findOne({
             research_id: req.body.research_id,
