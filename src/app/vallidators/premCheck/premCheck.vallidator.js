@@ -5,6 +5,7 @@ exports.premCheckSchema = Joi.object().keys({
   is_independent: Joi.string().valid('true', 'false').optional(),
   was_draft: Joi.string().required(),
   coin_name: Joi.string().optional(),
+  asset_id: Joi.string().required(),
   coin_image: Joi.string().required(),
   research_label: Joi.string().optional(),
   research_id: Joi.string()

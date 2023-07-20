@@ -19,6 +19,7 @@ const schema = mongoose.Schema(
     reposter_username:{type: String},
     research_child:{type: Object},
     coin_name: {type: String},
+    asset_id:{type:String},
     coin_url: {type: String},
     coin_image: {type: String},
     amount_paid:{type: Number},
