@@ -17,6 +17,7 @@ exports.premCheck = async (req, res, next) => {
     // get body data
     const {
       coin_name,
+      asset_id,
       coin_image,
       research_label,
       twitter_url,
