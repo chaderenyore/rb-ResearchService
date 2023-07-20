@@ -113,6 +113,7 @@ exports.launchResearch = async (req, res, next) => {
               ticker: researchExist.ticker,
               research_label: researchExist.research_label,
               coin_name: researchExist.coin_name,
+              asset_id:researchExist.asset_id,
               coin_image: researchExist.coin_image,
               tokenomics_rating: researchExist.tokenomics_rating,
               research_price: researchExist.research_price,
