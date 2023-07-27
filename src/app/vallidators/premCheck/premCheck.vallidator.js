@@ -3,7 +3,7 @@ Joi.objectId = require("joi-objectid")(Joi);
 
 exports.premCheckSchema = Joi.object().keys({
   is_independent: Joi.string().valid('true', 'false').optional(),
-  was_draft: Joi.string().required(),
+  was_draft: Joi.string().optional(),
   coin_name: Joi.string().optional(),
   asset_id: Joi.string().required(),
   coin_image: Joi.string().required(),
