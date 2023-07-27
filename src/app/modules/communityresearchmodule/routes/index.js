@@ -49,7 +49,6 @@ router.get(
 
 router.get(
   '/full-report',
-  authorize(['user','org']),
   validateRequest(GetCommunityResearchDetailsSchema.getCommunityResearchDetailsQuerySchema, "query"),
   GetCommunityResearchDetailsController.getResearchDetails
 );
@@ -77,28 +76,24 @@ router.post(
 
 router.get(
   '/user/public',
-  authorize(['user','org']),
   validateRequest(ViewUsersPublicResearchSchema.viewUsersPublicResearchQuerySchema, "query"),
   ViewUsersPublicResearchController.fetchAllCommunityResearch
 );
 
 router.get(
   '/communityglobalsearch',
-  authorize(['user','org']),
   validateRequest(ResearchGlobalSearchSchema.globalQuerySchema, 'query'),
   ResearchGlobalSearchController.searchResearchGlobally
 );
 
 router.get(
   '/popular-research',
-  authorize(['user','org']),
   validateRequest(PopularResearchSchema.popularResearchQuerySchema, 'query'),
   PopularResearchController.fetchAllPopularResearch
 );
 
 router.get(
   '/filterbycoin',
-  authorize(['user','org']),
   validateRequest(SearchCommunitByCoinNameSchema.searchByCoinNameQuerySchema, 'query'),
   SearchCommunitByCoinNameController.searchReserachByCoinName
 );
