@@ -15,7 +15,7 @@ exports.getResearchDetails = async (req, res, next) => {
   try {
     // check if research exists
     const researchExist = await new ResearchService().findAResearch({
-      _id: req.query.research_id, is_banned: false, is_visible:true
+      _id: req.query.research_id, is_banned: false
     });
     if (researchExist) {
       // search for all research dependents
