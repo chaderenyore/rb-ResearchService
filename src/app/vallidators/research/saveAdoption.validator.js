@@ -7,7 +7,7 @@ exports.saveAdoptionAndRecognitionSchema = Joi.object().keys({
   partners_info: Joi.array()
     .items(
       Joi.object().keys({
-        project_name: Joi.string().required(),
+        project_name: Joi.string().optional(),
         link_to_partnership_anouncement: Joi.string().uri().optional(),
       })
     )
@@ -15,7 +15,7 @@ exports.saveAdoptionAndRecognitionSchema = Joi.object().keys({
   media_links: Joi.array()
     .items(
       Joi.object().keys({
-        media_name: Joi.string().required(),
+        media_name: Joi.string().optional(),
         link: Joi.string().uri().optional(),
       })
     )
