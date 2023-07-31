@@ -35,7 +35,6 @@ const router = Router();
 
 router.get(
   '/',
-  authorize(['user','org']),
   validateRequest(FetchAllCommunityResearchSchema.getAllCommunityQuerySchema, 'query'),
   FetchAllCommunityResearchController.fetchAllCommunityResearch
 );

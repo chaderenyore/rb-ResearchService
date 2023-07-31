@@ -9,6 +9,7 @@ const Likes = require("./modules/likes/routes/likes.routes");
 const Comments = require("./modules/comments/routes/comments.routes");
 const CoinNotes = require("./modules/coinAssets/routes/notes.routes");
 const ResearchList = require("./modules/researchList/routes/researchList.routes");
+const FavCoin = require("../app/modules/coinAssets/routes/favCoin.routes")
 
 
 
@@ -25,6 +26,8 @@ module.exports = () => {
   router.use("/like", Likes);
   router.use("/comment", Comments);
   router.use("/notes",  CoinNotes);
+  router.use("/favourite-coins",  FavCoin);
+
   router.use("/list",  ResearchList);
 
 
