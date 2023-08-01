@@ -25,7 +25,7 @@ exports.addFavCoin = async (req, res, next) => {
                 ])
               );
         } else {
-            const favCoin = await new FavCoinService().create({...req.body});
+            const favCoin = await new FavCoinService().create({user_id:req.user.user_id,...req.body});
 
             return createResponse("Favourite Coin Saved", favCoin)(res, HTTP.OK);
         }
