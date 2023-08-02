@@ -5,6 +5,8 @@ const schema = mongoose.Schema(
     user_id: String,
     asset_id: String,
     coin_name: String,
+    img_url: String,
+    ticker: String,
     price: String,
     chg24hrs: String,
     market_cap: String,
