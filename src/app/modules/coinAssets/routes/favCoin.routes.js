@@ -6,12 +6,15 @@ const validateRequest = require("../../../middlewares/vallidate");
 const AddFavCoin = require('../../../vallidators/favouriteCoins/add.validator');
 const RemoveFavCoin = require("../../../vallidators/favouriteCoins/remove.validator");
 const FetchAllFavCoin = require("../../../vallidators/favouriteCoins/fetchAllUsersFavoCoin.validator")
+const ValidateFavCoin = require("../../../vallidators/favouriteCoins/validate")
 
 
 // controllers
 const AddFavCoinController = require('../favCoinControllers/addFavCoin.controllers');
 const GetFavCoinController = require('../favCoinControllers/fetchUsersFavCoin.controller');
 const RemoveFavCoinController = require('../favCoinControllers/removeFavCoin.controller');
+const ValidateFavCoinController = require('../favCoinControllers/validate');
+
 
 
 const router = Router();
@@ -37,6 +40,12 @@ router.delete(
     RemoveFavCoinController.removefavCoin
   );
 
+router.post(
+    '/validate',
+    authorize(['user','org']),
+    validateRequest(ValidateFavCoin.validateFavSchema, "body"),
+    ValidateFavCoinController.validateFavCoin
+  );
 
 
 
