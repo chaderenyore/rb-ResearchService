@@ -9,5 +9,7 @@ exports.addFavCoinBodySchema = Joi.object({
   market_cap: Joi.string().required(),
   volume: Joi.string().required(),
   vol_per_market_cap: Joi.string().required(),
-
+  circulating_supply: Joi.string().optional(),
+  img_url:Joi.string().optional(),
+  ticker:Joi.string().optional(),
 });
