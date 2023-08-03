@@ -43,7 +43,7 @@ router.delete(
 router.post(
     '/validate',
     authorize(['user','org']),
-    validateRequest(ValidateFavCoin.validateFavSchema, "body"),
+    validateRequest(ValidateFavCoin.validateFavSchema, "query"),
     ValidateFavCoinController.validateFavCoin
   );
 
