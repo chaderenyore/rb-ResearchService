@@ -9,8 +9,8 @@ exports.validateFavCoin = async (req, res, next) => {
     // search for fav
     const filter = {
         user_id: req.user.user_id,
-        asset_id: asset_id, 
-        coin_name: coin_name
+        asset_id: req.query.asset_id, 
+        coin_name: req.query.coin_name
     }
       const favCoinExist = await new FavCoinService().findARecord(filter);
     
