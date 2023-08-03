@@ -11,7 +11,7 @@ exports.addFavCoin = async (req, res, next) => {
             asset_id,
             coin_name
         } = req.body
-        const isFav = await new FavCoinService().findARecord({asset_id, coin_name})
+        const isFav = await new FavCoinService().findARecord({user_id:req.user.user_id,asset_id, coin_name})
         if(isFav){
             return next(
                 createError(HTTP.OK, [
