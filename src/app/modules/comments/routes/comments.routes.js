@@ -49,14 +49,12 @@ router.post(
 
 router.get(
   '/reply/all',
-  authorize(['user','org']),
   validateRequest(AllCommentReplies.getAllRepliesQuerySchema, "query"),
   AllCommentRepliesController.getAllCommentReplies
 );
 
 router.get(
   '/research-comments/all',
-  authorize(['user','org']),
   validateRequest(AllResearchComments.getAllResearchCommentQuerySchema, "query"),
   AllResearchCommentsController.getAllResearchComments
 );
