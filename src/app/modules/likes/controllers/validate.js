@@ -8,19 +8,6 @@ const logger = require("../../../../../logger.conf");
 
 exports.validateLike = async (req, res, next) => {
   try {
-    if (!req.query.community_id || !req.query.comment_id) {
-      return next(
-        createError(HTTP.OK, [
-          {
-            status: RESPONSE.SUCCESS,
-            message: "No query params, please pass comment id or community id",
-            statusCode: HTTP.OK,
-            data: null,
-            code: HTTP.OK,
-          },
-        ])
-      );
-    }
     // search for likes in any entry related to like
     if(req.query.community_id){
       const researchLikeExist = await new ResewarchLikeService().findARecord({
