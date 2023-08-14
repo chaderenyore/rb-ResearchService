@@ -8,20 +8,22 @@ const logger = require("../../../../../logger.conf");
 
 exports.validateLike = async (req, res, next) => {
   try {
+    let researchLikeExist;
+    let commentLikeExist;
     // search for likes in any entry related to like
     if(req.query.community_id){
-      const researchLikeExist = await new ResewarchLikeService().findARecord({
+      researchLikeExist = await new ResewarchLikeService().findARecord({
         community_id: req.query.community_id,
         user_id: req.user.user_id,
       });
     }
     if(req.query.comment_id){
-      const commentLikeExist = await new CommentsLikesService().findARecord({
+      commentLikeExist = await new CommentsLikesService().findARecord({
         comment_id: req.query.comment_id,
         user_id: req.user.user_id,
       });
     }
-    if (req.query.community_id && !commentLikeExist) {
+    if (req.query.community_id && !researchLikeExist) {
       return next(
         createError(HTTP.OK, [
           {
