@@ -102,7 +102,6 @@ router.get(
 
 router.get(
   '/last-research',
-  authorize(['user','org']),
   validateRequest(UsersLastResearchSchema.UserLastResearchQuerySchema, "query"),
   FetchUserLastController.fetchLastResearch
 );
