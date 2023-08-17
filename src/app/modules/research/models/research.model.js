@@ -37,6 +37,7 @@ const schema = mongoose.Schema(
     is_sponsored: {type :Boolean},
     is_draft: {type: Boolean},
     tags: {type: [String]},
+    final_comments: {type: String},
     type: {type: String},
     number_of_downloads: {type: Number, default: 0},
     is_saved: {type: Boolean},
