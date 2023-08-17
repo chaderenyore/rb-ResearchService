@@ -78,6 +78,11 @@ exports.saveCommunitySpiritInfo = async (req, res, next) => {
               req.body.research_id,
               resultData
             );
+                const updatedResearch = await new ResearchService().update({
+             _id: req.body.research_id,
+                },
+              {final_comments: req.body.final_comments}
+                );
             return createResponse(`Data Saved`, updatedCommunityDetails)(
               res,
               HTTP.OK
@@ -137,6 +142,11 @@ exports.saveCommunitySpiritInfo = async (req, res, next) => {
               req.body.research_id,
               resultData
             );
+          const updatedResearch2 = await new ResearchService().update({
+             _id: req.body.research_id,
+                },
+              {final_comments: req.body.final_comments}
+                );
             return createResponse(`Data Saved`, newCommunityDetailsData)(
               res,
               HTTP.OK
