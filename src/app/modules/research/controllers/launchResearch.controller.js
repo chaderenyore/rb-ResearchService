@@ -127,6 +127,7 @@ exports.launchResearch = async (req, res, next) => {
               is_visible: req.query.is_visible,
               original_research_id: researchExist._id,
               research_label:researchExist.research_label,
+              final_comments: researchExist.final_comments,
               researcher_id: req.user.user_id,
               tags: researchExist.tags,
             };
