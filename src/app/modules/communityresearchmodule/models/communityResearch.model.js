@@ -22,6 +22,7 @@ const schema = mongoose.Schema(
     asset_id:{type:String},
     coin_url: {type: String},
     coin_image: {type: String},
+    final_comments: {type: String},
     amount_paid:{type: Number},
     total_likes: {type: Number, min:0, default: 0},
     total_comments: {type: Number, min:0, default: 0},
