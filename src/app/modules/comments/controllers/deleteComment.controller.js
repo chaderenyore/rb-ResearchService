@@ -35,7 +35,6 @@ exports.deleteComment = async (req, res, next) => {
      if(research){
       // delete comment
       const deletedComment = await new CommentService().deletOne({_id: req.query.comment_id});
-      const CommentReplies = await new CommentService().deleteAll({comment_id: req.query.comment_id});
 
       console.log("deleted COmment =========== " , deletedComment);
       // update community
