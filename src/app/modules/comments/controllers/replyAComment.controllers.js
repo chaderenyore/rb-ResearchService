@@ -46,11 +46,12 @@ exports.replyAComment = async (req, res, next) => {
           if (user && user.data && user.data.code === 200) {
             let firstname;
             let fullname;
-            if(user.data.data.first_name && user.data.data.firstname !== " "){
-             firstname = user.data.data.firstname;
+            if(user.data.data.first_name && user.data.data.first_name !== " "){
+             firstname = user.data.data.first_name;
              fullname = firstname;
             }
             if(user.data.data.last_name && user.data.data.last_name !== " "){
+             firstname = user.data.data.first_name;
              fullname = `${firstname} ${user.data.data.last_name}`
             };
                // create A Reply
