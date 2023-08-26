@@ -36,7 +36,12 @@ exports.computeTokenomicsHealth = async (coinData) => {
       // get first step data from coinData and compute score
       if (Number(coinData.number_of_tradeable_tokens)) {
         // increase total points by value
-        totalPoint += Number(coinData.number_of_tradeable_tokens) || 4;
+        if(Number(coinData.number_of_tradeable_tokens) === 1){
+          totalPoint += Number(coinData.number_of_tradeable_tokens) || 4;
+        }
+        if(Number(coinData.number_of_tradeable_tokens) === 2){
+          totalPoint += Number(coinData.number_of_tradeable_tokens) || 2;
+        }
       }
       let isMainTokenPoint = tokenomicsControl
         ? Number(tokenomicsControl.is_main_token_score) || 5
