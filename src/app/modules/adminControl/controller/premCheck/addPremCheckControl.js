@@ -26,7 +26,7 @@ exports.addPremCheckControl = async (req, res, next) => {
         createError(HTTP.OK, [
           {
             status: RESPONSE.SUCCESS,
-            message: `${LastTweetTimeInDays_limit} days is Invalid`,
+            message: `${lastTweetTimeInDays_limit} days is Invalid`,
             statusCode: HTTP.OK,
             data: {},
             code: HTTP.OK,
