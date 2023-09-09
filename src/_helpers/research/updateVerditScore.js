@@ -35,7 +35,7 @@ exports.updateVerditSore = async (research_id, verditData) => {
     // Comparison
    if(verditData.type && verditData.type === "comparison"){
      if(verditData.grade >= 5){
-        totalVerditPoint +=25
+        totalVerditPoint +=20
         console.log("Comparison COndition")
 
      }
@@ -48,7 +48,7 @@ exports.updateVerditSore = async (research_id, verditData) => {
 
        }
        if(verditData.info.marketing_stage === "on_going" || verditData.info.marketing_stage === "just_started"){
-        totalVerditPoint +=5
+        totalVerditPoint +=10
         console.log("Adoption And Recognition COndition 2")
 
        }
